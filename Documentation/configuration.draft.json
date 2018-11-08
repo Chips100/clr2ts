@@ -1,0 +1,52 @@
+{
+	"input": { 
+		"assemblyFiles": [
+			".\\MyAssembly.dll",
+			".\\MyOtherAssembly.dll"
+		]
+	},
+	"options": {
+		"typeFilters": [
+			{
+				"subTypeOf": ["ISample1", "ISample2"]
+			},
+			{
+				"subTypeOf": ["ISample3"]
+			}
+		],
+		"knownTypes": [
+			{ "SampleBase": "@library/sample-base.ts" },
+			{ "OtherBase": "@library/other-base.ts" }
+		],
+		"classDecorators": [
+			{ 
+				"if": { "subTypeOf": "SampleBase" }, 
+				"decorator": "requestTypeName()", 
+				"params": ["{TypeNamespace}.{TypeName}, {TypeAssembly}"], 
+				"import": "@library" 
+			}
+		],
+		"propertyDecorators": [
+			{ 
+				"if": null,
+				"decorator": "requestProperty", 
+				"params": ["{PropertyName}"],
+				"import": "@library"
+			}
+		],
+		"strategies": {
+			"camelCaseStrategy": true
+		}
+	},
+	"log": {
+		"console": true
+	},
+	"output": {
+		"clipboard": true,
+		"bundledFile": ".\\output.ts",
+		"files": {
+			"directory": ".\\output"
+			"mimicNamespacesWithSubdirectories": true
+		}
+	}
+}
