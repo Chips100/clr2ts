@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Remoting;
 using Clr2Ts.Transpiler.Input;
@@ -94,7 +95,7 @@ namespace Clr2Ts.Transpiler.Tests.Input
                 // Check that the version of the assembly was determined correctly
                 // and that it was not loaded in this AppDomain.
                 Assert.Equal(SampleAssemblyInfo.Version , result);
-                Assert.DoesNotContain(AppDomain.CurrentDomain.GetAssemblies(), a => a.FullName.Contains(SampleAssemblyInfo.Name));
+                Assert.False(AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.Contains(SampleAssemblyInfo.Name)));
             }
         }
 
