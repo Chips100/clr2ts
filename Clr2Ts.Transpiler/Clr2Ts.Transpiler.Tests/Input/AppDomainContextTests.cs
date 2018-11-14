@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.Remoting;
 using Clr2Ts.Transpiler.Input;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -45,6 +47,20 @@ namespace Clr2Ts.Transpiler.Tests.Input
         }
 
         /// <summary>
+        /// AddAssemblyResolveDirectory should throw an <see cref="ArgumentNullException"/>
+        /// if null is passed as the directory to add.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void AppDomainContext_AddAssemblyResolveDirectory_ThrowsArgumentNullException()
+        {
+            using (var sut = AppDomainContext.Create())
+            {
+                sut.AddAssemblyResolveDirectory(null);
+            }
+        }
+
+        /// <summary>
         /// AddAssemblyResolveDirectory should throw an <see cref="ObjectDisposedException"/>
         /// if the AppDomainContext has already been disposed.
         /// </summary>
@@ -64,7 +80,18 @@ namespace Clr2Ts.Transpiler.Tests.Input
         [TestMethod]
         public void AppDomainContext_AddAssemblyResolveDirectory_LoadsAssembliesFromDirectory()
         {
-            // TODO.
+            using (var sut = AppDomainContext.Create())
+            {
+                sut.AddAssemblyResolveDirectory(SampleAssemblyInfo.LocationDirectory);
+
+                var proxy = sut.CreateProxyInstance<ProxyMockup>();
+                var result = proxy.LoadAssemblyByName(SampleAssemblyInfo.Name);
+                
+                // Check that the version of the assembly was determined correctly
+                // and that it was not loaded in this AppDomain.
+                Assert.AreEqual(SampleAssemblyInfo.Version , result);
+                Assert.IsTrue(!AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.Contains(SampleAssemblyInfo.Name)));
+            }
         }
 
         /// <summary>
@@ -91,6 +118,12 @@ namespace Clr2Ts.Transpiler.Tests.Input
 
             public void SetStaticValue(string value) => SomeStaticValue = value;
             public string GetStaticValue() => SomeStaticValue;
+
+            public string LoadAssemblyByName(string assemblyName)
+            {
+                var assembly = Assembly.Load(assemblyName);
+                return assembly.GetName().Version.ToString();
+            }
         }
     }
 }
