@@ -1,37 +1,37 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Remoting;
 using Clr2Ts.Transpiler.Input;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Clr2Ts.Transpiler.Tests.Input
 {
     /// <summary>
     /// Tests for the AppDomainContext that manages access to a separate AppDomain.
     /// </summary>
-    [TestClass]
     public class AppDomainContextTests
     {
         /// <summary>
         /// CreateProxyInstance should throw an <see cref="ObjectDisposedException"/>
         /// if the AppDomainContext has already been disposed.
         /// </summary>
-        [TestMethod]
-        [ExpectedException(typeof(ObjectDisposedException))]
+        [Fact]
         public void AppDomainContext_CreateProxyInstance_ThrowsObjectDisposedException()
         {
-            var sut = AppDomainContext.Create();
-            sut.Dispose();
-            sut.CreateProxyInstance<ProxyMockup>();
+            Assert.Throws<ObjectDisposedException>(() =>
+            {
+                var sut = AppDomainContext.Create();
+                sut.Dispose();
+                sut.CreateProxyInstance<ProxyMockup>();
+            });
         }
 
         /// <summary>
         /// CreateProxyInstance should return a proxy that delegates calls
         /// to the underlying AppDomain.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void AppDomainContext_CreateProxyInstance_CreatesProxyForAppDomain()
         {
             using (var sut = AppDomainContext.Create())
@@ -39,10 +39,10 @@ namespace Clr2Ts.Transpiler.Tests.Input
                 var proxy = sut.CreateProxyInstance<ProxyMockup>();
                 proxy.SetStaticValue("Other");
 
-                Assert.IsTrue(RemotingServices.IsTransparentProxy(proxy), "IsTransparentProxy");
-                Assert.IsTrue(RemotingServices.IsObjectOutOfAppDomain(proxy), "IsObjectOutOfAppDomain");
-                Assert.AreEqual("Default", ProxyMockup.SomeStaticValue, "SomeStaticValue in this AppDomain");
-                Assert.AreEqual("Other", proxy.GetStaticValue(), "SomeStaticValue in other AppDomain");
+                Assert.True(RemotingServices.IsTransparentProxy(proxy), "IsTransparentProxy");
+                Assert.True(RemotingServices.IsObjectOutOfAppDomain(proxy), "IsObjectOutOfAppDomain");
+                Assert.Equal("Default", ProxyMockup.SomeStaticValue);
+                Assert.Equal("Other", proxy.GetStaticValue());
             }
         }
 
@@ -50,34 +50,38 @@ namespace Clr2Ts.Transpiler.Tests.Input
         /// AddAssemblyResolveDirectory should throw an <see cref="ArgumentNullException"/>
         /// if null is passed as the directory to add.
         /// </summary>
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void AppDomainContext_AddAssemblyResolveDirectory_ThrowsArgumentNullException()
         {
-            using (var sut = AppDomainContext.Create())
+            Assert.Throws<ArgumentNullException>(() =>
             {
-                sut.AddAssemblyResolveDirectory(null);
-            }
+                using (var sut = AppDomainContext.Create())
+                {
+                    sut.AddAssemblyResolveDirectory(null);
+                }
+            });
         }
 
         /// <summary>
         /// AddAssemblyResolveDirectory should throw an <see cref="ObjectDisposedException"/>
         /// if the AppDomainContext has already been disposed.
         /// </summary>
-        [TestMethod]
-        [ExpectedException(typeof(ObjectDisposedException))]
+        [Fact]
         public void AppDomainContext_AddAssemblyResolveDirectory_ThrowsObjectDisposedException()
         {
-            var sut = AppDomainContext.Create();
-            sut.Dispose();
-            sut.AddAssemblyResolveDirectory(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory));
+            Assert.Throws<ObjectDisposedException>(() =>
+            {
+                var sut = AppDomainContext.Create();
+                sut.Dispose();
+                sut.AddAssemblyResolveDirectory(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory));
+            });
         }
 
         /// <summary>
         /// AddAssemblyResolveDirectory should use the provided directory
         /// to resolve assemblies when loaded in the underlying AppDomain.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void AppDomainContext_AddAssemblyResolveDirectory_LoadsAssembliesFromDirectory()
         {
             using (var sut = AppDomainContext.Create())
@@ -89,27 +93,29 @@ namespace Clr2Ts.Transpiler.Tests.Input
                 
                 // Check that the version of the assembly was determined correctly
                 // and that it was not loaded in this AppDomain.
-                Assert.AreEqual(SampleAssemblyInfo.Version , result);
-                Assert.IsTrue(!AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.Contains(SampleAssemblyInfo.Name)));
+                Assert.Equal(SampleAssemblyInfo.Version , result);
+                Assert.DoesNotContain(AppDomain.CurrentDomain.GetAssemblies(), a => a.FullName.Contains(SampleAssemblyInfo.Name));
             }
         }
 
         /// <summary>
         /// Disposing the AppDomainContext should unload the underlying AppDomain.
         /// </summary>
-        [TestMethod]
-        [ExpectedException(typeof(AppDomainUnloadedException))]
+        [Fact]
         public void AppDomainContext_Dispose_UnloadsAppDomain()
         {
-            // Test this by trying to access a proxy from the unloaded AppDomain.
-            ProxyMockup proxy;
-
-            using (var sut = AppDomainContext.Create())
+            Assert.Throws<AppDomainUnloadedException>(() =>
             {
-                proxy = sut.CreateProxyInstance<ProxyMockup>();
-            }
+                // Test this by trying to access a proxy from the unloaded AppDomain.
+                ProxyMockup proxy;
 
-            proxy.SetStaticValue("Other");
+                using (var sut = AppDomainContext.Create())
+                {
+                    proxy = sut.CreateProxyInstance<ProxyMockup>();
+                }
+
+                proxy.SetStaticValue("Other");
+            });
         }
 
         private class ProxyMockup : MarshalByRefObject
