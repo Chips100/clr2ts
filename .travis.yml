@@ -1,2 +1,2 @@
 language: csharp
-solution: Clr2Ts.Transpiler.sln
+solution: Clr2Ts.Transpiler/Clr2Ts.Transpiler.sln
