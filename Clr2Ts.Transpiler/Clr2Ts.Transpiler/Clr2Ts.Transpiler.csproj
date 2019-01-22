@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{628C1F21-B7BC-4D26-B260-A451E420B496}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Clr2Ts.Transpiler</RootNamespace>
     <AssemblyName>Clr2Ts.Transpiler</AssemblyName>
@@ -29,6 +29,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Clr2Ts.Transpiler.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -44,19 +47,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Input\AppDomainContext.cs" />
-    <Compile Include="TypeSystemModel\ClrClass.cs" />
-    <Compile Include="TypeSystemModel\ClrEnum.cs" />
-    <Compile Include="TypeSystemModel\ClrPropertyInfo.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Transpilation\CodeFragmentId.cs" />
+    <Compile Include="Transpilation\TranspilationResult.cs" />
+    <Compile Include="Transpilation\CodeFragment.cs" />
     <Compile Include="Configuration\TypeFilter.cs" />
-    <Compile Include="TypeSystemModel\ClrType.cs" />
-    <Compile Include="TypeSystemModel\ClrTypeIdentifier.cs" />
-    <Compile Include="TypeSystemModel\ClrTypeInfo.cs" />
-    <Compile Include="Input\AssemblyScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="Transpilation\TypeScript\TypeScriptTranspiler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Transpilation\TypeScript\TypeScriptCodeTemplates\ClassDefinition.txt" />
+    <EmbeddedResource Include="Transpilation\TypeScript\TypeScriptCodeTemplates\PropertyDefinition.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
