@@ -1,5 +1,7 @@
-﻿using Clr2Ts.Transpiler.Transpilation.TypeScript;
+﻿using Clr2Ts.Transpiler.Input;
+using Clr2Ts.Transpiler.Transpilation.TypeScript;
 using System;
+using System.IO;
 
 namespace Clr2Ts.Transpiler
 {
@@ -7,21 +9,24 @@ namespace Clr2Ts.Transpiler
     {
         public static void Main(string[] args)
         {
-            var transpiler = new TypeScriptTranspiler();
-            var fragment = transpiler.Transpile(typeof(SomeModel));
+            var assemblyScanner = new AssemblyScanner();
+            var sampleAssemblyName = "Clr2Ts.Transpiler.Tests.SampleAssembly";
+            var file = new FileInfo(Path.Combine("..", "..", "..", sampleAssemblyName, "bin", sampleAssemblyName + ".dll"));
+            var types = assemblyScanner.GetTypesForTranspilation(file.FullName);
 
-            Console.WriteLine(fragment.Id.Name);
-            foreach (var dependency in fragment.Dependencies) Console.WriteLine(dependency.Name);
-            Console.WriteLine(fragment.Code);
+            var transpiler = new TypeScriptTranspiler(new EmbeddedResourceTemplatingEngine());
+            var result = transpiler.Transpile(types);
+
+            foreach(var fragment in result.CodeFragments)
+            {
+                Console.WriteLine(fragment.Id.Name);
+                foreach (var dependency in fragment.Dependencies) Console.WriteLine(dependency.Name);
+                Console.WriteLine(fragment.Code);
+
+                File.WriteAllText(@"C:\temp\" + fragment.Id.Name + ".ts", fragment.Code);
+            }
+
             Console.ReadLine();
         }
-
-    }
-
-    public class SomeModel
-    {
-        public string SomeString { get; set; }
-
-        public int SomeInt { get; set; }
     }
 }

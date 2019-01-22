@@ -46,15 +46,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Input\AppDomainContext.cs" />
+    <Compile Include="Input\AssemblyScanner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Transpilation\CodeFragmentId.cs" />
+    <Compile Include="Transpilation\ITranspiler.cs" />
     <Compile Include="Transpilation\TranspilationResult.cs" />
     <Compile Include="Transpilation\CodeFragment.cs" />
     <Compile Include="Configuration\TypeFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="Transpilation\TypeScript\EmbeddedResourceTemplatingEngine.cs" />
+    <Compile Include="Transpilation\TypeScript\ITemplatingEngine.cs" />
     <Compile Include="Transpilation\TypeScript\TypeScriptTranspiler.cs" />
+    <Compile Include="Transpilation\TypeScript\TypeHandlingExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
