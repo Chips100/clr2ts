@@ -49,6 +49,8 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Input\AppDomainContext.cs" />
     <Compile Include="Input\AssemblyScanner.cs" />
+    <Compile Include="Input\AssemblyXmlDocumentationSource.cs" />
+    <Compile Include="Input\IDocumentationSource.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Transpilation\CodeFragmentId.cs" />
     <Compile Include="Transpilation\ITranspiler.cs" />

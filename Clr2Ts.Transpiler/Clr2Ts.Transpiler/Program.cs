@@ -14,7 +14,7 @@ namespace Clr2Ts.Transpiler
             var file = new FileInfo(Path.Combine("..", "..", "..", sampleAssemblyName, "bin", sampleAssemblyName + ".dll"));
             var types = assemblyScanner.GetTypesForTranspilation(file.FullName);
 
-            var transpiler = new TypeScriptTranspiler(new EmbeddedResourceTemplatingEngine());
+            var transpiler = new TypeScriptTranspiler(new EmbeddedResourceTemplatingEngine(), new AssemblyXmlDocumentationSource());
             var result = transpiler.Transpile(types);
 
             foreach(var fragment in result.CodeFragments)
