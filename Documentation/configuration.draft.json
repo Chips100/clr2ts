@@ -1,8 +1,7 @@
 {
 	"input": { 
 		"assemblyFiles": [
-			".\\MyAssembly.dll",
-			".\\MyOtherAssembly.dll"
+			"..\\..\\..\\Clr2Ts.Transpiler.Tests.SampleAssembly\\bin\\Clr2Ts.Transpiler.Tests.SampleAssembly.dll"
 		]
 	},
 	"options": {
@@ -45,7 +44,7 @@
 		"clipboard": true,
 		"bundledFile": ".\\output.ts",
 		"files": {
-			"directory": ".\\output"
+			"directory": ".\\output",
 			"mimicNamespacesWithSubdirectories": true
 		}
 	}

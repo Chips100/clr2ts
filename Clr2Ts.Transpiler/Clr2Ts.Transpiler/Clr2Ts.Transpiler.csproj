@@ -46,11 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ConfigurationRoot.cs" />
+    <Compile Include="Configuration\InputConfiguration.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Input\AppDomainContext.cs" />
+    <Compile Include="AppDomainContext.cs" />
     <Compile Include="Input\AssemblyScanner.cs" />
     <Compile Include="Input\AssemblyXmlDocumentationSource.cs" />
-    <Compile Include="Input\IDocumentationSource.cs" />
+    <Compile Include="IDocumentationSource.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Transpilation\CodeFragmentId.cs" />
     <Compile Include="Transpilation\ITranspiler.cs" />

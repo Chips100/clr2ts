@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-namespace Clr2Ts.Transpiler.Input
+namespace Clr2Ts.Transpiler
 {
     /// <summary>
     /// Context for working in a seperate AppDomain.

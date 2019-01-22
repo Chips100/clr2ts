@@ -1,7 +1,9 @@
-﻿using Clr2Ts.Transpiler.Input;
+﻿using Clr2Ts.Transpiler.Configuration;
+using Clr2Ts.Transpiler.Input;
 using Clr2Ts.Transpiler.Transpilation.TypeScript;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Clr2Ts.Transpiler
 {
@@ -9,10 +11,15 @@ namespace Clr2Ts.Transpiler
     {
         public static void Main(string[] args)
         {
+            var configuration = ConfigurationRoot.ReadFromJsonFile(
+                Path.Combine("..", "..", "..", "..", "Documentation", "configuration.draft.json"));
+
+            var assemblyFiles = configuration.Input.AssemblyFiles
+                .Select(f => new FileInfo(f).FullName);
+
+            // Process each assembly in seperate AppDomain? AppDomainContext is ready...
             var assemblyScanner = new AssemblyScanner();
-            var sampleAssemblyName = "Clr2Ts.Transpiler.Tests.SampleAssembly";
-            var file = new FileInfo(Path.Combine("..", "..", "..", sampleAssemblyName, "bin", sampleAssemblyName + ".dll"));
-            var types = assemblyScanner.GetTypesForTranspilation(file.FullName);
+            var types = assemblyFiles.SelectMany(af => assemblyScanner.GetTypesForTranspilation(af));
 
             var transpiler = new TypeScriptTranspiler(new EmbeddedResourceTemplatingEngine(), new AssemblyXmlDocumentationSource());
             var result = transpiler.Transpile(types);
