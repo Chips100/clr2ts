@@ -12,7 +12,7 @@ namespace Clr2Ts.Transpiler
         public static void Main(string[] args)
         {
             var configFile = args[0];
-            var configuration = ConfigurationRoot.ReadFromJsonFile(configFile);
+            var configuration = ConfigurationRoot.FromJsonFile(configFile);
 
             var assemblyFiles = configuration.Input.AssemblyFiles
                 .Select(f => new FileInfo(f).FullName);

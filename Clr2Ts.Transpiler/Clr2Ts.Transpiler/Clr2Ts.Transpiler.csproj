@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ConfigurationException.cs" />
     <Compile Include="Configuration\ConfigurationRoot.cs" />
     <Compile Include="Configuration\InputConfiguration.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

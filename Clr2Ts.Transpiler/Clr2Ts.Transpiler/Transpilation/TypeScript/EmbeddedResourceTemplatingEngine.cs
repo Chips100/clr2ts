@@ -1,16 +1,33 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace Clr2Ts.Transpiler.Transpilation.TypeScript
 {
-    public class EmbeddedResourceTemplatingEngine: ITemplatingEngine
+    /// <summary>
+    /// Allows usage of templates with simple placeholders stored in embedded resources.
+    /// </summary>
+    public sealed class EmbeddedResourceTemplatingEngine: ITemplatingEngine
     {
+        /// <summary>
+        /// Uses a template with the specified texts for its placeholders.
+        /// </summary>
+        /// <param name="templateName">Name of the template to use.</param>
+        /// <param name="replacements">Texts that should be used to replace placeholders.</param>
+        /// <returns>The resulting text that was created from the template.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="templateName"/> refers to an unknown template.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="replacements"/> is null.</exception>
         public string UseTemplate(string templateName, IDictionary<string, string> replacements)
         {
-            var templateFullName = $"{GetType().Namespace}.TypeScriptCodeTemplates.{templateName}.txt";
+            if (replacements == null) throw new ArgumentNullException(nameof(replacements));
 
-            using (var stream = GetType().Assembly.GetManifestResourceStream(templateFullName))
+            // Read embedded resource that represents the template.
+            var templateFullName = $"{GetType().Namespace}.TypeScriptCodeTemplates.{templateName}.txt";
+            var stream = GetType().Assembly.GetManifestResourceStream(templateFullName);
+            if (stream == null) throw new ArgumentOutOfRangeException(nameof(templateName), $"Unknown template: {templateName}");
+
+            using (stream)
             using (var reader = new StreamReader(stream, Encoding.UTF8))
             {
                 var templateContent = new StringBuilder(reader.ReadToEnd());
