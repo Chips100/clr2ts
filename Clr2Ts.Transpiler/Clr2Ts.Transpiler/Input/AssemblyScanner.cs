@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
 namespace Clr2Ts.Transpiler.Input
@@ -16,8 +17,11 @@ namespace Clr2Ts.Transpiler.Input
         /// <returns>A sequence with the types from the assembly that should be transpiled.</returns>
         public IEnumerable<Type> GetTypesForTranspilation(string assemblyFile)
         {
+            // Support relative paths by resolving them first.
+            var fileInfo = new FileInfo(assemblyFile);
+
             // For now, just return all types of the assembly.
-            return Assembly.LoadFile(assemblyFile).GetTypes();
+            return Assembly.LoadFile(fileInfo.FullName).GetTypes();
         }
     }
 }

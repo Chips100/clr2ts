@@ -27,5 +27,11 @@ namespace Clr2Ts.Transpiler.Tests
         /// </summary>
         public static DirectoryInfo LocationDirectory => new DirectoryInfo(
             Path.Combine("..", "..", "..", Name, "bin"));
+
+        /// <summary>
+        /// Location of the sample assembly file.
+        /// </summary>
+        public static FileInfo Location => new FileInfo(
+            Path.Combine(LocationDirectory.FullName, $"{Name}.dll"));
     }
 }
