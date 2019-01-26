@@ -21,23 +21,15 @@ namespace Clr2Ts.Transpiler.Extensions
         {
             if (level < 0) throw new ArgumentOutOfRangeException(nameof(level), "level for indentation cannot be negative.");
 
-            // Quick exit for trivial cases.
-            if (string.IsNullOrWhiteSpace(input) || level == 0) return input;
+            // Early exit for trivial cases (and normalization to empty string).
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+            if (level == 0) return input;
 
-            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(input)))
-            using (var reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                var indentation = new string(Enumerable.Repeat('\t', level).ToArray());
-                var builder = new StringBuilder();
-                string line;
-
-                while ((line = reader.ReadLine()) != null)
-                {
-                    builder.AppendLine($"{indentation}{line}");
-                }
-
-                return builder.ToString();
-            }
+            // Split by NewLine and put the indented lines back together.
+            var indentation = new string(Enumerable.Repeat('\t', level).ToArray());
+            return string.Join(Environment.NewLine, input
+                .Split(new[] { Environment.NewLine }, StringSplitOptions.None)
+                .Select(line => $"{indentation}{line}".TrimEnd()));
         }
     }
 }

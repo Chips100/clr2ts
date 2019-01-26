@@ -1,0 +1,7 @@
+{
+  "input": {
+    "assemblyFiles": [
+      "../../../Clr2Ts.Transpiler.Tests.SampleAssembly/bin/Clr2Ts.Transpiler.Tests.SampleAssembly.dll"
+    ]
+  }
+}
