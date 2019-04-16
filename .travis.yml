@@ -1,8 +1,8 @@
 language: csharp
+mono: none
+dotnet: 2.1.300
 solution: Clr2Ts.sln
-install:
-  - nuget restore Clr2Ts.sln
-  - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
 script:
-  - xbuild /p:Configuration=Release Clr2Ts.sln
-  - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe ./tests/**/*.Tests.dll
+ - dotnet restore
+ - dotnet build --configuration Release
+ - dotnet test
