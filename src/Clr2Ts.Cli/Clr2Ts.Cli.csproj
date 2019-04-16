@@ -1,12 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>clr2ts</ToolCommandName>
+    <PackageOutputPath>../../dist</PackageOutputPath>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
+    <Authors>Dennis Janiak</Authors>
+    <Company />
+    <Product>clr2ts</Product>
+    <PackageId>clr2ts</PackageId>
+    <Description>Transpiler that takes CLR assemblies and outputs corresponding typescript definitions.</Description>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Chips100/clr2ts</RepositoryUrl>
+    <PackageTags>CLR TypeScript .NET C#</PackageTags>
+    <PackageReleaseNotes>First release as nuget package (dotnet tool).</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Clr2Ts.Transpiler\Clr2Ts.Transpiler.csproj" />
   </ItemGroup>
-
 </Project>
