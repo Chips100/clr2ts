@@ -5,4 +5,4 @@ solution: Clr2Ts.sln
 script:
  - dotnet restore
  - dotnet build --configuration Release
- - dotnet test
+ - dotnet test ./tests/Clr2Ts.Transpiler.Tests/Clr2Ts.Transpiler.Tests.csproj
