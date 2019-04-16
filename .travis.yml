@@ -1,8 +1,8 @@
 language: csharp
 mono: none
-dotnet: 2.1.300
+dotnet: 2.1.500
 solution: Clr2Ts.sln
 script:
  - dotnet restore
  - dotnet build --configuration Release
- - dotnet test ./tests/Clr2Ts.Transpiler.Tests/Clr2Ts.Transpiler.Tests.csproj
+ - dotnet test
