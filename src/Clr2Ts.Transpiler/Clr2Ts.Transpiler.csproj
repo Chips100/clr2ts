@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Transpilation\TypeScript\TypeScriptCodeTemplates\ClassDefinition.txt" />
+    <None Remove="Transpilation\TypeScript\TypeScriptCodeTemplates\PropertyDefinition.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Transpilation\TypeScript\TypeScriptCodeTemplates\ClassDefinition.txt" />
+    <EmbeddedResource Include="Transpilation\TypeScript\TypeScriptCodeTemplates\PropertyDefinition.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
+
+</Project>

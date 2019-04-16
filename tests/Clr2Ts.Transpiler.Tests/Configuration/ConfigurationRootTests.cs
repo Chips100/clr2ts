@@ -42,7 +42,7 @@ namespace Clr2Ts.Transpiler.Tests.Configuration
         {
             var config = ConfigurationRoot.FromJsonFile("configuration.sample.json");
 
-            Assert.Equal(1, config.Input.AssemblyFiles.Count());
+            Assert.Single(config.Input.AssemblyFiles);
         }
     }
 }

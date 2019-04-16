@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace Clr2Ts.Transpiler
+namespace Clr2Ts.Cli
 {
     public class Program
     {
@@ -17,14 +17,14 @@ namespace Clr2Ts.Transpiler
             var assemblyFiles = configuration.Input.AssemblyFiles
                 .Select(f => new FileInfo(f).FullName);
 
-            // Process each assembly in seperate AppDomain? AppDomainContext is ready...
+            // Process each assembly in seperate AppDomain? AppDomainContext had to be dropped for .NET Standard 2.0
             var assemblyScanner = new AssemblyScanner();
             var types = assemblyFiles.SelectMany(af => assemblyScanner.GetTypesForTranspilation(af));
 
             var transpiler = new TypeScriptTranspiler(new EmbeddedResourceTemplatingEngine(), new AssemblyXmlDocumentationSource());
             var result = transpiler.Transpile(types);
 
-            foreach(var fragment in result.CodeFragments)
+            foreach (var fragment in result.CodeFragments)
             {
                 Console.WriteLine(fragment.Id.Name);
                 foreach (var dependency in fragment.Dependencies) Console.WriteLine(dependency.Name);

@@ -18,8 +18,8 @@ namespace Clr2Ts.Transpiler.Tests.Input
         {
             // Just check for presence of this test type when scanning the current assembly.
             var sut = new AssemblyScanner();
-            Assert.True(sut.GetTypesForTranspilation(GetType().Assembly.Location)
-                .Any(t => t.Name == nameof(AssemblyScannerTests)));
+            Assert.Contains(sut.GetTypesForTranspilation(GetType().Assembly.Location), 
+                t => t.Name == nameof(AssemblyScannerTests));
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace Clr2Ts.Transpiler.Tests.Input
         {
             // Just check for presence of this test type when scanning the current assembly.
             var sut = new AssemblyScanner();
-            Assert.True(sut.GetTypesForTranspilation("Clr2Ts.Transpiler.Tests.dll")
-                .Any(t => t.Name == nameof(AssemblyScannerTests)));
+            Assert.Contains(sut.GetTypesForTranspilation("Clr2Ts.Transpiler.Tests.dll"),
+                t => t.Name == nameof(AssemblyScannerTests));
         }
     }
 }

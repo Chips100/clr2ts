@@ -26,7 +26,7 @@ namespace Clr2Ts.Transpiler.Tests
         /// Directory in which the sample assembly is located.
         /// </summary>
         public static DirectoryInfo LocationDirectory => new DirectoryInfo(
-            Path.Combine("..", "..", "..", Name, "bin"));
+            Path.Combine("..", "..", "..", "..", Name, "bin", "netstandard2.0"));
 
         /// <summary>
         /// Location of the sample assembly file.

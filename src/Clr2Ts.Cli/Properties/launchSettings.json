@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Clr2Ts.Cli": {
+      "commandName": "Project"
+    }
+  }
+}
