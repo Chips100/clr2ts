@@ -13,7 +13,7 @@
 				"subTypeOf": ["ISample3"]
 			}
 		],
-		"knownTypes": [
+		"customTypeMaps": [
 			{ "SampleBase": "@library/sample-base.ts" },
 			{ "OtherBase": "@library/other-base.ts" }
 		],
@@ -42,10 +42,10 @@
 	},
 	"output": {
 		"clipboard": true,
-		"bundledFile": "./output.ts",
+		"bundledFile": "C:/temp/bundled.ts",
 		"files": {
-			"directory": "./output",
-			"mimicNamespacesWithSubdirectories": true
+			"directory": "C:/temp/output",
+			"mimicNamespacesWithSubdirectories": false
 		}
 	}
 }

@@ -17,7 +17,18 @@ namespace Clr2Ts.Transpiler.Tests.Configuration
         [Fact]
         public void ConfigurationRoot_ThrowsConfigurationException_WhenInputNull()
         {
-            Assert.Throws<ConfigurationException>(() => new ConfigurationRoot(null));
+            Assert.Throws<ConfigurationException>(() => new ConfigurationRoot(null, new OutputConfiguration(false, string.Empty, null)));
+        }
+
+        /// <summary>
+        /// The constructor should throw a <see cref="ConfigurationException"/> 
+        /// when no output configuration is provided.
+        /// </summary>
+        [Fact]
+        public void ConfigurationRoot_ThrowsConfigurationException_WhenOutputNull()
+        {
+            Assert.Throws<ConfigurationException>(() => new ConfigurationRoot(
+                new InputConfiguration(new[] { "SampleAssembly" }), null));
         }
 
         /// <summary>

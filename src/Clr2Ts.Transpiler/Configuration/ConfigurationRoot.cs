@@ -14,16 +14,23 @@ namespace Clr2Ts.Transpiler.Configuration
         /// Creates a <see cref="ConfigurationRoot"/>.
         /// </summary>
         /// <param name="input">Input-specific configuration for the transpilation.</param>
-        /// <exception cref="ConfigurationException">Thrown when <paramref name="input"/> is null.</exception>
-        public ConfigurationRoot(InputConfiguration input)
+        /// <param name="output">Output-specific configuration for the transpilation.</param>
+        /// <exception cref="ConfigurationException">Thrown when <paramref name="input"/> or <paramref name="output"/> is null.</exception>
+        public ConfigurationRoot(InputConfiguration input, OutputConfiguration output)
         {
             Input = input ?? throw new ConfigurationException("The input section of the configuration cannot be omitted.");
+            Output = output ?? throw new ConfigurationException("The output section of the configuration cannot be omitted.");
         }
 
         /// <summary>
         /// Gets input-specific configuration for the transpilation.
         /// </summary>
         public InputConfiguration Input { get; }
+
+        /// <summary>
+        /// Gets output-specific configuration for the transpilation.
+        /// </summary>
+        public OutputConfiguration Output { get; }
 
         /// <summary>
         /// Creates a ConfigurationRoot by reading configuration from the specified file.

@@ -13,7 +13,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
     /// </summary>
     public sealed class TypeScriptTranspiler
     {
-        private readonly TypeReferenceTranslator _typeReferenceTranslator = new TypeReferenceTranslator();
+        private readonly ITypeReferenceTranslator _typeReferenceTranslator = new DefaultTypeReferenceTranslator();
         private readonly ITemplatingEngine _templatingEngine;
         private readonly IDocumentationSource _documentationSource;
 

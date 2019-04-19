@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Clr2Ts.Transpiler.Extensions
 {
