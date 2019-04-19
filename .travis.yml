@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: 2.1.500
+dotnet: 2.1.502
 solution: Clr2Ts.sln
 script:
  - dotnet restore
