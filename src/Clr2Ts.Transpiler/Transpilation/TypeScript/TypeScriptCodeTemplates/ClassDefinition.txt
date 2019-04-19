@@ -1,3 +1,0 @@
-﻿[Documentation]export class [ClassName] {
-[Properties]
-}

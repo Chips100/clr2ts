@@ -3,13 +3,27 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Clr2Ts.Transpiler.Transpilation.TypeScript
+namespace Clr2Ts.Transpiler.Transpilation.Templating
 {
     /// <summary>
     /// Allows usage of templates with simple placeholders stored in embedded resources.
     /// </summary>
     public sealed class EmbeddedResourceTemplatingEngine: ITemplatingEngine
     {
+        private readonly string _subFolder;
+
+        private EmbeddedResourceTemplatingEngine(string subFolder)
+        {
+            _subFolder = subFolder;
+        }
+
+        /// <summary>
+        /// Creates a TemplatingEngine by reading embedded resources with TypeScript code snippets.
+        /// </summary>
+        /// <returns>The TemplatingEngine based on embedded resources.</returns>
+        public static ITemplatingEngine ForTypeScript()
+            => new EmbeddedResourceTemplatingEngine("TypeScriptCodeTemplates");
+
         /// <summary>
         /// Uses a template with the specified texts for its placeholders.
         /// </summary>
@@ -23,7 +37,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
             if (replacements == null) throw new ArgumentNullException(nameof(replacements));
 
             // Read embedded resource that represents the template.
-            var templateFullName = $"{GetType().Namespace}.TypeScriptCodeTemplates.{templateName}.txt";
+            var templateFullName = $"{GetType().Namespace}.{_subFolder}.{templateName}.txt";
             var stream = GetType().Assembly.GetManifestResourceStream(templateFullName);
             if (stream == null) throw new ArgumentOutOfRangeException(nameof(templateName), $"Unknown template: {templateName}");
 

@@ -37,5 +37,8 @@ namespace Clr2Ts.Transpiler.Transpilation
             // Use the full name (namespace + type name) of the type for referencing the code fragment.
             return new CodeFragmentId(type.FullName);
         }
+
+        public override bool Equals(object obj) => Name.Equals(obj);
+        public override int GetHashCode() => Name.GetHashCode();
     }
 }

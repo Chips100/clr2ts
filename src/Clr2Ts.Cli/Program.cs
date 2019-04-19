@@ -1,5 +1,6 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using Clr2Ts.Transpiler.Input;
+using Clr2Ts.Transpiler.Transpilation.Templating;
 using Clr2Ts.Transpiler.Transpilation.TypeScript;
 using System;
 using System.IO;
@@ -21,7 +22,10 @@ namespace Clr2Ts.Cli
             var assemblyScanner = new AssemblyScanner();
             var types = assemblyFiles.SelectMany(af => assemblyScanner.GetTypesForTranspilation(af));
 
-            var transpiler = new TypeScriptTranspiler(new EmbeddedResourceTemplatingEngine(), new AssemblyXmlDocumentationSource());
+            var transpiler = new TypeScriptTranspiler(
+                EmbeddedResourceTemplatingEngine.ForTypeScript(), 
+                new AssemblyXmlDocumentationSource());
+
             var result = transpiler.Transpile(types);
 
             foreach (var fragment in result.CodeFragments)

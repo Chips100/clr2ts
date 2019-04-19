@@ -5,13 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Transpilation\TypeScript\TypeScriptCodeTemplates\ClassDefinition.txt" />
-    <None Remove="Transpilation\TypeScript\TypeScriptCodeTemplates\PropertyDefinition.txt" />
+    <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\ClassDefinition.txt" />
+    <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\PropertyDefinition.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Transpilation\TypeScript\TypeScriptCodeTemplates\ClassDefinition.txt" />
-    <EmbeddedResource Include="Transpilation\TypeScript\TypeScriptCodeTemplates\PropertyDefinition.txt" />
+    <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\ClassDefinition.txt" />
+    <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\PropertyDefinition.txt" />
   </ItemGroup>
 
   <ItemGroup>

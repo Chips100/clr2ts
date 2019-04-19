@@ -1,4 +1,6 @@
 ﻿using Clr2Ts.Transpiler.Extensions;
+using Clr2Ts.Transpiler.Transpilation.Templating;
+using Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +11,11 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
     /// <summary>
     /// Allows transpiling .NET type definitions to TypeScript source code.
     /// </summary>
-    public sealed class TypeScriptTranspiler : ITranspiler
+    public sealed class TypeScriptTranspiler
     {
-        private ITemplatingEngine _templatingEngine;
-        private IDocumentationSource _documentationSource;
+        private readonly TypeReferenceTranslator _typeReferenceTranslator = new TypeReferenceTranslator();
+        private readonly ITemplatingEngine _templatingEngine;
+        private readonly IDocumentationSource _documentationSource;
 
         /// <summary>
         /// Creates a <see cref="TypeScriptTranspiler"/>.
@@ -41,13 +44,11 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
 
         private CodeFragment GenerateClassDefinition(Type type)
         {
-            var dependencies = type.GetDependencies().Select(CodeFragmentId.ForClrType);
-
             var code = _templatingEngine.UseTemplate("ClassDefinition", new Dictionary<string, string>
             {
-                { "ClassName", type.Name },
+                { "ClassDeclaration", type.Name },
                 { "Documentation", GenerateDocumentationComment(type) },
-                { "Properties", GeneratePropertyDefinitions(type).AddIndentation() }
+                { "Properties", GeneratePropertyDefinitions(type, out var dependencies).AddIndentation() }
             });
 
             return new CodeFragment(
@@ -56,15 +57,25 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
                 code);
         }
 
-        private string GeneratePropertyDefinitions(Type type)
+        private string GeneratePropertyDefinitions(Type type, out IEnumerable<CodeFragmentId> dependencies)
         {
-            return string.Join(Environment.NewLine, type.GetPropertiesForTranspilation()
-                .Select(p => _templatingEngine.UseTemplate("PropertyDefinition", new Dictionary<string, string>
+            var propertyCodeSnippets = new List<string>();
+            var deps = new List<CodeFragmentId>();
+
+            foreach(var property in type.GetProperties())
+            {
+                var typeReferenceTranslation = _typeReferenceTranslator.Translate(property.PropertyType);
+                deps.AddRange(typeReferenceTranslation.Dependencies);
+                propertyCodeSnippets.Add(_templatingEngine.UseTemplate("PropertyDefinition", new Dictionary<string, string>
                 {
-                    { "PropertyName", p.Name },
-                    { "Documentation", GenerateDocumentationComment(p) },
-                    { "PropertyType", p.PropertyType.ToTypeScriptName() }
-                })));
+                    { "PropertyName", property.Name },
+                    { "Documentation", GenerateDocumentationComment(property) },
+                    { "PropertyType", typeReferenceTranslation.ReferencedTypeName }
+                }));
+            }
+
+            dependencies = deps.Distinct().ToList();
+            return string.Join(Environment.NewLine, propertyCodeSnippets);
         }
         
         private string GenerateDocumentationComment(MemberInfo member)

@@ -1,0 +1,3 @@
+﻿[Documentation]export class [ClassDeclaration] {
+[Properties]
+}

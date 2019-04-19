@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Clr2Ts.Transpiler.Transpilation.TypeScript
+namespace Clr2Ts.Transpiler.Transpilation.Templating
 {
     /// <summary>
     /// Allows usage of templates with simple placeholders.
