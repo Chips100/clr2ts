@@ -1,5 +1,6 @@
 ﻿using Clr2Ts.Transpiler.Configuration.Files;
 using Clr2Ts.Transpiler.Input;
+using Clr2Ts.Transpiler.Logging;
 using Clr2Ts.Transpiler.Output;
 using Clr2Ts.Transpiler.Transpilation.Templating;
 using Clr2Ts.Transpiler.Transpilation.TypeScript;
@@ -47,13 +48,17 @@ namespace Clr2Ts.Cli
             // Change the current working directory based on the configuration file to allow relative paths.
             Environment.CurrentDirectory = configuration.ConfigurationFile.DirectoryName;
 
+            // Logging.
+            var logger = LoggerFactory.FromConfiguration(configuration);
+
             // Input.
-            var assemblyScanner = new AssemblyScanner();
+            var assemblyScanner = new AssemblyScanner(logger);
 
             // Transpilation.
             var transpiler = new TypeScriptTranspiler(
                 EmbeddedResourceTemplatingEngine.ForTypeScript(),
-                new AssemblyXmlDocumentationSource());
+                new AssemblyXmlDocumentationSource(),
+                logger);
 
             var result = transpiler.Transpile(assemblyScanner.GetTypesByConfiguration(configuration));
 

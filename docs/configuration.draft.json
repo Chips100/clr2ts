@@ -1,7 +1,7 @@
 {
 	"input": { 
 		"assemblyFiles": [
-			"../*.SampleAssembly.dll"
+			"../tests/*.SampleAssembly.dll"
 		]
 	},
 	"options": {

@@ -1,4 +1,5 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
+using Clr2Ts.Transpiler.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +13,18 @@ namespace Clr2Ts.Transpiler.Input
     /// </summary>
     public sealed class AssemblyScanner
     {
+        private readonly ILogger _logger;
+
+        /// <summary>
+        /// Creates an <see cref="AssemblyScanner"/>.
+        /// </summary>
+        /// <param name="logger">Logger to use for writing log messages.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="logger"/> is null.</exception>
+        public AssemblyScanner(ILogger logger)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
         /// <summary>
         /// Gets all types that should be transpiled according to the specified configuration.
         /// </summary>
@@ -39,6 +52,7 @@ namespace Clr2Ts.Transpiler.Input
         {
             // Support relative paths by resolving them first.
             var fileInfo = new FileInfo(assemblyFile);
+            _logger.WriteInformation($"Loading assembly for transpilation: {fileInfo.FullName}");
 
             // For now, just return all types of the assembly.
             return Assembly.LoadFile(fileInfo.FullName).GetTypes();

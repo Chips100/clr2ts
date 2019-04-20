@@ -1,5 +1,5 @@
 ﻿using Clr2Ts.Transpiler.Input;
-using System.Linq;
+using Clr2Ts.Transpiler.Tests.Mocks;
 using Xunit;
 
 namespace Clr2Ts.Transpiler.Tests.Input
@@ -17,7 +17,7 @@ namespace Clr2Ts.Transpiler.Tests.Input
         public void AssemblyScanner_GetTypesFromAssembly_ReturnsTypes()
         {
             // Just check for presence of this test type when scanning the current assembly.
-            var sut = new AssemblyScanner();
+            var sut = new AssemblyScanner(new LoggerMock());
             Assert.Contains(sut.GetTypesFromAssembly(GetType().Assembly.Location), 
                 t => t.Name == nameof(AssemblyScannerTests));
         }
@@ -29,7 +29,7 @@ namespace Clr2Ts.Transpiler.Tests.Input
         public void AssemblyScanner_GetTypesFromAssembly_SupportsRelativePaths()
         {
             // Just check for presence of this test type when scanning the current assembly.
-            var sut = new AssemblyScanner();
+            var sut = new AssemblyScanner(new LoggerMock());
             Assert.Contains(sut.GetTypesFromAssembly("Clr2Ts.Transpiler.Tests.dll"),
                 t => t.Name == nameof(AssemblyScannerTests));
         }
