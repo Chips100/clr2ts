@@ -76,10 +76,10 @@ namespace Clr2Ts.Cli
         private static ConfigurationRoot GetConfiguration(string configFile)
         {
             // Determine which configuration file to use.
-            var configFileInfo = string.IsNullOrWhiteSpace(configFile) ? new FileInfo(configFile)
+            var configFileInfo = !string.IsNullOrWhiteSpace(configFile) ? new FileInfo(configFile)
                 : SearchConfigurationFile(new DirectoryInfo(Environment.CurrentDirectory));
 
-            if (configFileInfo?.Exists ?? false)
+            if (!(configFileInfo?.Exists ?? false))
             {
                 throw new FileNotFoundException($"Could not find configuration file. {ConfigFileNotFoundHelpText}");
             }
