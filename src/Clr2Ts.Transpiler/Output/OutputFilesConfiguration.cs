@@ -1,4 +1,6 @@
-﻿namespace Clr2Ts.Transpiler.Configuration
+﻿using Clr2Ts.Transpiler.Configuration;
+
+namespace Clr2Ts.Transpiler.Output
 {
     /// <summary>
     /// Represents the configuration that specifies how the code should be written to individual files.

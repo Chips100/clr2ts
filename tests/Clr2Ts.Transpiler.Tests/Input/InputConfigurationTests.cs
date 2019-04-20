@@ -1,9 +1,10 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
+using Clr2Ts.Transpiler.Input;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Clr2Ts.Transpiler.Tests.Configuration
+namespace Clr2Ts.Transpiler.Tests.Input
 {
     /// <summary>
     /// Tests for <see cref="InputConfiguration"/>.

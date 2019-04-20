@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Clr2Ts.Transpiler.Configuration;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace Clr2Ts.Transpiler.Configuration
+namespace Clr2Ts.Transpiler.Input
 {
     /// <summary>
     /// Represents the input-specific configuration section for a transpilation process.
     /// </summary>
+    [ConfigurationSection("input")]
     public sealed class InputConfiguration
     {
         /// <summary>

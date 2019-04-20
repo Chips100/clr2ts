@@ -14,11 +14,11 @@ namespace Clr2Ts.Transpiler.Tests.Input
         /// types defined in the specified assembly.
         /// </summary>
         [Fact]
-        public void AssemblyScanner_GetTypesForTranspilation_ReturnsTypes()
+        public void AssemblyScanner_GetTypesFromAssembly_ReturnsTypes()
         {
             // Just check for presence of this test type when scanning the current assembly.
             var sut = new AssemblyScanner();
-            Assert.Contains(sut.GetTypesForTranspilation(GetType().Assembly.Location), 
+            Assert.Contains(sut.GetTypesFromAssembly(GetType().Assembly.Location), 
                 t => t.Name == nameof(AssemblyScannerTests));
         }
 
@@ -26,11 +26,11 @@ namespace Clr2Ts.Transpiler.Tests.Input
         /// The <see cref="AssemblyScanner"/> should support relative paths for assemblies.
         /// </summary>
         [Fact]
-        public void AssemblyScanner_GetTypesForTranspilation_SupportsRelativePaths()
+        public void AssemblyScanner_GetTypesFromAssembly_SupportsRelativePaths()
         {
             // Just check for presence of this test type when scanning the current assembly.
             var sut = new AssemblyScanner();
-            Assert.Contains(sut.GetTypesForTranspilation("Clr2Ts.Transpiler.Tests.dll"),
+            Assert.Contains(sut.GetTypesFromAssembly("Clr2Ts.Transpiler.Tests.dll"),
                 t => t.Name == nameof(AssemblyScannerTests));
         }
     }

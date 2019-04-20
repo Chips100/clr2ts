@@ -1,8 +1,11 @@
-﻿namespace Clr2Ts.Transpiler.Configuration
+﻿using Clr2Ts.Transpiler.Configuration;
+
+namespace Clr2Ts.Transpiler.Output
 {
     /// <summary>
     /// Represents the output-specific configuration section for a transpilation process.
     /// </summary>
+    [ConfigurationSection("output")]
     public sealed class OutputConfiguration
     {
         /// <summary>
