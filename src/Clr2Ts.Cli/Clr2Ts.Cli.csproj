@@ -6,7 +6,7 @@
     <ToolCommandName>clr2ts</ToolCommandName>
     <PackageOutputPath>../../dist</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.1.2</Version>
+    <Version>0.1.4</Version>
     <Authors>Dennis Janiak</Authors>
     <Company />
     <Product>clr2ts</Product>
@@ -15,7 +15,8 @@
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chips100/clr2ts</RepositoryUrl>
     <PackageTags>CLR TypeScript .NET C#</PackageTags>
-    <PackageReleaseNotes>First release as nuget package (dotnet tool).</PackageReleaseNotes>
+    <PackageReleaseNotes>Add support for more use cases (generics, collections, automatic transpilation of dependencies).
+Extend configuration (filter types by attribute or base type).</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

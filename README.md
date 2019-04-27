@@ -34,6 +34,9 @@ A configuration file may look like this:
     "input": { 
         "assemblyFiles": [
             "./Path/To/Your/Assembly.dll"
+        ],
+        "typeFilters": [
+            { "hasAttribute": ["AttributeName"] }
         ]
     },
     "output": {
