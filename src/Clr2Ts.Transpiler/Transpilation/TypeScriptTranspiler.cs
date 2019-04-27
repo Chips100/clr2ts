@@ -48,12 +48,28 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
             return TranspileDependencies(result);
         }
 
+        private CodeFragment GenerateClassDefinition(Type type)
+        {
+            _logger.WriteInformation($"Translating type {type}.");
+            var code = _templatingEngine.UseTemplate("ClassDefinition", new Dictionary<string, string>
+            {
+                { "ClassDeclaration", type.GetNameWithGenericTypeParameters() },
+                { "Documentation", GenerateDocumentationComment(type) },
+                { "Properties", GeneratePropertyDefinitions(type, out var dependencies).AddIndentation() }
+            });
+
+            return new CodeFragment(
+                CodeFragmentId.ForClrType(type),
+                dependencies,
+                code);
+        }
+
         private TranspilationResult TranspileDependencies(TranspilationResult currentResult)
         {
             while (currentResult.GetUnresolvedDependencies().Any())
             {
                 var codeFragments = new List<CodeFragment>();
-                foreach(var dependency in currentResult.GetUnresolvedDependencies())
+                foreach (var dependency in currentResult.GetUnresolvedDependencies())
                 {
                     if (!dependency.TryRecreateClrType(out var type))
                     {
@@ -67,22 +83,6 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
             }
 
             return currentResult;
-        }
-
-        private CodeFragment GenerateClassDefinition(Type type)
-        {
-            _logger.WriteInformation($"Translating type {type}.");
-            var code = _templatingEngine.UseTemplate("ClassDefinition", new Dictionary<string, string>
-            {
-                { "ClassDeclaration", type.Name },
-                { "Documentation", GenerateDocumentationComment(type) },
-                { "Properties", GeneratePropertyDefinitions(type, out var dependencies).AddIndentation() }
-            });
-
-            return new CodeFragment(
-                CodeFragmentId.ForClrType(type),
-                dependencies,
-                code);
         }
 
         private string GeneratePropertyDefinitions(Type type, out IEnumerable<CodeFragmentId> dependencies)

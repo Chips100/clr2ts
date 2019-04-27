@@ -23,10 +23,12 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _strategies = new ITypeReferenceTranslationStrategy[]
             {
+                new GenericArgumentTranslationStrategy(this),
                 new NullableTypeTranslationStrategy(this),
                 new BuiltInTypeTranslationStrategy(this),
                 new DictionaryTypeTranslationStrategy(this),
                 new CollectionTypeTranslationStrategy(this),
+                new GenericTypeTranslationStrategy(this),
                 new DefaultTranslationStrategy()
             };
         }

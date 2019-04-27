@@ -20,5 +20,10 @@
         /// Some sample nullable integer property.
         /// </summary>
         public int? SampleNullableInt { get; set; }
+
+        /// <summary>
+        /// Example for a reference to a generic type.
+        /// </summary>
+        public GenericClass<string, string> GenericDependency { get; set; }
     }
 }

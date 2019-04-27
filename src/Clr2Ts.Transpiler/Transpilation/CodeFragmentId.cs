@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Clr2Ts.Transpiler.Extensions;
+using System;
 
 namespace Clr2Ts.Transpiler.Transpilation
 {
@@ -53,7 +54,7 @@ namespace Clr2Ts.Transpiler.Transpilation
             if (type == null) throw new ArgumentNullException(nameof(type));
 
             // Use the full name (namespace + type name) of the type for referencing the code fragment.
-            return new CodeFragmentId(type.FullName, type);
+            return new CodeFragmentId($"{type.Namespace}.{type.GetNameWithoutGenericTypeParamters()}", type);
         }
 
         public override string ToString() => Name;
