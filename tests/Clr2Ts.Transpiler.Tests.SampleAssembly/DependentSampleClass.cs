@@ -14,6 +14,11 @@ namespace Clr2Ts.Transpiler.Tests.SampleAssembly
         public IEnumerable<SampleClass> Dependency { get; set; }
 
         /// <summary>
+        /// Property with a dictionary.
+        /// </summary>
+        public IDictionary<string, SampleClass> DictionaryDependencies { get; set; }
+
+        /// <summary>
         /// Normal property.
         /// </summary>
         public string OtherProperty { get; set; }

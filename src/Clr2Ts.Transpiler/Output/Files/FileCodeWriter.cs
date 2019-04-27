@@ -52,9 +52,9 @@ namespace Clr2Ts.Transpiler.Output.Files
                 foreach (var dependency in codeFragment.Dependencies)
                 {
                     writer.WriteLine(GetImportFor(codeFragment.Id, dependency));
-                    writer.WriteLine();
                 }
 
+                writer.WriteLine();
                 writer.Write(codeFragment.Code);
             }
         }

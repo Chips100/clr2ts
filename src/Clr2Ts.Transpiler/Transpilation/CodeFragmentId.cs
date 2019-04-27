@@ -38,7 +38,7 @@ namespace Clr2Ts.Transpiler.Transpilation
             return new CodeFragmentId(type.FullName);
         }
 
-        public override bool Equals(object obj) => Name.Equals(obj);
+        public override bool Equals(object obj) => Name.Equals((obj as CodeFragmentId)?.Name);
         public override int GetHashCode() => Name.GetHashCode();
     }
 }

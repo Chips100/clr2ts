@@ -1,1 +1,2 @@
-﻿[Documentation]public [PropertyName]: [PropertyType] = null;
+﻿
+[Documentation]public [PropertyName]: [PropertyType] = null;
