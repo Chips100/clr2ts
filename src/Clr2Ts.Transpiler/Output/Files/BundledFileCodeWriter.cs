@@ -37,6 +37,8 @@ namespace Clr2Ts.Transpiler.Output.Files
                 foreach (var fragment in codeFragments)
                 {
                     writer.Write(fragment.Code);
+                    writer.WriteLine();
+                    writer.WriteLine();
                 }
             }
         }

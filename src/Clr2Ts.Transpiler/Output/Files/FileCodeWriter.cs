@@ -32,6 +32,9 @@ namespace Clr2Ts.Transpiler.Output.Files
         /// <param name="codeFragments">Code fragments that should be written.</param>
         public void Write(IEnumerable<CodeFragment> codeFragments)
         {
+            // Clean the target directory first.
+            if (Directory.Exists(_directory)) Directory.Delete(_directory, true);
+
             foreach(var fragment in codeFragments)
             {
                 WriteCodeFragment(fragment);
