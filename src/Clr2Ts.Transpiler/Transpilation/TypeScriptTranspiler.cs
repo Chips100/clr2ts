@@ -44,7 +44,29 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
         {
             if (types == null) throw new ArgumentNullException(nameof(types));
 
-            return new TranspilationResult(types.Select(GenerateClassDefinition));
+            var result = new TranspilationResult(types.Select(GenerateClassDefinition));
+            return TranspileDependencies(result);
+        }
+
+        private TranspilationResult TranspileDependencies(TranspilationResult currentResult)
+        {
+            while (currentResult.GetUnresolvedDependencies().Any())
+            {
+                var codeFragments = new List<CodeFragment>();
+                foreach(var dependency in currentResult.GetUnresolvedDependencies())
+                {
+                    if (!dependency.TryRecreateClrType(out var type))
+                    {
+                        throw new InvalidOperationException($"Detected unresolvable dependency that could not be transpiled: {dependency}");
+                    }
+
+                    codeFragments.Add(GenerateClassDefinition(type));
+                }
+
+                currentResult = currentResult.AddCodeFragments(codeFragments);
+            }
+
+            return currentResult;
         }
 
         private CodeFragment GenerateClassDefinition(Type type)

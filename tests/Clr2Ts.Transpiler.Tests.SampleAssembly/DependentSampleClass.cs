@@ -16,7 +16,7 @@ namespace Clr2Ts.Transpiler.Tests.SampleAssembly
         /// <summary>
         /// Property with a dictionary.
         /// </summary>
-        public IDictionary<string, SampleClass> DictionaryDependencies { get; set; }
+        public IDictionary<string, TransitiveDependency> DictionaryDependencies { get; set; }
 
         /// <summary>
         /// Normal property.
