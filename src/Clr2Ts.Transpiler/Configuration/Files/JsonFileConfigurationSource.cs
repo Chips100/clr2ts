@@ -40,7 +40,7 @@ namespace Clr2Ts.Transpiler.Configuration.Files
         public T GetSection<T>()
         {
             var sectionName = ConfigurationSectionAttribute.GetSectionName<T>();
-            if (!_root.ContainsKey(sectionName)) return default(T);
+            if (!_root.ContainsKey(sectionName)) return default;
 
             try
             {
