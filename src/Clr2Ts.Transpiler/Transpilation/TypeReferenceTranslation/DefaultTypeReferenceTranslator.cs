@@ -25,6 +25,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation
             {
                 new NullableTypeTranslationStrategy(this),
                 new BuiltInTypeTranslationStrategy(this),
+                new CollectionTypeTranslationStrategy(this),
                 new DefaultTranslationStrategy()
             };
         }

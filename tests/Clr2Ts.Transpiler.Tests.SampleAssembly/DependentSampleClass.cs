@@ -1,4 +1,6 @@
-﻿namespace Clr2Ts.Transpiler.Tests.SampleAssembly
+﻿using System.Collections.Generic;
+
+namespace Clr2Ts.Transpiler.Tests.SampleAssembly
 {
     /// <summary>
     /// Example for a type that references another transpiled type.
@@ -9,7 +11,7 @@
         /// <summary>
         /// Property that references another type.
         /// </summary>
-        public SampleClass Dependency { get; set; }
+        public IEnumerable<SampleClass> Dependency { get; set; }
 
         /// <summary>
         /// Normal property.
