@@ -40,7 +40,8 @@ namespace Clr2Ts.Transpiler.Input
                     .EnumerateFiles(x, SearchOption.AllDirectories)
                     .Select(f => f.FullName));
 
-            return assemblyFiles.SelectMany(GetTypesFromAssembly);
+            return assemblyFiles.SelectMany(GetTypesFromAssembly)
+                .Where(configuration.TypeFilter.IsMatch);
         }
 
         /// <summary>

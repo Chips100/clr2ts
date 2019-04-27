@@ -1,4 +1,8 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
+using Clr2Ts.Transpiler.Filters;
+using Clr2Ts.Transpiler.Filters.ConfigurationAdapters;
+using Clr2Ts.Transpiler.Filters.TypeFilters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,8 +18,9 @@ namespace Clr2Ts.Transpiler.Input
         /// Creates an <see cref="InputConfiguration"/>.
         /// </summary>
         /// <param name="assemblyFiles">Names of the assembly files that should be transpiled.</param>
+        /// <param name="typeFilters">Filters that should be used to determine which types should be transpiled.</param>
         /// <exception cref="ConfigurationException">Thrown when <paramref name="assemblyFiles"/> is null or empty.</exception>
-        public InputConfiguration(IEnumerable<string> assemblyFiles)
+        public InputConfiguration(IEnumerable<string> assemblyFiles, IEnumerable<TypeFilterConfigurationAdapter> typeFilters = null)
         {
             if (assemblyFiles == null || !assemblyFiles.Any())
             {
@@ -23,11 +28,17 @@ namespace Clr2Ts.Transpiler.Input
             }
 
             AssemblyFiles = assemblyFiles.ToList();
+            TypeFilter = CompositeFilter.Or(typeFilters ?? Enumerable.Empty<IFilter<Type>>());
         }
 
         /// <summary>
         /// Gets the names of the assembly files that should be transpiled.
         /// </summary>
         public IEnumerable<string> AssemblyFiles { get; }
+
+        /// <summary>
+        /// Gets the filter that should be used to determine which types should be transpiled.
+        /// </summary>
+        public IFilter<Type> TypeFilter { get; }
     }
 }

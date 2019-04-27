@@ -3,6 +3,7 @@
     /// <summary>
     /// Example for a type that references another transpiled type.
     /// </summary>
+    [Sample]
     public class DependentSampleClass
     {
         /// <summary>

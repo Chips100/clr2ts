@@ -3,6 +3,7 @@
     /// <summary>
     /// Sample class for unit tests.
     /// </summary>
+    [Sample]
     public class SampleClass
     {
         /// <summary>

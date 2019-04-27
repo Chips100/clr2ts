@@ -2,17 +2,14 @@
 	"input": { 
 		"assemblyFiles": [
 			"../tests/*.SampleAssembly.dll"
+		],
+		"typeFilters": [
+			{
+				"hasAttribute": ["Sample", "Attribute2"]
+			}
 		]
 	},
 	"options": {
-		"typeFilters": [
-			{
-				"subTypeOf": ["ISample1", "ISample2"]
-			},
-			{
-				"subTypeOf": ["ISample3"]
-			}
-		],
 		"customTypeMaps": [
 			{ "SampleBase": "@library/sample-base.ts" },
 			{ "OtherBase": "@library/other-base.ts" }
