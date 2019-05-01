@@ -4,9 +4,9 @@
 			"../tests/*.SampleAssembly.dll"
 		],
 		"typeFilters": [
-			{
-				"hasAttribute": ["Sample", "Attribute2"]
-			}
+      {
+        "hasAttribute": ["Sample"]
+      }
 		]
 	},
 	"transpilation": {
