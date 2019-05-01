@@ -36,7 +36,13 @@ A configuration file may look like this:
             "./Path/To/Your/Assembly.dll"
         ],
         "typeFilters": [
-            { "hasAttribute": ["AttributeName"] }
+            // Define multiple filters for OR-semantics.
+            {
+                // Multiple values in a single filter for AND-semantics.
+                "hasAttribute": ["AttributeName"],
+                "subTypeOf": "BaseType",
+                "namespace": "Namespace.SubNamespace"
+            }
         ]
     },
     "output": {
