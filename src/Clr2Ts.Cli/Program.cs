@@ -52,19 +52,20 @@ namespace Clr2Ts.Cli
             var logger = LoggerFactory.FromConfiguration(configuration);
 
             // Input.
-            var assemblyScanner = new AssemblyScanner(logger);
+            using (var assemblyScanner = new AssemblyScanner(logger))
+            {
+                // Transpilation.
+                var transpiler = new TypeScriptTranspiler(
+                    EmbeddedResourceTemplatingEngine.ForTypeScript(),
+                    new AssemblyXmlDocumentationSource(),
+                    logger);
 
-            // Transpilation.
-            var transpiler = new TypeScriptTranspiler(
-                EmbeddedResourceTemplatingEngine.ForTypeScript(),
-                new AssemblyXmlDocumentationSource(),
-                logger);
+                var result = transpiler.Transpile(assemblyScanner.GetTypesByConfiguration(configuration));
 
-            var result = transpiler.Transpile(assemblyScanner.GetTypesByConfiguration(configuration));
-
-            // Output.
-            var writer = CodeWriterFactory.FromConfiguration(configuration);
-            writer.Write(result.CodeFragments);
+                // Output.
+                var writer = CodeWriterFactory.FromConfiguration(configuration);
+                writer.Write(result.CodeFragments);
+            }
         }
     }
 }

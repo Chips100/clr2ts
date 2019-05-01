@@ -4,4 +4,7 @@
     <OutputPath>bin\</OutputPath>
     <DocumentationFile>bin\Clr2Ts.Transpiler.Tests.SampleAssembly.xml</DocumentationFile>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Clr2Ts.Transpiler.Tests.SampleDependency\Clr2Ts.Transpiler.Tests.SampleDependency.csproj" />
+  </ItemGroup>
 </Project>
