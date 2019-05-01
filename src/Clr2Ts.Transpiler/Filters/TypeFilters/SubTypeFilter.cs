@@ -26,7 +26,7 @@ namespace Clr2Ts.Transpiler.Filters.TypeFilters
             if (item == null) throw new ArgumentNullException(nameof(item));
 
             // Search for implemented interfaces as well as base classes.
-            return _baseTypeNames.Any(x => IsSubTypeOf(item, x));
+            return _baseTypeNames.All(x => IsSubTypeOf(item, x));
         }
 
         /// <summary>

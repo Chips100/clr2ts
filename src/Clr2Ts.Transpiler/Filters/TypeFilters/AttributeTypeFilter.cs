@@ -32,7 +32,7 @@ namespace Clr2Ts.Transpiler.Filters.TypeFilters
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            return GetAttributeNamesOfType(item).Any(_acceptedAttributeNames.Contains);
+            return GetAttributeNamesOfType(item).All(_acceptedAttributeNames.Contains);
         }
 
         private IEnumerable<string> GetAttributeNamesOfType(Type type)
