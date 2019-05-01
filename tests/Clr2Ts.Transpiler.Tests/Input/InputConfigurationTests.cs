@@ -35,5 +35,17 @@ namespace Clr2Ts.Transpiler.Tests.Input
             original.Add("4");
             Assert.Equal(3, inputConfiguration.AssemblyFiles.Count());
         }
+
+        /// <summary>
+        /// If the typefilter section has been omitted in the input configuration,
+        /// the filter should return true for any type.
+        /// </summary>
+        [Fact]
+        public void InputConfiguration_EmptyTypeFilter_ReturnsTrue()
+        {
+            var inputConfiguration = new InputConfiguration(new[] { "Assembly" }, null);
+
+            Assert.True(inputConfiguration.TypeFilter.IsMatch(GetType()));
+        }
     }
 }

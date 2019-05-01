@@ -28,7 +28,7 @@ namespace Clr2Ts.Transpiler.Input
             }
 
             AssemblyFiles = assemblyFiles.ToList();
-            TypeFilter = CompositeFilter.Or(typeFilters ?? Enumerable.Empty<IFilter<Type>>());
+            TypeFilter = typeFilters != null ? CompositeFilter.Or(typeFilters) : ConstantFilter.Create<Type>(true);
         }
 
         /// <summary>
