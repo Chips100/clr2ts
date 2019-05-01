@@ -9,7 +9,7 @@ namespace Clr2Ts.Transpiler.Filters.TypeFilters
     /// </summary>
     public sealed class AttributeTypeFilter : IFilter<Type>
     {
-        private readonly HashSet<string> _acceptedAttributeNames;
+        private readonly IEnumerable<string> _attributeNames;
 
         /// <summary>
         /// Creates a <see cref="AttributeTypeFilter"/>.
@@ -19,8 +19,7 @@ namespace Clr2Ts.Transpiler.Filters.TypeFilters
         {
             if (attributeNames == null) throw new ArgumentNullException(nameof(attributeNames));
 
-            _acceptedAttributeNames = new HashSet<string>(
-                attributeNames.SelectMany(GetAcceptedAttributeNames));
+            _attributeNames = attributeNames.ToList();
         }
 
         /// <summary>
@@ -32,7 +31,8 @@ namespace Clr2Ts.Transpiler.Filters.TypeFilters
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            return GetAttributeNamesOfType(item).All(_acceptedAttributeNames.Contains);
+            var attributesOfType = new HashSet<string>(GetAttributeNamesOfType(item));
+            return _attributeNames.All(x => GetAcceptedAttributeNames(x).Any(attributesOfType.Contains));
         }
 
         private IEnumerable<string> GetAttributeNamesOfType(Type type)
