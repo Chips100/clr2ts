@@ -107,7 +107,7 @@ namespace Clr2Ts.Transpiler.Configuration.Files
             {
                 // Look for config file in current directory.
                 var configFiles = directory.GetFiles(ConfigFilePattern);
-                if (configFiles.Length == 1) configFiles.Single();
+                if (configFiles.Length == 1) return configFiles.Single();
 
                 // Multiple matches result in unresolvable conflicts for now.
                 if (configFiles.Length > 1)
