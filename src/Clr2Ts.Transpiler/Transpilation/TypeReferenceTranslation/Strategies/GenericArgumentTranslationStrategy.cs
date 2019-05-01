@@ -6,7 +6,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
     /// <summary>
     /// Strategy for translating a reference to a generic type argument.
     /// </summary>
-    public sealed class GenericArgumentTranslationStrategy: ITypeReferenceTranslator
+    public sealed class GenericArgumentTranslationStrategy: ITypeReferenceTranslationStrategy
     {
         /// <summary>
         /// Is overridden to define which type references can be translated by this strategy.
