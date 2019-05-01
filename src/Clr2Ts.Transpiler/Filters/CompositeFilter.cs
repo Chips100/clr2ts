@@ -19,7 +19,7 @@ namespace Clr2Ts.Transpiler.Filters
             => new CompositeFilterImplementation<T>(filters, x => x.Any(y => y()));
 
         /// <summary>
-        /// Creates a filter that evaluates to <see langword="true" /> iff at all underlying filters evaluate to <see langword="true" />.
+        /// Creates a filter that evaluates to <see langword="true" /> iff all underlying filters evaluate to <see langword="true" />.
         /// </summary>
         /// <typeparam name="T">Type of the items that the filter can be applied to.</typeparam>
         /// <param name="filters">Underlying filters that should be combined.</param>
