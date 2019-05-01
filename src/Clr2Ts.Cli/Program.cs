@@ -56,6 +56,7 @@ namespace Clr2Ts.Cli
             {
                 // Transpilation.
                 var transpiler = new TypeScriptTranspiler(
+                    configuration,
                     EmbeddedResourceTemplatingEngine.ForTypeScript(),
                     new AssemblyXmlDocumentationSource(),
                     logger);

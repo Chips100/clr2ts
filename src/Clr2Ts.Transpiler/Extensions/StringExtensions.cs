@@ -9,6 +9,19 @@ namespace Clr2Ts.Transpiler.Extensions
     public static class StringExtensions
     {
         /// <summary>
+        /// Converts a name from PascalCase to camelCase.
+        /// </summary>
+        /// <param name="input">Input in PascalCase.</param>
+        /// <returns>The name in camelCase.</returns>
+        public static string ToCamelCase(this string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+
+            // Just convert the first character to lower case.
+            return input.Substring(0, 1).ToLower() + input.Substring(1);
+        }
+        
+        /// <summary>
         /// Indents all lines of the specified string by the specified number of tabs.
         /// </summary>
         /// <param name="input">String with the lines that should be indented.</param>

@@ -1,4 +1,5 @@
-﻿using Clr2Ts.Transpiler.Extensions;
+﻿using Clr2Ts.Transpiler.Configuration;
+using Clr2Ts.Transpiler.Extensions;
 using Clr2Ts.Transpiler.Logging;
 using Clr2Ts.Transpiler.Transpilation.Templating;
 using Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation;
@@ -18,20 +19,27 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
         private readonly ITemplatingEngine _templatingEngine;
         private readonly IDocumentationSource _documentationSource;
         private readonly ILogger _logger;
+        private readonly TranspilationConfiguration _configuration;
 
         /// <summary>
         /// Creates a <see cref="TypeScriptTranspiler"/>.
         /// </summary>
+        /// <param name="configurationSource">Source for the configuration that should be used.</param>
         /// <param name="templatingEngine">Engine to use for loading templates.</param>
         /// <param name="documentationSource">Source for looking up documentation comments for members.</param>
         /// <param name="logger">Logger to use for writing log messages.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="templatingEngine"/> or <paramref name="documentationSource"/> or <paramref name="logger"/> is null.</exception>
-        public TypeScriptTranspiler(ITemplatingEngine templatingEngine, IDocumentationSource documentationSource, ILogger logger)
+        public TypeScriptTranspiler(IConfigurationSource configurationSource, ITemplatingEngine templatingEngine, IDocumentationSource documentationSource, ILogger logger)
         {
+            if (configurationSource == null) throw new ArgumentNullException(nameof(configurationSource));
+
             _templatingEngine = templatingEngine ?? throw new ArgumentNullException(nameof(templatingEngine));
             _documentationSource = documentationSource ?? throw new ArgumentNullException(nameof(documentationSource));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _typeReferenceTranslator = new DefaultTypeReferenceTranslator(logger);
+
+            _configuration = configurationSource.GetSection<TranspilationConfiguration>()
+                ?? TranspilationConfiguration.Default;
         }
 
         /// <summary>
@@ -98,7 +106,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
                 deps.AddRange(typeReferenceTranslation.Dependencies);
                 propertyCodeSnippets.Add(_templatingEngine.UseTemplate("PropertyDefinition", new Dictionary<string, string>
                 {
-                    { "PropertyName", property.Name },
+                    { "PropertyName", GetTypeScriptPropertyName(property) },
                     { "Documentation", GenerateDocumentationComment(property) },
                     { "PropertyType", typeReferenceTranslation.ReferencedTypeName }
                 }));
@@ -107,6 +115,9 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
             dependencies = deps.Distinct().ToList();
             return string.Join(Environment.NewLine, propertyCodeSnippets);
         }
+
+        private string GetTypeScriptPropertyName(PropertyInfo property)
+            => _configuration.CamelCase ? property.Name.ToCamelCase() : property.Name;
         
         private string GenerateDocumentationComment(MemberInfo member)
         {

@@ -1,7 +1,6 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using Clr2Ts.Transpiler.Filters;
 using Clr2Ts.Transpiler.Filters.ConfigurationAdapters;
-using Clr2Ts.Transpiler.Filters.TypeFilters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
