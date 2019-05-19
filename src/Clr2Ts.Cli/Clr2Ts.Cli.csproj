@@ -6,7 +6,7 @@
     <ToolCommandName>clr2ts</ToolCommandName>
     <PackageOutputPath>../../dist</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.1.5</Version>
+    <Version>0.1.6</Version>
     <Authors>Dennis Janiak</Authors>
     <Company />
     <Product>clr2ts</Product>
