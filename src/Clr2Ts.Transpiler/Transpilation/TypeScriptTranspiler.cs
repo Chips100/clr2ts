@@ -1,45 +1,25 @@
-﻿using Clr2Ts.Transpiler.Configuration;
-using Clr2Ts.Transpiler.Extensions;
-using Clr2Ts.Transpiler.Logging;
-using Clr2Ts.Transpiler.Transpilation.Templating;
-using Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation;
+﻿using Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Clr2Ts.Transpiler.Transpilation.TypeScript
 {
     /// <summary>
-    /// Allows transpiling .NET type definitions to TypeScript source code.
+    /// Allows transpiling a set of interdependent .NET type definitions to TypeScript source code.
     /// </summary>
     public sealed class TypeScriptTranspiler
     {
-        private readonly ITypeReferenceTranslator _typeReferenceTranslator;
-        private readonly ITemplatingEngine _templatingEngine;
-        private readonly IDocumentationSource _documentationSource;
-        private readonly ILogger _logger;
-        private readonly TranspilationConfiguration _configuration;
+        private ITypeDefinitionTranslator _typeDefinitionTranslator;
 
         /// <summary>
         /// Creates a <see cref="TypeScriptTranspiler"/>.
         /// </summary>
-        /// <param name="configurationSource">Source for the configuration that should be used.</param>
-        /// <param name="templatingEngine">Engine to use for loading templates.</param>
-        /// <param name="documentationSource">Source for looking up documentation comments for members.</param>
-        /// <param name="logger">Logger to use for writing log messages.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="templatingEngine"/> or <paramref name="documentationSource"/> or <paramref name="logger"/> is null.</exception>
-        public TypeScriptTranspiler(IConfigurationSource configurationSource, ITemplatingEngine templatingEngine, IDocumentationSource documentationSource, ILogger logger)
+        /// <param name="typeDefinitionTranslator">Translator used to translate type definitions.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeDefinitionTranslator"/> is null.</exception>
+        public TypeScriptTranspiler(ITypeDefinitionTranslator typeDefinitionTranslator)
         {
-            if (configurationSource == null) throw new ArgumentNullException(nameof(configurationSource));
-
-            _templatingEngine = templatingEngine ?? throw new ArgumentNullException(nameof(templatingEngine));
-            _documentationSource = documentationSource ?? throw new ArgumentNullException(nameof(documentationSource));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _typeReferenceTranslator = new DefaultTypeReferenceTranslator(logger);
-
-            _configuration = configurationSource.GetSection<TranspilationConfiguration>()
-                ?? TranspilationConfiguration.Default;
+            _typeDefinitionTranslator = typeDefinitionTranslator ?? throw new ArgumentNullException(nameof(typeDefinitionTranslator));
         }
 
         /// <summary>
@@ -52,24 +32,8 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
         {
             if (types == null) throw new ArgumentNullException(nameof(types));
 
-            var result = new TranspilationResult(types.Select(GenerateClassDefinition));
+            var result = new TranspilationResult(types.Select(_typeDefinitionTranslator.Translate));
             return TranspileDependencies(result);
-        }
-
-        private CodeFragment GenerateClassDefinition(Type type)
-        {
-            _logger.WriteInformation($"Translating type {type}.");
-            var code = _templatingEngine.UseTemplate("ClassDefinition", new Dictionary<string, string>
-            {
-                { "ClassDeclaration", type.GetNameWithGenericTypeParameters() },
-                { "Documentation", GenerateDocumentationComment(type) },
-                { "Properties", GeneratePropertyDefinitions(type, out var dependencies).AddIndentation() }
-            });
-
-            return new CodeFragment(
-                CodeFragmentId.ForClrType(type),
-                dependencies,
-                code);
         }
 
         private TranspilationResult TranspileDependencies(TranspilationResult currentResult)
@@ -84,50 +48,13 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
                         throw new InvalidOperationException($"Detected unresolvable dependency that could not be transpiled: {dependency}");
                     }
 
-                    codeFragments.Add(GenerateClassDefinition(type));
+                    codeFragments.Add(_typeDefinitionTranslator.Translate(type));
                 }
 
                 currentResult = currentResult.AddCodeFragments(codeFragments);
             }
 
             return currentResult;
-        }
-
-        private string GeneratePropertyDefinitions(Type type, out IEnumerable<CodeFragmentId> dependencies)
-        {
-            var propertyCodeSnippets = new List<string>();
-            var deps = new List<CodeFragmentId>();
-
-            foreach(var property in type.GetProperties())
-            {
-                _logger.WriteInformation($"Translating property {property.Name} on type {type}.");
-
-                var typeReferenceTranslation = _typeReferenceTranslator.Translate(property.PropertyType);
-                deps.AddRange(typeReferenceTranslation.Dependencies);
-                propertyCodeSnippets.Add(_templatingEngine.UseTemplate("PropertyDefinition", new Dictionary<string, string>
-                {
-                    { "PropertyName", GetTypeScriptPropertyName(property) },
-                    { "Documentation", GenerateDocumentationComment(property) },
-                    { "PropertyType", typeReferenceTranslation.ReferencedTypeName }
-                }));
-            }
-
-            dependencies = deps.Distinct().ToList();
-            return string.Join(Environment.NewLine, propertyCodeSnippets);
-        }
-
-        private string GetTypeScriptPropertyName(PropertyInfo property)
-            => _configuration.CamelCase ? property.Name.ToCamelCase() : property.Name;
-        
-        private string GenerateDocumentationComment(MemberInfo member)
-        {
-            var documentation = _documentationSource.GetDocumentationText(member);
-            if (string.IsNullOrWhiteSpace(documentation)) return null;
-
-            return $@"/**
- * {documentation}
- */
-";
         }
     }
 }

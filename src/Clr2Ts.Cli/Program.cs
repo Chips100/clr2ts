@@ -3,6 +3,7 @@ using Clr2Ts.Transpiler.Input;
 using Clr2Ts.Transpiler.Logging;
 using Clr2Ts.Transpiler.Output;
 using Clr2Ts.Transpiler.Transpilation.Templating;
+using Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation;
 using Clr2Ts.Transpiler.Transpilation.TypeScript;
 using System;
 using System.Linq;
@@ -55,12 +56,13 @@ namespace Clr2Ts.Cli
             using (var assemblyScanner = new AssemblyScanner(logger))
             {
                 // Transpilation.
-                var transpiler = new TypeScriptTranspiler(
+                var definitionTranslator = new DefaultTypeDefinitionTranslator(
                     configuration,
                     EmbeddedResourceTemplatingEngine.ForTypeScript(),
                     new AssemblyXmlDocumentationSource(),
                     logger);
 
+                var transpiler = new TypeScriptTranspiler(definitionTranslator);
                 var result = transpiler.Transpile(assemblyScanner.GetTypesByConfiguration(configuration));
 
                 // Output.
