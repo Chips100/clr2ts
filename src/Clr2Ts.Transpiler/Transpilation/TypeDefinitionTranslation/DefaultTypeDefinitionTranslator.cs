@@ -35,7 +35,8 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation
             _strategies = new ITypeDefinitionTranslationStrategy[]
             {
                 new ClassDefinitionTranslationStrategy(configurationSource, templatingEngine, documentationSource, logger),
-                new EnumDefinitionTranslator(configurationSource, templatingEngine, documentationSource, logger)
+                new InterfaceDefinitionTranslationStrategy(configurationSource, templatingEngine, documentationSource, logger),
+                new EnumDefinitionTranslationStrategy(configurationSource, templatingEngine, documentationSource, logger)
             };
         }
 

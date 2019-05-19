@@ -10,19 +10,19 @@ using System.Reflection;
 namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
 {
     /// <summary>
-    /// Strategy for translating definitions of class types.
+    /// Strategy for translating definitions of interface types.
     /// </summary>
-    public sealed class ClassDefinitionTranslationStrategy : TranslationStrategyBase
+    public sealed class InterfaceDefinitionTranslationStrategy : TranslationStrategyBase
     {
         /// <summary>
-        /// Creates a <see cref="ClassDefinitionTranslationStrategy"/>.
+        /// Creates a <see cref="EnumDefinitionTranslator"/>.
         /// </summary>
         /// <param name="configurationSource">Source for the configuration that should be used.</param>
         /// <param name="templatingEngine">Engine to use for loading templates.</param>
         /// <param name="documentationSource">Source for looking up documentation comments for members.</param>
         /// <param name="logger">Logger to use for writing log messages.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="templatingEngine"/> or <paramref name="documentationSource"/> or <paramref name="logger"/> is null.</exception>
-        public ClassDefinitionTranslationStrategy(IConfigurationSource configurationSource, ITemplatingEngine templatingEngine, IDocumentationSource documentationSource, ILogger logger)
+        public InterfaceDefinitionTranslationStrategy(IConfigurationSource configurationSource, ITemplatingEngine templatingEngine, IDocumentationSource documentationSource, ILogger logger)
             : base(configurationSource, templatingEngine, documentationSource, logger)
         { }
 
@@ -32,7 +32,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <param name="type">Type definition that should be translated.</param>
         /// <returns>True, if this strategy can be used to translate the specified type definition; otherwise false.</returns>
         protected override bool CanTranslate(Type type)
-            => type.IsClass;
+            => type.IsInterface;
 
         /// <summary>
         /// Is overridden to define how the type definition is translated by this strategy.
@@ -42,9 +42,9 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <returns>Result of the translation.</returns>
         protected override CodeFragment Translate(Type type, ITemplatingEngine templatingEngine)
         {
-            var code = templatingEngine.UseTemplate("ClassDefinition", new Dictionary<string, string>
+            var code = templatingEngine.UseTemplate("InterfaceDefinition", new Dictionary<string, string>
             {
-                { "ClassDeclaration", type.GetNameWithGenericTypeParameters() },
+                { "InterfaceDeclaration", type.GetNameWithGenericTypeParameters() },
                 { "Documentation", GenerateDocumentationComment(type) },
                 { "Properties", GeneratePropertyDefinitions(type, templatingEngine, out var dependencies).AddIndentation() }
             });
@@ -66,7 +66,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
 
                 var typeReferenceTranslation = TypeReferenceTranslator.Translate(property.PropertyType);
                 deps.AddRange(typeReferenceTranslation.Dependencies);
-                propertyCodeSnippets.Add(templatingEngine.UseTemplate("ClassPropertyDefinition", new Dictionary<string, string>
+                propertyCodeSnippets.Add(templatingEngine.UseTemplate("InterfacePropertyDefinition", new Dictionary<string, string>
                 {
                     { "PropertyName", GetTypeScriptPropertyName(property) },
                     { "Documentation", GenerateDocumentationComment(property) },

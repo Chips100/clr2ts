@@ -35,5 +35,10 @@
         /// Sample property that holds an enum value with a different underlying type.
         /// </summary>
         public SampleLongEnum LongEnumProperty { get; set; }
+
+        /// <summary>
+        /// Sample property that references an interface type.
+        /// </summary>
+        public SampleInterface InterfaceProperty { get; set; }
     }
 }

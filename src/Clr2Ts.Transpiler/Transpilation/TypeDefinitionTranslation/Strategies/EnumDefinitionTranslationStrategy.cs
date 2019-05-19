@@ -11,7 +11,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
     /// <summary>
     /// Strategy for translating definitions of enum types.
     /// </summary>
-    public sealed class EnumDefinitionTranslator : TranslationStrategyBase
+    public sealed class EnumDefinitionTranslationStrategy : TranslationStrategyBase
     {
         /// <summary>
         /// Creates a <see cref="EnumDefinitionTranslator"/>.
@@ -21,7 +21,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <param name="documentationSource">Source for looking up documentation comments for members.</param>
         /// <param name="logger">Logger to use for writing log messages.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="templatingEngine"/> or <paramref name="documentationSource"/> or <paramref name="logger"/> is null.</exception>
-        public EnumDefinitionTranslator(IConfigurationSource configurationSource, ITemplatingEngine templatingEngine, IDocumentationSource documentationSource, ILogger logger)
+        public EnumDefinitionTranslationStrategy(IConfigurationSource configurationSource, ITemplatingEngine templatingEngine, IDocumentationSource documentationSource, ILogger logger)
             : base(configurationSource, templatingEngine, documentationSource, logger)
         { }
 
