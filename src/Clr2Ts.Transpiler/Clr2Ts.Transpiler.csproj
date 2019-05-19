@@ -6,11 +6,18 @@
 
   <ItemGroup>
     <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\ClassDefinition.txt" />
+    <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\EnumDefinition.txt" />
+    <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\EnumValue.txt" />
     <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\PropertyDefinition.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\EnumDefinition.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\ClassDefinition.txt" />
+    <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\EnumValue.txt" />
     <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\PropertyDefinition.txt" />
   </ItemGroup>
 

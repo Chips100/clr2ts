@@ -27,6 +27,7 @@ namespace Clr2Ts.Cli
             }
             catch(Exception exception)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"{exception}");
                 Environment.ExitCode = 1;
             }

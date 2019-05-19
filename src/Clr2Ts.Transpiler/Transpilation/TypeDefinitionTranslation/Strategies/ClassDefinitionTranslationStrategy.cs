@@ -26,7 +26,6 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             : base(configurationSource, templatingEngine, documentationSource, logger)
         { }
 
-
         /// <summary>
         /// Is overridden to define which type definitions can be translated by this strategy.
         /// </summary>

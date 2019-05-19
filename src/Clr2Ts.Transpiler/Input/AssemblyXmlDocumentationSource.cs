@@ -46,6 +46,10 @@ namespace Clr2Ts.Transpiler.Input
             {
                 return $"P:{property.DeclaringType.FullName}.{property.Name}";
             }
+            else if (member is FieldInfo field)
+            {
+                return $"F:{field.DeclaringType.FullName}.{field.Name}";
+            }
 
             throw new ArgumentOutOfRangeException($"Unsupported MemberInfo for documentation: {member.GetType()}");
         }

@@ -25,5 +25,15 @@
         /// Example for a reference to a generic type.
         /// </summary>
         public GenericClass<string, string> GenericDependency { get; set; }
+
+        /// <summary>
+        /// Sample property that holds an enum value.
+        /// </summary>
+        public SampleEnum EnumProperty { get; set; }
+
+        /// <summary>
+        /// Sample property that holds an enum value with a different underlying type.
+        /// </summary>
+        public SampleLongEnum LongEnumProperty { get; set; }
     }
 }
