@@ -26,6 +26,24 @@
     <None Update="configuration.sample.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Configuration\Files\SampleDirectoryWithConfigFile\my.clr2ts.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Configuration\Files\SampleDirectoryWithMultipleConfigFiles\first.clr2ts.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Configuration\Files\SampleDirectoryWithMultipleConfigFiles\second.clr2ts.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Configuration\Files\SampleDirectoryWithoutConfigFile\otherconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Configuration\Files\SampleDirectoryWithSubDirectory\my.clr2ts.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Configuration\Files\SampleDirectoryWithSubDirectory\SampleSubDirectoryWithConfigFile\otherconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
