@@ -6,7 +6,7 @@
     <ToolCommandName>clr2ts</ToolCommandName>
     <PackageOutputPath>../../dist</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.1.6</Version>
+    <Version>0.1.7</Version>
     <Authors>Dennis Janiak</Authors>
     <Company />
     <Product>clr2ts</Product>
@@ -15,8 +15,7 @@
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chips100/clr2ts</RepositoryUrl>
     <PackageTags>CLR TypeScript .NET C#</PackageTags>
-    <PackageReleaseNotes>Add support for more use cases (generics, collections, automatic transpilation of dependencies).
-Extend configuration (filter types by attribute or base type).</PackageReleaseNotes>
+    <PackageReleaseNotes>BugFix for self-recursive type definitions.</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
