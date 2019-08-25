@@ -15,7 +15,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
     public sealed class InterfaceDefinitionTranslationStrategy : TranslationStrategyBase
     {
         /// <summary>
-        /// Creates a <see cref="EnumDefinitionTranslator"/>.
+        /// Creates a <see cref="InterfaceDefinitionTranslationStrategy"/>.
         /// </summary>
         /// <param name="configurationSource">Source for the configuration that should be used.</param>
         /// <param name="templatingEngine">Engine to use for loading templates.</param>
@@ -74,7 +74,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 }));
             }
 
-            dependencies = deps.Distinct().ToList();
+            dependencies = deps;
             return string.Join(Environment.NewLine, propertyCodeSnippets);
         }
 

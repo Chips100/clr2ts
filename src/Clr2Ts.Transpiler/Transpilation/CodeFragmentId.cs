@@ -60,5 +60,11 @@ namespace Clr2Ts.Transpiler.Transpilation
         public override string ToString() => Name;
         public override bool Equals(object obj) => Name.Equals((obj as CodeFragmentId)?.Name);
         public override int GetHashCode() => Name.GetHashCode();
+
+        public static bool operator ==(CodeFragmentId a, CodeFragmentId b)
+            => a?.Equals(b) ?? b == null;
+
+        public static bool operator !=(CodeFragmentId a, CodeFragmentId b)
+            => !(a == b);
     }
 }

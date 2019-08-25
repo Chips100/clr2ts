@@ -23,8 +23,12 @@ namespace Clr2Ts.Transpiler.Transpilation
             if (string.IsNullOrWhiteSpace(code)) throw new ArgumentException("Code cannot be empty.", nameof(code));
 
             Id = id ?? throw new ArgumentNullException(nameof(id));
-            Dependencies = dependencies.ToList();
             Code = code;
+            Dependencies = dependencies
+                // A code fragment does not need to indicate a dependency on itself.
+                .Where(d => d != id)
+                .Distinct()
+                .ToList();
         }
 
         /// <summary>

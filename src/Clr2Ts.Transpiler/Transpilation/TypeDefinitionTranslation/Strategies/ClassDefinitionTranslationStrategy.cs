@@ -74,7 +74,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 }));
             }
 
-            dependencies = deps.Distinct().ToList();
+            dependencies = deps;
             return string.Join(Environment.NewLine, propertyCodeSnippets);
         }
 

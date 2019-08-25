@@ -15,10 +15,9 @@
         /// </summary>
         public ExampleClass1 DependencyOtherType { get; set; }
 
-        /*
         /// <summary>
         /// Example for a dependency on the type itself.
         /// </summary>
-        public ExampleClass2 DependencySelfRecursive { get; set; }*/
+        public ExampleClass2 DependencySelfRecursive { get; set; }
     }
 }
