@@ -1,0 +1,10 @@
+{
+  "input": {
+    "assemblyFiles": [
+      "../Clr2Ts.EndToEnd.Targets.dll"
+    ]
+  },
+  "output": {
+    "bundledFile": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/bundled/bundle.ts"
+  }
+}

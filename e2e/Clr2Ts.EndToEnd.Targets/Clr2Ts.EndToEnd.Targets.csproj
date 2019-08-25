@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>bin\Clr2Ts.EndToEnd.Targets.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="configs\config.files-flat.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="configs\config.bundled.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet &quot;$(SolutionDir)\src\Clr2Ts.Cli\bin\$(Configuration)\netcoreapp2.1\Clr2Ts.Cli.dll&quot; &quot;$(OutDir)\configs\config.bundled.json&quot;" />
+    <Exec Command="dotnet &quot;$(SolutionDir)\src\Clr2Ts.Cli\bin\$(Configuration)\netcoreapp2.1\Clr2Ts.Cli.dll&quot; &quot;$(OutDir)\configs\config.files-flat.json&quot;" />
+  </Target>
+</Project>
