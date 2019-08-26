@@ -46,11 +46,21 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void StringExtensions_AddIndentation_IndentsLines()
         {
             var expectedIndentation = "\t\t";
-            Assert.Equal($@"{expectedIndentation}Line 1
-{expectedIndentation}Line 2
-{expectedIndentation}Line 3", @"Line 1
-Line 2
-Line 3".AddIndentation(2));
+            var expected = string.Join(Environment.NewLine, new[]
+            {
+                $"{expectedIndentation}Line 1",
+                $"{expectedIndentation}Line 2",
+                $"{expectedIndentation}Line 3"
+            });
+
+            var actual = string.Join(Environment.NewLine, new[]
+            {
+                "Line 1",
+                "Line 2",
+                "Line 3"
+            }).AddIndentation(2);
+
+            Assert.Equal(actual, expected);
         }
 
         /// <summary>
@@ -60,11 +70,21 @@ Line 3".AddIndentation(2));
         public void StringExtensions_AddIndentation_KeepsEmptyLines()
         {
             var expectedIndentation = "\t\t";
-            Assert.Equal($@"{expectedIndentation}Line 1
+            var expected = string.Join(Environment.NewLine, new[]
+            {
+                $"{expectedIndentation}Line 1",
+                $"",
+                $"{expectedIndentation}Line 3"
+            });
 
-{expectedIndentation}Line 3", @"Line 1
+            var actual = string.Join(Environment.NewLine, new[]
+            {
+                "Line 1",
+                "",
+                "Line 3"
+            }).AddIndentation(2);
 
-Line 3".AddIndentation(2));
+            Assert.Equal(actual, expected);
         }
 
         /// <summary>
