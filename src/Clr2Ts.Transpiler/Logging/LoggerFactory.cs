@@ -1,5 +1,6 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using Clr2Ts.Transpiler.Logging.Console;
+using Clr2Ts.Transpiler.Logging.File;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,11 @@ namespace Clr2Ts.Transpiler.Logging
             if (configuration.Console)
             {
                 loggers.Add(new ConsoleLogger());
+            }
+
+            if (!string.IsNullOrWhiteSpace(configuration.File))
+            {
+                loggers.Add(new FileLogger(configuration.File));
             }
 
             return new CompositeLogger(loggers);

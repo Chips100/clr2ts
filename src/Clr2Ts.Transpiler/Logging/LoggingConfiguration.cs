@@ -12,14 +12,21 @@ namespace Clr2Ts.Transpiler.Logging
         /// Creates a <see cref="LoggingConfiguration"/>.
         /// </summary>
         /// <param name="console">True, if log messages should be written to the console.</param>
-        public LoggingConfiguration(bool console)
+        /// <param name="file">Path to a file that should be written to.</param>
+        public LoggingConfiguration(bool console, string file)
         {
             Console = console;
+            File = file;
         }
 
         /// <summary>
         /// Gets a value indicating if log messages should be written to the console.
         /// </summary>
         public bool Console { get; }
+
+        /// <summary>
+        /// Gets the path to a file that should be written to; or null if no file logging should be used.
+        /// </summary>
+        public string File { get; }
     }
 }
