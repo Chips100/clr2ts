@@ -1,5 +1,6 @@
 # clr2ts
 [![Build Status](https://travis-ci.com/Chips100/clr2ts.svg?branch=master)](https://travis-ci.com/Chips100/clr2ts)
+[![Build status](https://ci.appveyor.com/api/projects/status/242dl9xb86ua6220?svg=true)](https://ci.appveyor.com/project/Chips100/clr2ts)
 ![GitHub](https://img.shields.io/github/license/Chips100/clr2ts.svg)
 ![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/clr2ts.svg)
 
