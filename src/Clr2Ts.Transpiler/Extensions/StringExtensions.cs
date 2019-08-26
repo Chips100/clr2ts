@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Clr2Ts.Transpiler.Extensions
 {
@@ -41,6 +43,48 @@ namespace Clr2Ts.Transpiler.Extensions
             return string.Join(Environment.NewLine, input
                 .Split(new[] { Environment.NewLine }, StringSplitOptions.None)
                 .Select(line => $"{indentation}{line}".TrimEnd()));
+        }
+
+        /// <summary>
+        /// Uses the current string as a template with placeholders to
+        /// be filled with values from the specified context.
+        /// </summary>
+        /// <param name="template">String that is used as the template.</param>
+        /// <param name="context">Context that holds the values to be inserted into the template.</param>
+        /// <returns>The template string filled with values from the context.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="context"/> is null.</exception>
+        public static string FormatWith(this string template, IDictionary<string, object> context)
+        {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
+            // Early exit for empty string.
+            if (string.IsNullOrWhiteSpace(template)) return string.Empty;
+
+            // Regex that finds placeholders enclosed by curly braces,
+            // e.g. "Hello, { ContextValue.Name }!". Respects escaping of opening curly braces.
+            return new Regex(@"(?<!\\){[^}]*}")
+                // Replace placeholders in template string
+                // by inserting values from the context.
+                .Replace(template, match => EvaluateTemplateContext(match.Value, context))
+
+                // Unescape characters that have been escaped
+                // to not be matched by the templating process.
+                .Replace(@"\{", "{");
+        }
+
+        private static string EvaluateTemplateContext(string path, IDictionary<string, object> context)
+        {
+            var cleanPath = path.Trim('{', '}').Replace(" ", string.Empty);
+            var pathElements = new Queue<string>(cleanPath.Split('.'));
+
+            // Follow the path in the object's properties.
+            context.TryGetValue(pathElements.Dequeue(), out var obj);
+            while (obj != null && pathElements.Any())
+            {
+                obj = obj.GetType().GetProperty(pathElements.Dequeue()).GetValue(obj);
+            }
+
+            return obj?.ToString();
         }
     }
 }
