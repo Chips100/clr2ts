@@ -63,7 +63,7 @@ namespace Clr2Ts.Cli
                     new AssemblyXmlDocumentationSource(),
                     logger);
 
-                var transpiler = new TypeScriptTranspiler(definitionTranslator);
+                var transpiler = new TypeScriptTranspiler(configuration, definitionTranslator);
                 var result = transpiler.Transpile(assemblyScanner.GetTypesByConfiguration(configuration));
 
                 // Output.

@@ -1,5 +1,6 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using Clr2Ts.Transpiler.Logging;
+using Clr2Ts.Transpiler.Transpilation.Configuration;
 using Clr2Ts.Transpiler.Transpilation.Templating;
 using Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation;
 using System;
@@ -31,7 +32,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             _documentationSource = documentationSource ?? throw new ArgumentNullException(nameof(documentationSource));
 
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            TypeReferenceTranslator = new DefaultTypeReferenceTranslator(logger);
+            TypeReferenceTranslator = new DefaultTypeReferenceTranslator(configurationSource, logger);
             Configuration = configurationSource.GetSection<TranspilationConfiguration>()
                 ?? TranspilationConfiguration.Default;
         }

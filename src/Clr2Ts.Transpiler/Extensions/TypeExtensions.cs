@@ -39,7 +39,7 @@ namespace Clr2Ts.Transpiler.Extensions
         /// </summary>
         /// <param name="type">Type for which the name should be retreived.</param>
         /// <returns>The name of the type without its generic type parameters; or simply its name if the type is not generic.</returns>
-        public static string GetNameWithoutGenericTypeParamters(this Type type)
+        public static string GetNameWithoutGenericTypeParameters(this Type type)
             => type.GetNameWithReplacedTypeParameters(_ => string.Empty);
 
         private static string GetNameWithReplacedTypeParameters(this Type type, Func<Type, string> replacement)

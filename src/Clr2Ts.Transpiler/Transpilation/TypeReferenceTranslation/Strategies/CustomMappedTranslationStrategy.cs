@@ -1,21 +1,20 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
-using Clr2Ts.Transpiler.Extensions;
 using System;
 using System.Linq;
 
 namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
 {
     /// <summary>
-    /// Strategy for translating a reference to a generic type.
+    /// Strategy for translating a reference to a mapped type.
     /// </summary>
-    public sealed class GenericTypeTranslationStrategy : TranslationStrategyBase
+    public sealed class CustomMappedTranslationStrategy : TranslationStrategyBase
     {
         /// <summary>
-        /// Creates a <see cref="GenericTypeTranslationStrategy"/>.
+        /// Creates a <see cref="CustomMappedTranslationStrategy"/>.
         /// </summary>
         /// <param name="configurationSource">Source for the configuration that should be used.</param>
         /// <param name="translator">Full translator that can be used to translate parts of the complete type reference.</param>
-        public GenericTypeTranslationStrategy(IConfigurationSource configurationSource, ITypeReferenceTranslator translator)
+        public CustomMappedTranslationStrategy(IConfigurationSource configurationSource, ITypeReferenceTranslator translator)
             : base(configurationSource, translator)
         { }
 
@@ -25,7 +24,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <param name="type">Type reference that should be translated.</param>
         /// <returns>True, if this strategy can be used to translate the specified type reference; otherwise false.</returns>
         protected override bool CanTranslate(Type type)
-            => type.IsGenericType;
+            => Configuration.CustomTypeMaps.Any(m => m.MapsType(type));
 
         /// <summary>
         /// Is overridden to define how the type reference is translated by this strategy.
@@ -35,13 +34,10 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <returns>Result of the translation.</returns>
         protected override TypeReferenceTranslationResult Translate(Type referencedType, ITypeReferenceTranslator translator)
         {
-            var translatedTypeArguments = referencedType.GetGenericArguments().Select(translator.Translate);
-            var referencedTypeName = referencedType.GetNameWithoutGenericTypeParameters()
-                + $"<{ string.Join(", ", translatedTypeArguments.Select(x => x.ReferencedTypeName)) }>";
+            var map = Configuration.CustomTypeMaps.FirstOrDefault(m => m.MapsType(referencedType));
 
-            return new TypeReferenceTranslationResult(referencedTypeName,
-                CodeDependencies.FromCodeFragments(new[] { CodeFragmentId.ForClrType(referencedType.GetGenericTypeDefinition()) })
-                    .Merge(translatedTypeArguments.Aggregate(CodeDependencies.Empty, (x, n) => x.Merge(n.Dependencies))));
+            return new TypeReferenceTranslationResult(
+                map.Name, CodeDependencies.FromImports(new[] { new Import(map.Name, map.Source) }));
         }
     }
 }

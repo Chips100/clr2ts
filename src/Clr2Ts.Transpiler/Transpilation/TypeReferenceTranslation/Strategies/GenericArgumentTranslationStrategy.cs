@@ -23,6 +23,6 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <returns>Result of the translation.</returns>
         public TypeReferenceTranslationResult Translate(Type referencedType)
             // Simple: Generic parameters are available by their name.
-            => new TypeReferenceTranslationResult(referencedType.Name, Enumerable.Empty<CodeFragmentId>());
+            => new TypeReferenceTranslationResult(referencedType.Name, CodeDependencies.Empty);
     }
 }

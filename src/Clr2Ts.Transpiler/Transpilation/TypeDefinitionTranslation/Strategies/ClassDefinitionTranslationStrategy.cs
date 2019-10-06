@@ -57,14 +57,15 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         private string GeneratePropertyDefinitions(Type type, ITemplatingEngine templatingEngine, out CodeDependencies dependencies)
         {
             var propertyCodeSnippets = new List<string>();
-            var deps = new List<CodeFragmentId>();
+            var deps = CodeDependencies.Empty;
 
             foreach (var property in type.GetProperties())
             {
                 Logger.WriteInformation($"Translating property {property.Name} on type {type}.");
 
                 var typeReferenceTranslation = TypeReferenceTranslator.Translate(property.PropertyType);
-                deps.AddRange(typeReferenceTranslation.Dependencies);
+                deps = deps.Merge(typeReferenceTranslation.Dependencies);
+
                 propertyCodeSnippets.Add(templatingEngine.UseTemplate("ClassPropertyDefinition", new Dictionary<string, string>
                 {
                     { "PropertyName", GetTypeScriptPropertyName(property) },
@@ -73,7 +74,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 }));
             }
 
-            dependencies = CodeDependencies.FromCodeFragments(deps);
+            dependencies = deps;
             return string.Join(Environment.NewLine, propertyCodeSnippets);
         }
 

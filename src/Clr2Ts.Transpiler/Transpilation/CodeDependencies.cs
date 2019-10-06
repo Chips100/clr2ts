@@ -40,9 +40,27 @@ namespace Clr2Ts.Transpiler.Transpilation
         /// <returns>The set of dependencies without the specified code fragment.</returns>
         public CodeDependencies WithoutCodeFragment(CodeFragmentId id)
         {
+            if (id == null) throw new ArgumentNullException(nameof(id));
+
             return new CodeDependencies(
                 CodeFragments.Except(new[] { id }),
                 Imports);
+        }
+
+        /// <summary>
+        /// Merges this set of dependencies with another set of dependencies.
+        /// </summary>
+        /// <param name="dependencies">Other dependencies that should be added onto the current dependencies.</param>
+        /// <returns>A set of dependencies that contains all dependencies of the merged sets.</returns>
+        public CodeDependencies Merge(CodeDependencies dependencies)
+        {
+            if (dependencies == null) throw new ArgumentNullException(nameof(dependencies));
+
+            // Just concatenate the sequences; distinct is done
+            // in construction of the resulting set.
+            return new CodeDependencies(
+                CodeFragments.Concat(dependencies.CodeFragments),
+                Imports.Concat(dependencies.Imports));
         }
 
         /// <summary>
@@ -64,6 +82,19 @@ namespace Clr2Ts.Transpiler.Transpilation
             if (ids == null) throw new ArgumentNullException(nameof(ids));
 
             return new CodeDependencies(ids, Enumerable.Empty<Import>());
+        }
+
+        /// <summary>
+        /// Creates a set of dependencies referencing the specified imports
+        /// of TypeScript artifacts defined outside of the transpiled codebase.
+        /// </summary>
+        /// <param name="imports">Imports of TypeScript artifacts that should make up the set of dependencies.</param>
+        /// <returns>A set of dependencies referencing the specified TypeScript artifacts.</returns>
+        public static CodeDependencies FromImports(IEnumerable<Import> imports)
+        {
+            if (imports == null) throw new ArgumentNullException(nameof(imports));
+
+            return new CodeDependencies(Enumerable.Empty<CodeFragmentId>(), imports);
         }
     }
 }

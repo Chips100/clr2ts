@@ -1,0 +1,21 @@
+{
+  "input": {
+    "assemblyFiles": [
+      "../Clr2Ts.EndToEnd.Targets.dll"
+    ]
+  },
+  "transpilation": {
+    "customTypeMaps": [
+      {
+        "type": "Clr2Ts.EndToEnd.Targets.ExampleClass1",
+        "name": "CustomType",
+        "source": "../../CustomType"
+      }
+    ]
+  },
+  "output": {
+    "files": {
+      "directory": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/custom-map"
+    }
+  }
+}

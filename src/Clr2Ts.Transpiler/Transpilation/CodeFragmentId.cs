@@ -54,7 +54,7 @@ namespace Clr2Ts.Transpiler.Transpilation
             if (type == null) throw new ArgumentNullException(nameof(type));
 
             // Use the full name (namespace + type name) of the type for referencing the code fragment.
-            return new CodeFragmentId($"{type.Namespace}.{type.GetNameWithoutGenericTypeParamters()}", type);
+            return new CodeFragmentId($"{type.Namespace}.{type.GetNameWithoutGenericTypeParameters()}", type);
         }
 
         public override string ToString() => Name;

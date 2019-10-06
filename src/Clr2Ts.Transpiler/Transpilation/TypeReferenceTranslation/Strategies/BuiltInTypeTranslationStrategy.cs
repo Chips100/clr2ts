@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Clr2Ts.Transpiler.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,8 +29,10 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <summary>
         /// Creates a <see cref="BuiltInTypeTranslationStrategy"/>.
         /// </summary>
+        /// <param name="configurationSource">Source for the configuration that should be used.</param>
         /// <param name="translator">Full translator that can be used to translate parts of the complete type reference.</param>
-        public BuiltInTypeTranslationStrategy(ITypeReferenceTranslator translator) : base(translator)
+        public BuiltInTypeTranslationStrategy(IConfigurationSource configurationSource, ITypeReferenceTranslator translator)
+            : base(configurationSource, translator)
         { }
 
         /// <summary>
@@ -47,6 +50,6 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <param name="translator">Full translator that can be used to translate parts of the complete type reference.</param>
         /// <returns>Result of the translation.</returns>
         protected override TypeReferenceTranslationResult Translate(Type referencedType, ITypeReferenceTranslator translator)
-            => new TypeReferenceTranslationResult(BuiltInTypes[referencedType], Enumerable.Empty<CodeFragmentId>());
+            => new TypeReferenceTranslationResult(BuiltInTypes[referencedType], CodeDependencies.Empty);
     }
 }

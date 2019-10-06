@@ -1,4 +1,6 @@
-﻿using Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation;
+﻿using Clr2Ts.Transpiler.Configuration;
+using Clr2Ts.Transpiler.Transpilation.Configuration;
+using Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +12,19 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
     /// </summary>
     public sealed class TypeScriptTranspiler
     {
-        private ITypeDefinitionTranslator _typeDefinitionTranslator;
+        private readonly ITypeDefinitionTranslator _typeDefinitionTranslator;
+        private readonly TranspilationConfiguration _configuration;
 
         /// <summary>
         /// Creates a <see cref="TypeScriptTranspiler"/>.
         /// </summary>
         /// <param name="typeDefinitionTranslator">Translator used to translate type definitions.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeDefinitionTranslator"/> is null.</exception>
-        public TypeScriptTranspiler(ITypeDefinitionTranslator typeDefinitionTranslator)
+        public TypeScriptTranspiler(IConfigurationSource configurationSource, ITypeDefinitionTranslator typeDefinitionTranslator)
         {
+            if (configurationSource == null) throw new ArgumentNullException(nameof(configurationSource));
+
+            _configuration = configurationSource.GetSection<TranspilationConfiguration>() ?? TranspilationConfiguration.Default;
             _typeDefinitionTranslator = typeDefinitionTranslator ?? throw new ArgumentNullException(nameof(typeDefinitionTranslator));
         }
 
@@ -31,6 +37,10 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
         public TranspilationResult Transpile(IEnumerable<Type> types)
         {
             if (types == null) throw new ArgumentNullException(nameof(types));
+
+            // Only translate type definitions that are
+            // not mapped to custom TypeScript types.
+            types = types.Where(t => !_configuration.CustomTypeMaps.Any(m => m.MapsType(t)));
 
             var result = new TranspilationResult(types.Select(_typeDefinitionTranslator.Translate));
             return TranspileDependencies(result);

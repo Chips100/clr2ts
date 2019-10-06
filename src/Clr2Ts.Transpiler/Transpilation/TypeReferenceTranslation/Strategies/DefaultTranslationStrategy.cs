@@ -22,6 +22,8 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <param name="translator">Full translator that can be used to translate parts of the complete type reference.</param>
         /// <returns>Result of the translation.</returns>
         public TypeReferenceTranslationResult Translate(Type referencedType)
-            => new TypeReferenceTranslationResult(referencedType.Name, new[] { CodeFragmentId.ForClrType(referencedType) });
+            => new TypeReferenceTranslationResult(
+                referencedType.Name, 
+                CodeDependencies.FromCodeFragments(new[] { CodeFragmentId.ForClrType(referencedType) }));
     }
 }

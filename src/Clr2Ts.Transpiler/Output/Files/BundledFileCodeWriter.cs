@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Clr2Ts.Transpiler.Output.Files
@@ -34,6 +35,12 @@ namespace Clr2Ts.Transpiler.Output.Files
 
             using (var writer = new StreamWriter(_file, false, Encoding.UTF8))
             {
+                // Import artifacts defined outside of the transpiled codebase.
+                foreach (var import in codeFragments.SelectMany(x => x.Dependencies.Imports).Distinct())
+                {
+                    writer.WriteLine(GetImportFor(import));
+                }
+
                 foreach (var fragment in codeFragments)
                 {
                     writer.Write(fragment.Code);
@@ -42,5 +49,8 @@ namespace Clr2Ts.Transpiler.Output.Files
                 }
             }
         }
+
+        private string GetImportFor(Import import)
+            => $"import {{ {import.Name} }} from '{import.ImportSource}';";
     }
 }

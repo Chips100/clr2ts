@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Clr2Ts.EndToEnd.Targets
+﻿namespace Clr2Ts.EndToEnd.Targets
 {
     /// <summary>
     /// Simple example class type.

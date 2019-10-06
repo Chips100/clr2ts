@@ -1,4 +1,5 @@
-﻿using Clr2Ts.Transpiler.Logging;
+﻿using Clr2Ts.Transpiler.Configuration;
+using Clr2Ts.Transpiler.Logging;
 using Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies;
 using System;
 using System.Collections.Generic;
@@ -17,18 +18,20 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation
         /// <summary>
         /// Creates a <see cref="DefaultTypeReferenceTranslator"/>.
         /// </summary>
+        /// <param name="configurationSource">Source for the configuration that should be used.</param>
         /// <param name="logger">Logger to use for writing log messages.</param>
-        public DefaultTypeReferenceTranslator(ILogger logger)
+        public DefaultTypeReferenceTranslator(IConfigurationSource configurationSource, ILogger logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _strategies = new ITypeReferenceTranslationStrategy[]
             {
                 new GenericArgumentTranslationStrategy(),
-                new NullableTypeTranslationStrategy(this),
-                new BuiltInTypeTranslationStrategy(this),
-                new DictionaryTypeTranslationStrategy(this),
-                new CollectionTypeTranslationStrategy(this),
-                new GenericTypeTranslationStrategy(this),
+                new NullableTypeTranslationStrategy(configurationSource, this),
+                new BuiltInTypeTranslationStrategy(configurationSource, this),
+                new DictionaryTypeTranslationStrategy(configurationSource, this),
+                new CollectionTypeTranslationStrategy(configurationSource, this),
+                new GenericTypeTranslationStrategy(configurationSource, this),
+                new CustomMappedTranslationStrategy(configurationSource, this),
                 new DefaultTranslationStrategy()
             };
         }

@@ -52,6 +52,13 @@ namespace Clr2Ts.Transpiler.Output.Files
 
             using (var writer = new StreamWriter(file, false, Encoding.UTF8))
             {
+                // Import artifacts defined outside of the transpiled codebase.
+                foreach (var import in codeFragment.Dependencies.Imports)
+                {
+                    writer.WriteLine(GetImportFor(import));
+                }
+
+                // Import other transpiled code fragments that this fragment depends on.
                 foreach (var dependency in codeFragment.Dependencies.CodeFragments)
                 {
                     writer.WriteLine(GetImportFor(codeFragment.Id, dependency));
@@ -102,7 +109,10 @@ namespace Clr2Ts.Transpiler.Output.Files
                     parts.Take(parts.Length - 1).Select(p => $"{p}/"));
             }
 
-            return $"import {{ {parts.Last()} }} from './{subdirectory}{ parts.Last() }'";
+            return $"import {{ {parts.Last()} }} from './{subdirectory}{ parts.Last() }';";
         }
+
+        private string GetImportFor(Import import)
+            => $"import {{ {import.Name} }} from '{import.ImportSource}';";
     }
 }

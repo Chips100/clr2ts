@@ -1,0 +1,3 @@
+﻿# Ignore compiled output of tsc for CustomType.ts
+*.js
+*.js.map
