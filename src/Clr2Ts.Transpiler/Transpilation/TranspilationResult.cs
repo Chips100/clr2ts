@@ -48,7 +48,7 @@ namespace Clr2Ts.Transpiler.Transpilation
             var resolvable = new HashSet<CodeFragmentId>(CodeFragments.Select(x => x.Id));
 
             return CodeFragments
-                .SelectMany(x => x.Dependencies)
+                .SelectMany(x => x.Dependencies.CodeFragments)
                 .Where(x => !resolvable.Contains(x));
         }
     }

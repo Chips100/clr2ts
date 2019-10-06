@@ -50,8 +50,8 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
 
             return new CodeFragment(
                 CodeFragmentId.ForClrType(type),
-                Enumerable.Empty<CodeFragmentId>(),
-                code);
+                code,
+                CodeDependencies.Empty);
         }
 
         private string GenerateEnumValues(Type type, ITemplatingEngine templatingEngine)

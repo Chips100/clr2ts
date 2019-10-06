@@ -52,7 +52,7 @@ namespace Clr2Ts.Transpiler.Output.Files
 
             using (var writer = new StreamWriter(file, false, Encoding.UTF8))
             {
-                foreach (var dependency in codeFragment.Dependencies)
+                foreach (var dependency in codeFragment.Dependencies.CodeFragments)
                 {
                     writer.WriteLine(GetImportFor(codeFragment.Id, dependency));
                 }

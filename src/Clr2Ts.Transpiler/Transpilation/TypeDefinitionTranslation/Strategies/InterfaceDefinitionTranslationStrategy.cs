@@ -4,7 +4,6 @@ using Clr2Ts.Transpiler.Logging;
 using Clr2Ts.Transpiler.Transpilation.Templating;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
@@ -51,11 +50,11 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
 
             return new CodeFragment(
                 CodeFragmentId.ForClrType(type),
-                dependencies,
-                code);
+                code,
+                dependencies);
         }
 
-        private string GeneratePropertyDefinitions(Type type, ITemplatingEngine templatingEngine, out IEnumerable<CodeFragmentId> dependencies)
+        private string GeneratePropertyDefinitions(Type type, ITemplatingEngine templatingEngine, out CodeDependencies dependencies)
         {
             var propertyCodeSnippets = new List<string>();
             var deps = new List<CodeFragmentId>();
@@ -74,7 +73,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 }));
             }
 
-            dependencies = deps;
+            dependencies = CodeDependencies.FromCodeFragments(deps);
             return string.Join(Environment.NewLine, propertyCodeSnippets);
         }
 
