@@ -30,8 +30,8 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation
                 new BuiltInTypeTranslationStrategy(configurationSource, this),
                 new DictionaryTypeTranslationStrategy(configurationSource, this),
                 new CollectionTypeTranslationStrategy(configurationSource, this),
-                new GenericTypeTranslationStrategy(configurationSource, this),
                 new CustomMappedTranslationStrategy(configurationSource, this),
+                new GenericTypeTranslationStrategy(configurationSource, this),
                 new DefaultTranslationStrategy()
             };
         }

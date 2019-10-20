@@ -10,6 +10,11 @@
         "type": "Clr2Ts.EndToEnd.Targets.ExampleClass1",
         "name": "CustomType",
         "source": "../../CustomType"
+      },
+      {
+        "type": "Clr2Ts.EndToEnd.Targets.GenericType",
+        "name": "GenericCustomType",
+        "source": "../../GenericCustomType"
       }
     ]
   },
