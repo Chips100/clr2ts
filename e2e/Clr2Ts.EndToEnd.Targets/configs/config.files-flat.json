@@ -4,6 +4,9 @@
       "../Clr2Ts.EndToEnd.Targets.dll"
     ]
   },
+  "transpilation": {
+    "flattenBaseTypes": true
+  },
   "output": {
     "files": {
       "directory": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/files-flat",

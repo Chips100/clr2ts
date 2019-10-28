@@ -14,10 +14,12 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         /// Creates an <see cref="TranspilationConfiguration"/>.
         /// </summary>
         /// <param name="camelCase">If set to true, property names should be converted to camelCase.</param>
+        /// <param name="flattenBaseTypes">If set to true, properties derived from base types will be declared in the type itself.</param>
         /// <param name="customTypeMaps">Custom type maps mapping .NET types to TypeScript types.</param>
-        public TranspilationConfiguration(bool? camelCase, IEnumerable<CustomTypeMap> customTypeMaps)
+        public TranspilationConfiguration(bool? camelCase, bool? flattenBaseTypes, IEnumerable<CustomTypeMap> customTypeMaps)
         {
             CamelCase = camelCase ?? true; // Defaults to true.
+            FlattenBaseTypes = flattenBaseTypes ?? false;
             CustomTypeMaps = customTypeMaps?.ToList() ?? Enumerable.Empty<CustomTypeMap>();
         }
 
@@ -25,6 +27,11 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         /// If set to true, property names should be converted to camelCase.
         /// </summary>
         public bool CamelCase { get; }
+        
+        /// <summary>
+        /// If set to true, properties derived from base types will be declared in the type itself.
+        /// </summary>
+        public bool FlattenBaseTypes { get; }
 
         /// <summary>
         /// Gets custom type maps mapping .NET types to TypeScript types.
@@ -35,6 +42,6 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         /// Returns a default configuration for the transpilation
         /// that should be used if the section has been omitted.
         /// </summary>
-        public static TranspilationConfiguration Default => new TranspilationConfiguration(true, null);
+        public static TranspilationConfiguration Default => new TranspilationConfiguration(true, null, null);
     }
 }

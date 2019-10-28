@@ -4,6 +4,7 @@ using Clr2Ts.Transpiler.Logging;
 using Clr2Ts.Transpiler.Transpilation.Templating;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
@@ -41,25 +42,51 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <returns>Result of the translation.</returns>
         protected override CodeFragment Translate(Type type, ITemplatingEngine templatingEngine)
         {
+            var properties = GeneratePropertyDefinitions(type, templatingEngine);
+            var declaration = GenerateClassDeclaration(type);
+
             var code = templatingEngine.UseTemplate("ClassDefinition", new Dictionary<string, string>
             {
-                { "ClassDeclaration", type.GetNameWithGenericTypeParameters() },
+                { "ClassDeclaration", declaration.code },
                 { "Documentation", GenerateDocumentationComment(type) },
-                { "Properties", GeneratePropertyDefinitions(type, templatingEngine, out var dependencies).AddIndentation() }
+                { "Properties", properties.code.AddIndentation() }
             });
 
             return new CodeFragment(
                 CodeFragmentId.ForClrType(type),
                 code,
-                dependencies);
+                declaration.dependencies.Merge(properties.dependencies));
         }
 
-        private string GeneratePropertyDefinitions(Type type, ITemplatingEngine templatingEngine, out CodeDependencies dependencies)
+        private (string code, CodeDependencies dependencies) GenerateClassDeclaration(Type type)
+        {
+            var declarationParts = new List<string> { type.GetNameWithGenericTypeParameters() };
+            var deps = CodeDependencies.Empty;
+
+            if (!Configuration.FlattenBaseTypes && type.BaseType != typeof(object))
+            {
+                var baseTypeTranslation = TypeReferenceTranslator.Translate(type.BaseType);
+                declarationParts.Add($"extends { baseTypeTranslation.ReferencedTypeName }");
+                deps = deps.Merge(baseTypeTranslation.Dependencies);
+            }
+
+            var interfaces = type.GetInterfaces();
+            if (interfaces.Any())
+            {
+                var interfaceTranslations = interfaces.Select(TypeReferenceTranslator.Translate);
+                declarationParts.Add($"implements { string.Join(", ", interfaceTranslations.Select(t => t.ReferencedTypeName)) }");
+                deps = interfaceTranslations.Select(t => t.Dependencies).Aggregate(deps, (d, next) => d.Merge(next));
+            }
+
+            return (string.Join(" ", declarationParts), deps);
+        }
+
+        private (string code, CodeDependencies dependencies) GeneratePropertyDefinitions(Type type, ITemplatingEngine templatingEngine)
         {
             var propertyCodeSnippets = new List<string>();
             var deps = CodeDependencies.Empty;
 
-            foreach (var property in type.GetProperties())
+            foreach (var property in GetPropertiesForTranspilation(type))
             {
                 Logger.WriteInformation($"Translating property {property.Name} on type {type}.");
 
@@ -74,9 +101,14 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 }));
             }
 
-            dependencies = deps;
-            return string.Join(Environment.NewLine, propertyCodeSnippets);
+            var properties = string.Join(Environment.NewLine, propertyCodeSnippets);
+            return (properties, deps);
         }
+
+        private IEnumerable<PropertyInfo> GetPropertiesForTranspilation(Type type)
+            => Configuration.FlattenBaseTypes
+                ? type.GetProperties()
+                : type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         private string GetTypeScriptPropertyName(PropertyInfo property)
             => Configuration.CamelCase ? property.Name.ToCamelCase() : property.Name;
