@@ -21,6 +21,11 @@
         public ExampleClass2 DependencySelfRecursive { get; set; }
 
         /// <summary>
+        /// Example for another dependency on another type.
+        /// </summary>
+        public ExampleClass3 AnotherDependency { get; set; }
+
+        /// <summary>
         /// Example for a nested constructed generic type reference.
         /// </summary>
         public GenericType<ExampleClass2, GenericType<ExampleClass1, int>> NestedGenericReference { get; set; }

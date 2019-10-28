@@ -49,5 +49,18 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
             // or fully qualified with namespace.
             return Type == typeName || Type == $"{type.Namespace}.{typeName}";
         }
+
+        /// <summary>
+        /// Creates a set of dependencies that references the mapped type.
+        /// </summary>
+        /// <returns>A set of dependencies that references the mapped type.</returns>
+        public CodeDependencies CreateImportDependency()
+        {
+            // Source is optional; might be an ambient type (like "any").
+            if (string.IsNullOrWhiteSpace(Source)) return CodeDependencies.Empty;
+
+            // Construct dependencies referencing the mapped type.
+            return CodeDependencies.FromImports(new[] { new Import(Name, Source) });
+        }
     }
 }

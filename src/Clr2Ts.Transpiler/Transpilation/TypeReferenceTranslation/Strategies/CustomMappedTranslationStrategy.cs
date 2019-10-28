@@ -45,13 +45,12 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
                 var referencedTypeName = $"{map.Name}<{ string.Join(", ", translatedTypeArguments.Select(x => x.ReferencedTypeName)) }>";
 
                 return new TypeReferenceTranslationResult(referencedTypeName,
-                    CodeDependencies.FromImports(new[] { new Import(map.Name, map.Source) })
+                    map.CreateImportDependency()
                         .Merge(translatedTypeArguments.Aggregate(CodeDependencies.Empty, (x, n) => x.Merge(n.Dependencies))));
             }
 
             // Non-generic: Just translate with the name defined in the map.
-            return new TypeReferenceTranslationResult(
-                map.Name, CodeDependencies.FromImports(new[] { new Import(map.Name, map.Source) }));
+            return new TypeReferenceTranslationResult(map.Name, map.CreateImportDependency());
         }
     }
 }
