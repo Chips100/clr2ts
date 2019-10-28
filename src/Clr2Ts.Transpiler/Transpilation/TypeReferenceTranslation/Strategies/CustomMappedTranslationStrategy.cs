@@ -36,6 +36,20 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         {
             var map = Configuration.CustomTypeMaps.FirstOrDefault(m => m.MapsType(referencedType));
 
+            // Support for custom maps of generic types.
+            // We do not delegate to the GenericTypeTranslationStrategy here to avoid any coupling between those two.
+            // Dealing with generic types in mapped types looks similar, but is a different concern.
+            if (referencedType.IsGenericType)
+            {
+                var translatedTypeArguments = referencedType.GetGenericArguments().Select(translator.Translate);
+                var referencedTypeName = $"{map.Name}<{ string.Join(", ", translatedTypeArguments.Select(x => x.ReferencedTypeName)) }>";
+
+                return new TypeReferenceTranslationResult(referencedTypeName,
+                    CodeDependencies.FromImports(new[] { new Import(map.Name, map.Source) })
+                        .Merge(translatedTypeArguments.Aggregate(CodeDependencies.Empty, (x, n) => x.Merge(n.Dependencies))));
+            }
+
+            // Non-generic: Just translate with the name defined in the map.
             return new TypeReferenceTranslationResult(
                 map.Name, CodeDependencies.FromImports(new[] { new Import(map.Name, map.Source) }));
         }
