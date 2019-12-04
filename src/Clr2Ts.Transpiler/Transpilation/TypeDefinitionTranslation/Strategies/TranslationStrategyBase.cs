@@ -1,6 +1,7 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using Clr2Ts.Transpiler.Logging;
 using Clr2Ts.Transpiler.Transpilation.Configuration;
+using Clr2Ts.Transpiler.Transpilation.Decorators;
 using Clr2Ts.Transpiler.Transpilation.Templating;
 using Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation;
 using System;
@@ -33,6 +34,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
 
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             TypeReferenceTranslator = new DefaultTypeReferenceTranslator(configurationSource, logger);
+            DecoratorTranslator = new DecoratorTranslator(configurationSource);
             Configuration = configurationSource.GetSection<TranspilationConfiguration>()
                 ?? TranspilationConfiguration.Default;
         }
@@ -46,6 +48,11 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// Gets a translator for type references in the type definition.
         /// </summary>
         protected ITypeReferenceTranslator TypeReferenceTranslator { get; }
+
+        /// <summary>
+        /// Gets a translator for decorators to apply to TypeScript definitions.
+        /// </summary>
+        protected DecoratorTranslator DecoratorTranslator { get; }
 
         /// <summary>
         /// Gets a logger for writing messages.

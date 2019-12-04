@@ -1,0 +1,26 @@
+{
+  "input": {
+    "assemblyFiles": [
+      "../Clr2Ts.EndToEnd.Targets.dll"
+    ]
+  },
+  "transpilation": {
+    "flattenBaseTypes": true,
+    "classDecorators": [
+      {
+        "if": {
+          "namespace": "Clr2Ts.EndToEnd.Targets.SubTyping"
+        },
+        "decorator": "typeName",
+        "parameters": ["'{Type.FullName}, {AssemblyName.Name}'"],
+        "import": "../../typeName.decorator"
+      }
+    ]
+  },
+  "output": {
+    "files": {
+      "directory": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/decorators",
+      "mimicNamespacesWithSubdirectories": false
+    }
+  }
+}

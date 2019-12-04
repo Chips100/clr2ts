@@ -42,11 +42,13 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <returns>Result of the translation.</returns>
         protected override CodeFragment Translate(Type type, ITemplatingEngine templatingEngine)
         {
+            var decorators = DecoratorTranslator.GenerateDecorators(type);
             var properties = GeneratePropertyDefinitions(type, templatingEngine);
             var declaration = GenerateClassDeclaration(type);
 
             var code = templatingEngine.UseTemplate("ClassDefinition", new Dictionary<string, string>
             {
+                { "Decorators", decorators.DecoratorCode },
                 { "ClassDeclaration", declaration.code },
                 { "Documentation", GenerateDocumentationComment(type) },
                 { "Properties", properties.code.AddIndentation() }
@@ -55,7 +57,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             return new CodeFragment(
                 CodeFragmentId.ForClrType(type),
                 code,
-                declaration.dependencies.Merge(properties.dependencies));
+                declaration.dependencies.Merge(properties.dependencies).Merge(decorators.Dependencies));
         }
 
         private (string code, CodeDependencies dependencies) GenerateClassDeclaration(Type type)
