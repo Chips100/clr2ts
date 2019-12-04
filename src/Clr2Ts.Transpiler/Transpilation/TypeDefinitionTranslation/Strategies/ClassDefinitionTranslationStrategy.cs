@@ -70,7 +70,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 deps = deps.Merge(baseTypeTranslation.Dependencies);
             }
 
-            var interfaces = type.GetInterfaces();
+            var interfaces = type.GetSelfImplementedInterfaces();
             if (interfaces.Any())
             {
                 var interfaceTranslations = interfaces.Select(TypeReferenceTranslator.Translate);

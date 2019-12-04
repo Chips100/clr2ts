@@ -15,13 +15,29 @@ namespace Clr2Ts.Transpiler.Extensions
         /// <param name="type">Current type.</param>
         /// <returns>A sequence with the base types that the current type is derived from.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="type"/> is null.</exception>
-        public static IEnumerable<Type> GetBaseTypes(this Type type) 
+        public static IEnumerable<Type> GetBaseTypes(this Type type)
+            // Wrap iterator in other method to enforce eager parameter null check.
             => GetBaseTypesIterator(type ?? throw new ArgumentNullException(nameof(type)));
 
         private static IEnumerable<Type> GetBaseTypesIterator(Type type)
         {
             Type baseType = type;
             while ((baseType = baseType.BaseType) != null) yield return baseType;
+        }
+
+        /// <summary>
+        /// Gets all interfaces that are implemented by the specified type,
+        /// not including interfaces that have been implented by its base types.
+        /// </summary>
+        /// <param name="type">The type for which the interfaces should be determined.</param>
+        /// <returns>A sequence of the interfaces that are implemented by the specified type.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="type"/> is null.</exception>
+        public static IEnumerable<Type> GetSelfImplementedInterfaces(this Type type)
+        {
+            if (type is null) throw new ArgumentNullException(nameof(type));
+
+            var baseInterfaces = type.BaseType?.GetInterfaces() ?? Enumerable.Empty<Type>();
+            return type.GetInterfaces().Except(baseInterfaces);
         }
 
         /// <summary>
