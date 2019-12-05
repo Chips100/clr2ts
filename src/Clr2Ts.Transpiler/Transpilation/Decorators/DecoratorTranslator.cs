@@ -58,11 +58,7 @@ namespace Clr2Ts.Transpiler.Transpilation.Decorators
 
             return new DecoratorTranslationResult(
                 $"@{configuration.DecoratorName}({string.Join(",", parameters)})" + Environment.NewLine,
-
-                // add import for the decorator definition, if specified.
-                configuration.DecoratorImportSource is null
-                    ? CodeDependencies.Empty 
-                    : CodeDependencies.FromImports(new[] { configuration.DecoratorImportSource }));
+                configuration.CreateImportDependency());
         }
     }
 }

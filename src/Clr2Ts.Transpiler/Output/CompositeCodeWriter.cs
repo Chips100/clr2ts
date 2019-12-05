@@ -10,7 +10,7 @@ namespace Clr2Ts.Transpiler.Output
     /// </summary>
     public sealed class CompositeCodeWriter : ICodeWriter
     {
-        private IEnumerable<ICodeWriter> _codeWriters;
+        private readonly IEnumerable<ICodeWriter> _codeWriters;
 
         /// <summary>
         /// Creates a <see cref="CompositeCodeWriter"/>.

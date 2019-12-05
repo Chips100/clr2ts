@@ -23,7 +23,7 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
             Condition = @if;
             DecoratorName = decorator;
             DecoratorParameters = new List<string>(parameters ?? Enumerable.Empty<string>());
-            DecoratorImportSource = string.IsNullOrWhiteSpace(import) ? null : new Import(decorator, import);
+            Import = import;
         }
 
         /// <summary>
@@ -42,8 +42,21 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         public IEnumerable<string> DecoratorParameters { get; }
 
         /// <summary>
-        /// Gets the import to reference the decorator definition.
+        /// Gets the source from which the TypeScript decorator is imported.
         /// </summary>
-        public Import DecoratorImportSource { get; }
+        public string Import { get; }
+
+        /// <summary>
+        /// Creates a set of dependencies that references the decorator.
+        /// </summary>
+        /// <returns>A set of dependencies that references the decorator.</returns>
+        public CodeDependencies CreateImportDependency()
+        {
+            // Source is optional; might be an ambient type (like "any").
+            if (string.IsNullOrWhiteSpace(Import)) return CodeDependencies.Empty;
+
+            // Construct dependencies referencing the mapped type.
+            return CodeDependencies.FromImports(new[] { new Import(DecoratorName, Import) });
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace Clr2Ts.Transpiler.Output
         }
 
         /// <summary>
-        /// Gets a value indicating if the code should be written to the console output.
+        /// Gets a value indicating if the code should be written to the clipboard.
         /// </summary>
         public bool Clipboard { get; }
 

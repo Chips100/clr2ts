@@ -10,7 +10,7 @@ namespace Clr2Ts.Transpiler.Logging
     /// </summary>
     public sealed class CompositeLogger : ILogger
     {
-        private IEnumerable<ILogger> _loggers;
+        private readonly IEnumerable<ILogger> _loggers;
 
         /// <summary>
         /// Creates a <see cref="CompositeLogger"/>.
