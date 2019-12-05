@@ -11,7 +11,7 @@ namespace Clr2Ts.Transpiler.Input
     /// <summary>
     /// Allows scanning of an assembly file for types that should be transpiled.
     /// </summary>
-    public sealed class AssemblyScanner: IDisposable
+    public sealed class AssemblyScanner : IDisposable
     {
         private bool _disposed;
         private readonly IList<DirectoryInfo> _probingDirectories = new List<DirectoryInfo>();

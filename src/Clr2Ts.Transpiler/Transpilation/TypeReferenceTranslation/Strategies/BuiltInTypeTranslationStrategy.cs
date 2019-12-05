@@ -1,7 +1,6 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
 {

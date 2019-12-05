@@ -89,7 +89,7 @@ namespace Clr2Ts.Transpiler.Configuration.Files
 
                 return new ReadOnlyDictionary<string, object>(root);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new ConfigurationException($"Could not read configuration file at {configurationFile.FullName}. "
                     + ConfigFileNotFoundHelpText, exception);

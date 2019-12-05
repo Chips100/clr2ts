@@ -29,7 +29,7 @@ namespace Clr2Ts.Transpiler.Output
 
             if (configuration.Files != null)
             {
-                writers.Add(new FileCodeWriter(configuration.Files.Directory, 
+                writers.Add(new FileCodeWriter(configuration.Files.Directory,
                     configuration.Files.MimicNamespacesWithSubdirectories));
             }
 

@@ -3,7 +3,7 @@
     /// <summary>
     /// Class that is derived from a base class.
     /// </summary>
-    public sealed class SubType1: BaseType1, IInterface1
+    public sealed class SubType1 : BaseType1, IInterface1
     {
         /// <summary>
         /// Property from the derived class.

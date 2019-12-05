@@ -7,7 +7,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
     /// Strategy for translating a reference to a nullable type.
     /// </summary>
     /// <remarks>As all types are nullable in TypeScript by default, this just unwraps the underlying type.</remarks>
-    public sealed class NullableTypeTranslationStrategy: TranslationStrategyBase
+    public sealed class NullableTypeTranslationStrategy : TranslationStrategyBase
     {
         /// <summary>
         /// Creates a <see cref="BuiltInTypeTranslationStrategy"/>.

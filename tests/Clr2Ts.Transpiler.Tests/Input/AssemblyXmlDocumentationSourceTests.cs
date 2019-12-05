@@ -1,6 +1,5 @@
 ﻿using Clr2Ts.Transpiler.Input;
 using System;
-using System.IO;
 using System.Reflection;
 using Xunit;
 

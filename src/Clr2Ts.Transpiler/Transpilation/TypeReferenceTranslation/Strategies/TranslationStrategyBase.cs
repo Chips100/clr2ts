@@ -8,7 +8,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
     /// Base for strategies for translating type references that
     /// use a full translator for parts of the complete type reference.
     /// </summary>
-    public abstract class TranslationStrategyBase: ITypeReferenceTranslationStrategy
+    public abstract class TranslationStrategyBase : ITypeReferenceTranslationStrategy
     {
         private readonly ITypeReferenceTranslator _translator;
 

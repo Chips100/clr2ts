@@ -1,14 +1,13 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
 {
     /// <summary>
     /// Strategy for translating a reference to a dictionary type.
     /// </summary>
-    public sealed class DictionaryTypeTranslationStrategy: TranslationStrategyBase
+    public sealed class DictionaryTypeTranslationStrategy : TranslationStrategyBase
     {
         /// <summary>
         /// Creates a <see cref="DictionaryTypeTranslationStrategy"/>.

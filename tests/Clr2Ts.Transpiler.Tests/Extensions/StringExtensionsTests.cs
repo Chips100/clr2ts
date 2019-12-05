@@ -37,7 +37,7 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         {
             Assert.Equal(string.Empty, ((string)null).AddIndentation());
         }
-        
+
         /// <summary>
         /// AddIndentation should indent all lines by the specified
         /// number of tabs.

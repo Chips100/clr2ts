@@ -29,7 +29,7 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         /// If set to true, property names should be converted to camelCase.
         /// </summary>
         public bool CamelCase { get; }
-        
+
         /// <summary>
         /// If set to true, properties derived from base types will be declared in the type itself.
         /// </summary>

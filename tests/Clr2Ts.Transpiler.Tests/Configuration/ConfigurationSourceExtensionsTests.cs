@@ -48,7 +48,7 @@ namespace Clr2Ts.Transpiler.Tests.Configuration
             public T GetSection<T>() => Activator.CreateInstance<T>();
         }
 
-        private class ConfigurationSourceWithoutSection: IConfigurationSource
+        private class ConfigurationSourceWithoutSection : IConfigurationSource
         {
             public T GetSection<T>() => default(T);
         }

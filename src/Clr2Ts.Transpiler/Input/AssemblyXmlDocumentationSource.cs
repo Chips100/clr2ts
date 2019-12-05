@@ -13,7 +13,7 @@ namespace Clr2Ts.Transpiler.Input
     /// The XML file is expected to be located in the same directory 
     /// as the assembly file with the same name, but an .xml file extension.
     /// </remarks>
-    public sealed class AssemblyXmlDocumentationSource: IDocumentationSource
+    public sealed class AssemblyXmlDocumentationSource : IDocumentationSource
     {
         /// <summary>
         /// Gets the documentation text for the specified member.
@@ -24,7 +24,7 @@ namespace Clr2Ts.Transpiler.Input
         public string GetDocumentationText(MemberInfo member)
         {
             if (member == null) throw new ArgumentNullException(nameof(member));
-            
+
             // Look for the XML documentation file.
             var xmlFile = Path.ChangeExtension(member.Module.Assembly.Location, "xml");
             if (!File.Exists(xmlFile)) return null;

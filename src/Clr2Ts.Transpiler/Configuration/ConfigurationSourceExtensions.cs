@@ -16,7 +16,7 @@ namespace Clr2Ts.Transpiler.Configuration
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="configurationSource"/> is null.</exception>
         /// <exception cref="ConfigurationException">Thrown if the section is missing from the provided <paramref name="configurationSource"/>.</exception>
         public static T GetRequiredSection<T>(this IConfigurationSource configurationSource)
-            where T: class
+            where T : class
         {
             if (configurationSource is null) throw new ArgumentNullException(nameof(configurationSource));
 

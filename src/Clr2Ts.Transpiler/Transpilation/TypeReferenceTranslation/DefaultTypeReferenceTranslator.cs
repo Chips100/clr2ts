@@ -10,7 +10,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation
     /// <summary>
     /// Default implementation of a <see cref="ITypeReferenceTranslator"/> that makes use of all known strategies.
     /// </summary>
-    public sealed class DefaultTypeReferenceTranslator: ITypeReferenceTranslator
+    public sealed class DefaultTypeReferenceTranslator : ITypeReferenceTranslator
     {
         private readonly IEnumerable<ITypeReferenceTranslationStrategy> _strategies;
         private readonly ILogger _logger;

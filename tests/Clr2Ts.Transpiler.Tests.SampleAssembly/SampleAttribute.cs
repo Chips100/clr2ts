@@ -5,6 +5,6 @@ namespace Clr2Ts.Transpiler.Tests.SampleAssembly
     /// <summary>
     /// Attribute for testing type filters.
     /// </summary>
-    public sealed class SampleAttribute: Attribute
+    public sealed class SampleAttribute : Attribute
     { }
 }

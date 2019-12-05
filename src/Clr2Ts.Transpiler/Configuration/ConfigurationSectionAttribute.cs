@@ -7,7 +7,7 @@ namespace Clr2Ts.Transpiler.Configuration
     /// Attribute for classes representing configuration sections.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class ConfigurationSectionAttribute: Attribute
+    public sealed class ConfigurationSectionAttribute : Attribute
     {
         /// <summary>
         /// Creates a <see cref="ConfigurationSectionAttribute"/>.

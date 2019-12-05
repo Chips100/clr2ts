@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Clr2Ts.Transpiler.Extensions;
+using System;
 using System.Linq;
-using Clr2Ts.Transpiler.Extensions;
 using Xunit;
 
 namespace Clr2Ts.Transpiler.Tests.Extensions
@@ -77,13 +77,13 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
 
         private class BaseA { }
 
-        private class BaseB: BaseA { }
+        private class BaseB : BaseA { }
 
-        private class SubClass: BaseB { }
+        private class SubClass : BaseB { }
 
 
         private interface ISomething { }
 
-        private interface ISomethingElse: ISomething { }
+        private interface ISomethingElse : ISomething { }
     }
 }

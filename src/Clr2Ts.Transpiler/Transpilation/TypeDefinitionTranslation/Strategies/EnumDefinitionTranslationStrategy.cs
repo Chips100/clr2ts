@@ -56,7 +56,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
 
         private string GenerateEnumValues(Type type, ITemplatingEngine templatingEngine)
         {
-            return string.Join("," + Environment.NewLine, Enum.GetNames(type).Select(name => 
+            return string.Join("," + Environment.NewLine, Enum.GetNames(type).Select(name =>
                 templatingEngine.UseTemplate("EnumValue", new Dictionary<string, string>
                 {
                     { "EnumValueName", name },

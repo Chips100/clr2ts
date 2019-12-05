@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Clr2Ts.Transpiler.Transpilation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Clr2Ts.Transpiler.Transpilation;
 
 namespace Clr2Ts.Transpiler.Output
 {

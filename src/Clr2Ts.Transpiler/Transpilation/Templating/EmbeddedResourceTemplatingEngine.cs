@@ -8,7 +8,7 @@ namespace Clr2Ts.Transpiler.Transpilation.Templating
     /// <summary>
     /// Allows usage of templates with simple placeholders stored in embedded resources.
     /// </summary>
-    public sealed class EmbeddedResourceTemplatingEngine: ITemplatingEngine
+    public sealed class EmbeddedResourceTemplatingEngine : ITemplatingEngine
     {
         private readonly string _subFolder;
 

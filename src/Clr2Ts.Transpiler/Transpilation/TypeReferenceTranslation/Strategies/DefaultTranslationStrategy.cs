@@ -23,7 +23,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <returns>Result of the translation.</returns>
         public TypeReferenceTranslationResult Translate(Type referencedType)
             => new TypeReferenceTranslationResult(
-                referencedType.Name, 
+                referencedType.Name,
                 CodeDependencies.FromCodeFragments(new[] { CodeFragmentId.ForClrType(referencedType) }));
     }
 }

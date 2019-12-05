@@ -3,7 +3,7 @@
     /// <summary>
     /// Example of an enum type.
     /// </summary>
-    public enum SampleLongEnum: long
+    public enum SampleLongEnum : long
     {
         /// <summary>
         /// Documentation of Int32Value.

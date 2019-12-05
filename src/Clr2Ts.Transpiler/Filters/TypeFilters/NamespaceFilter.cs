@@ -5,7 +5,7 @@ namespace Clr2Ts.Transpiler.Filters.TypeFilters
     /// <summary>
     /// Filter that matches types that are declared in the specified namespace.
     /// </summary>
-    public sealed class NamespaceFilter: IFilter<Type>
+    public sealed class NamespaceFilter : IFilter<Type>
     {
         private readonly string _namespace;
 

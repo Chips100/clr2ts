@@ -10,7 +10,7 @@ namespace Clr2Ts.Transpiler.Output.Files
     /// <summary>
     /// CodeWriter that bundles and writes all code fragments into a single file.
     /// </summary>
-    public sealed class BundledFileCodeWriter: ICodeWriter
+    public sealed class BundledFileCodeWriter : ICodeWriter
     {
         private readonly string _file;
 

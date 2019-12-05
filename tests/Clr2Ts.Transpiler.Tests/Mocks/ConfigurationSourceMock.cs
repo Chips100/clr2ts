@@ -6,7 +6,7 @@ namespace Clr2Ts.Transpiler.Tests.Mocks
     /// <summary>
     /// Mock-implementation of an <see cref="IConfigurationSource"/> that provides predefined values.
     /// </summary>
-    public sealed class ConfigurationSourceMock: IConfigurationSource
+    public sealed class ConfigurationSourceMock : IConfigurationSource
     {
         private readonly object[] _configurationSections;
 

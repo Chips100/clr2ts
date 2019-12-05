@@ -22,7 +22,7 @@ namespace Clr2Ts.Transpiler.Extensions
             // Just convert the first character to lower case.
             return input.Substring(0, 1).ToLower() + input.Substring(1);
         }
-        
+
         /// <summary>
         /// Indents all lines of the specified string by the specified number of tabs.
         /// </summary>

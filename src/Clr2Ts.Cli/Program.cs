@@ -25,7 +25,7 @@ namespace Clr2Ts.Cli
             {
                 Execute(args.FirstOrDefault());
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"{exception}");

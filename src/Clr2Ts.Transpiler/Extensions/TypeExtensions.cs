@@ -68,7 +68,7 @@ namespace Clr2Ts.Transpiler.Extensions
             var genericDefinition = type.GetGenericTypeDefinition();
 
             return genericDefinition.Name.Replace(
-                $"`{genericDefinition.GetGenericArguments().Length}", 
+                $"`{genericDefinition.GetGenericArguments().Length}",
                 replacement(genericDefinition));
         }
     }

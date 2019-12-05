@@ -9,7 +9,7 @@ namespace Clr2Ts.Transpiler.Output.Files
     /// <summary>
     /// CodeWriter that writes the code fragments into individual files.
     /// </summary>
-    public sealed class FileCodeWriter: ICodeWriter
+    public sealed class FileCodeWriter : ICodeWriter
     {
         private const char CodeFragmentIdSeparator = '.';
         private readonly string _directory;
@@ -35,7 +35,7 @@ namespace Clr2Ts.Transpiler.Output.Files
             // Clean the target directory first.
             if (Directory.Exists(_directory)) Directory.Delete(_directory, true);
 
-            foreach(var fragment in codeFragments)
+            foreach (var fragment in codeFragments)
             {
                 WriteCodeFragment(fragment);
             }
@@ -79,7 +79,7 @@ namespace Clr2Ts.Transpiler.Output.Files
             var parts = codeFragmentId.Name.Split(CodeFragmentIdSeparator);
             var directories = new List<string> { _directory };
             var fileName = $"{parts.Last()}.ts";
-            
+
             if (_mimicNamespacesWithSubdirectories)
             {
                 directories.AddRange(parts.Take(parts.Length - 1));

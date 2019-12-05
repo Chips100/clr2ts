@@ -84,7 +84,7 @@ namespace Clr2Ts.Transpiler.Tests.Configuration.Files
         {
             var config = JsonFileConfigurationSource.FromDirectory("Configuration/Files/SampleDirectoryWithConfigFile");
 
-            Assert.Equal("testcase-sample-directory-with-configfile", 
+            Assert.Equal("testcase-sample-directory-with-configfile",
                 config.GetSection<InputConfiguration>().AssemblyFiles.Single());
         }
 

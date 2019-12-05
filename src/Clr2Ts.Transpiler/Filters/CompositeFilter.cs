@@ -27,7 +27,7 @@ namespace Clr2Ts.Transpiler.Filters
         public static IFilter<T> And<T>(IEnumerable<IFilter<T>> filters)
             => new CompositeFilterImplementation<T>(filters, x => x.All(y => y()));
 
-        private class CompositeFilterImplementation<T>: IFilter<T>
+        private class CompositeFilterImplementation<T> : IFilter<T>
         {
             private readonly IEnumerable<IFilter<T>> _filters;
             private readonly Func<IEnumerable<Func<bool>>, bool> _aggregation;

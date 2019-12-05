@@ -5,7 +5,7 @@ namespace Clr2Ts.Transpiler.Configuration
     /// <summary>
     /// Thrown when an invalid configuration is detected.
     /// </summary>
-    public sealed class ConfigurationException: ApplicationException
+    public sealed class ConfigurationException : ApplicationException
     {
         /// <summary>
         /// Creates a <see cref="ConfigurationException"/>.

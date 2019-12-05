@@ -7,7 +7,7 @@ namespace Clr2Ts.Transpiler.Filters.ConfigurationAdapters
     /// <summary>
     /// Adapter for type filters as they are specified in the configuration.
     /// </summary>
-    public sealed class TypeFilterConfigurationAdapter: IFilter<Type>
+    public sealed class TypeFilterConfigurationAdapter : IFilter<Type>
     {
         private readonly IFilter<Type> _filter;
 
