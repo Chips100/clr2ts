@@ -11,6 +11,28 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
     public class StringExtensionsTests
     {
         /// <summary>
+        /// ToCamelCase should normalize null or whitespace to an empty string.
+        /// </summary>
+        [Fact]
+        public void StringExtensions_ToCamelCase_NormalizesEmptyInput()
+        {
+            Assert.Equal(string.Empty, ((string)null).ToCamelCase());
+            Assert.Equal(string.Empty, string.Empty.ToCamelCase());
+            Assert.Equal(string.Empty, "   ".ToCamelCase());
+        }
+
+        /// <summary>
+        /// ToCamelCase should make the first letter lowercase,
+        /// assuming the input was in PascalCase format.
+        /// </summary>
+        [Fact]
+        public void StringExtensions_ToCamelCase_MakesFirstLetterLowerCase()
+        {
+            Assert.Equal("x", "X".ToCamelCase());
+            Assert.Equal("someProperty", "SomeProperty".ToCamelCase());
+        }
+
+        /// <summary>
         /// AddIndentation should throw an <see cref="ArgumentOutOfRangeException"/>
         /// when the provided level is negative.
         /// </summary>
