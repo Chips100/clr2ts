@@ -1,4 +1,5 @@
-﻿using Clr2Ts.Transpiler.Configuration.Files;
+﻿using Clr2Ts.Transpiler.Configuration;
+using Clr2Ts.Transpiler.Configuration.Files;
 using Clr2Ts.Transpiler.Input;
 using Clr2Ts.Transpiler.Logging;
 using Clr2Ts.Transpiler.Output;
@@ -6,6 +7,7 @@ using Clr2Ts.Transpiler.Transpilation.Templating;
 using Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation;
 using Clr2Ts.Transpiler.Transpilation.TypeScript;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Clr2Ts.Cli
@@ -52,7 +54,25 @@ namespace Clr2Ts.Cli
 
             // Logging.
             var logger = LoggerFactory.FromConfiguration(configuration);
+            var stopwatch = Stopwatch.StartNew();
 
+            // Catch exceptions from the actual transpilation as
+            // we can write them to the created logger.
+            try
+            {
+                ExecuteTranspilation(configuration, logger);
+                logger.WriteInformation($"Executed successfully, took {stopwatch.ElapsedMilliseconds}ms.");
+            }
+            catch(Exception exception)
+            {
+                logger.WriteError($"{exception}");
+                logger.WriteInformation($"Encountered an error after {stopwatch.ElapsedMilliseconds}ms.");
+                throw;
+            }
+        }
+
+        private static void ExecuteTranspilation(IConfigurationSource configuration, ILogger logger)
+        {
             // Input.
             using (var assemblyScanner = new AssemblyScanner(logger))
             {
