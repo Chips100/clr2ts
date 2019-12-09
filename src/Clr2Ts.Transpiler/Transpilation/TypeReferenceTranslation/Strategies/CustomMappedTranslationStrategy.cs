@@ -1,4 +1,5 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
+using Clr2Ts.Transpiler.Transpilation.Configuration;
 using System;
 using System.Linq;
 
@@ -9,14 +10,19 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
     /// </summary>
     public sealed class CustomMappedTranslationStrategy : TranslationStrategyBase
     {
+        private readonly TranspilationConfiguration _configuration;
+
         /// <summary>
         /// Creates a <see cref="CustomMappedTranslationStrategy"/>.
         /// </summary>
         /// <param name="configurationSource">Source for the configuration that should be used.</param>
         /// <param name="translator">Full translator that can be used to translate parts of the complete type reference.</param>
         public CustomMappedTranslationStrategy(IConfigurationSource configurationSource, ITypeReferenceTranslator translator)
-            : base(configurationSource, translator)
-        { }
+            : base(translator)
+        {
+            _configuration = configurationSource.GetSection<TranspilationConfiguration>()
+                ?? TranspilationConfiguration.Default;
+        }
 
         /// <summary>
         /// Is overridden to define which type references can be translated by this strategy.
@@ -24,7 +30,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <param name="type">Type reference that should be translated.</param>
         /// <returns>True, if this strategy can be used to translate the specified type reference; otherwise false.</returns>
         protected override bool CanTranslate(Type type)
-            => Configuration.CustomTypeMaps.Any(m => m.MapsType(type));
+            => _configuration.CustomTypeMaps.Any(m => m.MapsType(type));
 
         /// <summary>
         /// Is overridden to define how the type reference is translated by this strategy.
@@ -34,7 +40,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <returns>Result of the translation.</returns>
         protected override TypeReferenceTranslationResult Translate(Type referencedType, ITypeReferenceTranslator translator)
         {
-            var map = Configuration.CustomTypeMaps.FirstOrDefault(m => m.MapsType(referencedType));
+            var map = _configuration.CustomTypeMaps.FirstOrDefault(m => m.MapsType(referencedType));
 
             // Support for custom maps of generic types.
             // We do not delegate to the GenericTypeTranslationStrategy here to avoid any coupling between those two.

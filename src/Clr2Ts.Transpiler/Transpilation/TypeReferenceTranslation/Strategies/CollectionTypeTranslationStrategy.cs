@@ -1,5 +1,4 @@
-﻿using Clr2Ts.Transpiler.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,10 +12,9 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <summary>
         /// Creates a <see cref="CollectionTypeTranslationStrategy"/>.
         /// </summary>
-        /// <param name="configurationSource">Source for the configuration that should be used.</param>
         /// <param name="translator">Full translator that can be used to translate parts of the complete type reference.</param>
-        public CollectionTypeTranslationStrategy(IConfigurationSource configurationSource, ITypeReferenceTranslator translator)
-            : base(configurationSource, translator)
+        public CollectionTypeTranslationStrategy(ITypeReferenceTranslator translator)
+            : base(translator)
         { }
 
         /// <summary>

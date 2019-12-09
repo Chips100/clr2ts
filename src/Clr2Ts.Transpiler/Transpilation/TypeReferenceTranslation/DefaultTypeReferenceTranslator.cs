@@ -26,12 +26,12 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation
             _strategies = new ITypeReferenceTranslationStrategy[]
             {
                 new GenericArgumentTranslationStrategy(),
-                new NullableTypeTranslationStrategy(configurationSource, this),
-                new BuiltInTypeTranslationStrategy(configurationSource, this),
-                new DictionaryTypeTranslationStrategy(configurationSource, this),
-                new CollectionTypeTranslationStrategy(configurationSource, this),
+                new NullableTypeTranslationStrategy(this),
+                new BuiltInTypeTranslationStrategy(this),
+                new DictionaryTypeTranslationStrategy( this),
+                new CollectionTypeTranslationStrategy(this),
                 new CustomMappedTranslationStrategy(configurationSource, this),
-                new GenericTypeTranslationStrategy(configurationSource, this),
+                new GenericTypeTranslationStrategy(this),
                 new DefaultTranslationStrategy()
             };
         }

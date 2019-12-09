@@ -1,6 +1,4 @@
-﻿using Clr2Ts.Transpiler.Configuration;
-using Clr2Ts.Transpiler.Transpilation.Configuration;
-using System;
+﻿using System;
 
 namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
 {
@@ -15,21 +13,11 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <summary>
         /// Creates a <see cref="TranslationStrategyBase"/>.
         /// </summary>
-        /// <param name="configurationSource">Source for the configuration that should be used.</param>
         /// <param name="translator">Full translator that can be used to translate parts of the complete type reference.</param>
-        protected TranslationStrategyBase(IConfigurationSource configurationSource, ITypeReferenceTranslator translator)
+        protected TranslationStrategyBase(ITypeReferenceTranslator translator)
         {
-            if (configurationSource == null) throw new ArgumentNullException(nameof(configurationSource));
-
             _translator = translator ?? throw new ArgumentNullException(nameof(translator));
-            Configuration = configurationSource.GetSection<TranspilationConfiguration>()
-                ?? TranspilationConfiguration.Default;
         }
-
-        /// <summary>
-        /// Gets the configuration that the strategy should respect.
-        /// </summary>
-        protected TranspilationConfiguration Configuration { get; }
 
         /// <summary>
         /// Determines if this strategy can be used to translate the specified type reference.
