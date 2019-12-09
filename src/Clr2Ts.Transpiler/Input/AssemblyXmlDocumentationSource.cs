@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,6 +16,9 @@ namespace Clr2Ts.Transpiler.Input
     /// </remarks>
     public sealed class AssemblyXmlDocumentationSource : IDocumentationSource
     {
+        private readonly ConcurrentDictionary<string, XDocument> _loadedDocuments
+            = new ConcurrentDictionary<string, XDocument>();
+
         /// <summary>
         /// Gets the documentation text for the specified member.
         /// </summary>
@@ -27,11 +31,12 @@ namespace Clr2Ts.Transpiler.Input
 
             // Look for the XML documentation file.
             var xmlFile = Path.ChangeExtension(member.Module.Assembly.Location, "xml");
-            if (!File.Exists(xmlFile)) return null;
+            var xmlDocument = _loadedDocuments.GetOrAdd(xmlFile, 
+                f => File.Exists(f) ? XDocument.Load(f) : null);
 
             // Search for the specified member in the XML file.
             // TODO: Keep loaded XML files in memory.
-            return XDocument.Load(xmlFile).Descendants("member")
+            return xmlDocument?.Descendants("member")
                 .FirstOrDefault(d => d.Attribute("name").Value == GetXmlName(member))
                 ?.Descendants("summary").FirstOrDefault()?.Value.ToString().Trim();
         }
