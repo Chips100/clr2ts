@@ -9,6 +9,11 @@ namespace Clr2Ts.Transpiler.Transpilation
     /// </summary>
     public sealed class CodeDependencies
     {
+        // Use sets to store the dependencies (have to be distinct),
+        // but expose IEnumerables for immutability.
+        private readonly ISet<CodeFragmentId> _codeFragments;
+        private readonly ISet<Import> _imports;
+
         /// <summary>
         /// Creates a set of dependencies for a code fragment.
         /// </summary>
@@ -19,19 +24,19 @@ namespace Clr2Ts.Transpiler.Transpilation
             if (codeFragments == null) throw new ArgumentNullException(nameof(codeFragments));
             if (imports == null) throw new ArgumentNullException(nameof(imports));
 
-            CodeFragments = codeFragments.Distinct().ToList();
-            Imports = imports.Distinct().ToList();
+            _codeFragments = new HashSet<CodeFragmentId>(codeFragments);
+            _imports = new HashSet<Import>(imports);
         }
 
         /// <summary>
         /// Gets the dependencies on other code fragments of the transpiled code base.
         /// </summary>
-        public IEnumerable<CodeFragmentId> CodeFragments { get; }
+        public IEnumerable<CodeFragmentId> CodeFragments => _codeFragments;
 
         /// <summary>
         /// Gets the dependencies on TypeScript artifact defined outside of the transpiled codebase.
         /// </summary>
-        public IEnumerable<Import> Imports { get; }
+        public IEnumerable<Import> Imports => _imports;
 
         /// <summary>
         /// Removes the dependency on a specific code fragment from the current set of dependencies.
@@ -96,5 +101,23 @@ namespace Clr2Ts.Transpiler.Transpilation
 
             return new CodeDependencies(Enumerable.Empty<CodeFragmentId>(), imports);
         }
+
+
+        public override bool Equals(object obj)
+            => obj is CodeDependencies dependencies
+                && _codeFragments.SetEquals(dependencies._codeFragments)
+                && _imports.SetEquals(dependencies._imports);
+
+        public override int GetHashCode()
+            // For now, just use the total count of the dependencies.
+            // This may lead to unnecessary call of Equals, but should otherwise be harmless,
+            // as this object is not used as keys in dictionaries yet.
+            => _codeFragments.Count + _imports.Count;
+
+        public static bool operator ==(CodeDependencies a, CodeDependencies b)
+            => a?.Equals(b) ?? b == null;
+
+        public static bool operator !=(CodeDependencies a, CodeDependencies b)
+            => !(a == b);
     }
 }
