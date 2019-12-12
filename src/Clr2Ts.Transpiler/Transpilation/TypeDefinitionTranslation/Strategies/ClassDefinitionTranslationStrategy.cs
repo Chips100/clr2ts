@@ -49,9 +49,13 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             var code = templatingEngine.UseTemplate("ClassDefinition", new Dictionary<string, string>
             {
                 { "Decorators", decorators.DecoratorCode },
+                { "ClassName", type.GetNameWithGenericTypeParameters() },
                 { "ClassDeclaration", declaration.code },
                 { "Documentation", GenerateDocumentationComment(type) },
-                { "Properties", properties.code.AddIndentation() }
+                { "Properties", properties.code.AddIndentation() },
+                { "ConstructorCode", declaration.isDerived 
+                    ? $"{ Environment.NewLine }super();".AddIndentation(2) 
+                    : string.Empty }
             });
 
             return new CodeFragment(
@@ -60,8 +64,9 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 declaration.dependencies.Merge(properties.dependencies).Merge(decorators.Dependencies));
         }
 
-        private (string code, CodeDependencies dependencies) GenerateClassDeclaration(Type type)
+        private (string code, bool isDerived, CodeDependencies dependencies) GenerateClassDeclaration(Type type)
         {
+            var isDerived = false;
             var declarationParts = new List<string> { type.GetNameWithGenericTypeParameters() };
             var deps = CodeDependencies.Empty;
 
@@ -70,6 +75,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 var baseTypeTranslation = TypeReferenceTranslator.Translate(type.BaseType);
                 declarationParts.Add($"extends { baseTypeTranslation.ReferencedTypeName }");
                 deps = deps.Merge(baseTypeTranslation.Dependencies);
+                isDerived = true;
             }
 
             var interfaces = type.GetSelfImplementedInterfaces();
@@ -80,7 +86,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 deps = interfaceTranslations.Select(t => t.Dependencies).Aggregate(deps, (d, next) => d.Merge(next));
             }
 
-            return (string.Join(" ", declarationParts), deps);
+            return (string.Join(" ", declarationParts), isDerived, deps);
         }
 
         private (string code, CodeDependencies dependencies) GeneratePropertyDefinitions(Type type, ITemplatingEngine templatingEngine)

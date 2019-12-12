@@ -1,3 +1,11 @@
 ﻿[Documentation][Decorators]export class [ClassDeclaration] {
 [Properties]
+
+	/**
+	 * Creates an instance with the specified values.
+	 * @param data Values that should be applied to the instance.
+	 */
+	public constructor(data?: Partial<[ClassName]>) {[ConstructorCode]
+		(<any>Object).assign(this, data);
+	}
 }
