@@ -12,7 +12,7 @@
           "namespace": "Clr2Ts.EndToEnd.Targets.SubTyping"
         },
         "decorator": "typeName",
-        "parameters": ["'{Type.FullName}, {AssemblyName.Name}'"],
+        "parameters": ["{Type.FullName} + ', ' + {AssemblyName.Name}"],
         "import": "../../typeName.decorator"
       }
     ]

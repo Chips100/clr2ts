@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -84,7 +85,7 @@ namespace Clr2Ts.Transpiler.Extensions
                 obj = obj.GetType().GetProperty(pathElements.Dequeue()).GetValue(obj);
             }
 
-            return obj?.ToString();
+            return JsonConvert.SerializeObject(obj);
         }
     }
 }

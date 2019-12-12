@@ -136,7 +136,7 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void StringExtensions_FormatWith_InsertsPlaceholdersFromContext()
         {
             var input = "{Tuple1.Item1}, {Tuple2.Item2}!";
-            var expected = "Hello, World!";
+            var expected = @"""Hello"", ""World""!";
 
             var context = new Dictionary<string, object>
             {
@@ -155,7 +155,7 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void StringExtensions_FormatWith_KeepsEscapedMarkers()
         {
             var input = @"\{\{\\{{Tuple1.Item1}, \{\\{ {Tuple2.Item2}!";
-            var expected = @"{{\{Hello, {\{ World!";
+            var expected = @"{{\{""Hello"", {\{ ""World""!";
 
             var context = new Dictionary<string, object>
             {
@@ -173,7 +173,7 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void StringExtensions_FormatWith_AllowsWhitespaceInPlaceholders()
         {
             var input = "{ Tuple1.Item1 }, { Tuple2.Item2 }!";
-            var expected = "Hello, World!";
+            var expected = @"""Hello"", ""World""!";
 
             var context = new Dictionary<string, object>
             {
@@ -191,7 +191,7 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void StringExtensions_FormatWith_AllowsDeepPaths()
         {
             var input = "{ Tuple1.Item1.Item1 }, { Tuple2.Item2.Item1 }!";
-            var expected = "Hello, World!";
+            var expected = @"""Hello"", ""World""!";
 
             var context = new Dictionary<string, object>
             {
@@ -209,7 +209,7 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void StringExtensions_FormatWith_AllowsNullValues()
         {
             var input = "{ Tuple1.Item1.Item1 }, { Tuple2.Item2.Item1 }!";
-            var expected = "Hello, !";
+            var expected = @"""Hello"", null!";
 
             var context = new Dictionary<string, object>
             {
