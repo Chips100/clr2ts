@@ -1,3 +1,5 @@
 ﻿[Documentation]export enum [EnumName] {
 [EnumValues]
 }
+
+[EnumAttributeMaps]

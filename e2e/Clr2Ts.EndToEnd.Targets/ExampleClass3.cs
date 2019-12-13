@@ -9,5 +9,10 @@
         /// Simple string property.
         /// </summary>
         public string SomeProperty { get; set; }
+
+        /// <summary>
+        /// Simple property referencing an enum.
+        /// </summary>
+        public ExampleEnum EnumProperty { get; set; }
     }
 }

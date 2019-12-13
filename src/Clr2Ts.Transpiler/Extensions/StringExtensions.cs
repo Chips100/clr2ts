@@ -78,14 +78,39 @@ namespace Clr2Ts.Transpiler.Extensions
             var cleanPath = path.Trim('{', '}').Replace(" ", string.Empty);
             var pathElements = new Queue<string>(cleanPath.Split('.'));
 
+            // TODO: this can be expressed in a functional way.
             // Follow the path in the object's properties.
             context.TryGetValue(pathElements.Dequeue(), out var obj);
             while (obj != null && pathElements.Any())
             {
-                obj = obj.GetType().GetProperty(pathElements.Dequeue()).GetValue(obj);
+                var pathElement = pathElements.Dequeue();
+                obj = TryDictionaryLookup(obj, pathElement) 
+                    ?? obj.GetType().GetProperty(pathElement)?.GetValue(obj);
             }
 
             return JsonConvert.SerializeObject(obj);
+        }
+
+        private static object TryDictionaryLookup(object potentialDictionary, string key)
+        {
+            if (potentialDictionary is null) throw new ArgumentNullException(nameof(potentialDictionary));
+
+            // Check if we are dealing with a dictionary.
+            var dictionaryInterface = potentialDictionary.GetType().GetInterface(typeof(IDictionary<,>).Name);
+            if (dictionaryInterface is null) return null;
+
+            // Supports only string keys for lookups.
+            var keyType = dictionaryInterface.GetGenericArguments()[0];
+            var valueType = dictionaryInterface.GetGenericArguments()[1];
+            if (keyType != typeof(string)) return null;
+
+            // Call TryGetValue on the detected dictionary.
+            var tryGetValueParameters = new object[] { key, null };
+            var tryGetValueResult = (bool)dictionaryInterface
+                .GetMethod(nameof(IDictionary<object, object>.TryGetValue))
+                .Invoke(potentialDictionary, tryGetValueParameters);
+
+            return tryGetValueResult ? tryGetValueParameters[1] : null;
         }
     }
 }

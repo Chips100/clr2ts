@@ -1,0 +1,3 @@
+﻿(<any>[EnumName]).[MapName] = {
+[MapItems]
+};

@@ -4,6 +4,15 @@
       "../Clr2Ts.EndToEnd.Targets.dll"
     ]
   },
+  /* TODO: This is a workaround! The bundled writer should respect the order of type definitions. */
+  "transpilation": {
+    "customTypeMaps": [
+      {
+        "type": "Clr2Ts.EndToEnd.Targets.Attributes.MyDisplayAttribute",
+        "name": "any"
+      }
+    ]
+  },
   "output": {
     "bundledFile": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/bundled/bundle.ts"
   }

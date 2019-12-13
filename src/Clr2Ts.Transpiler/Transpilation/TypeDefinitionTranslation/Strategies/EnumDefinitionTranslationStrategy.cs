@@ -5,6 +5,7 @@ using Clr2Ts.Transpiler.Transpilation.Templating;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
 {
@@ -45,9 +46,10 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             {
                 { "EnumName", type.Name },
                 { "Documentation", GenerateDocumentationComment(type) },
-                { "EnumValues", GenerateEnumValues(type, templatingEngine).AddIndentation() }
+                { "EnumValues", GenerateEnumValues(type, templatingEngine).AddIndentation() },
+                { "EnumAttributeMaps", GenerateEnumAttributeMaps(type, templatingEngine) }
             });
-
+            
             return new CodeFragment(
                 CodeFragmentId.ForClrType(type),
                 code,
@@ -63,6 +65,41 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                     { "Documentation", GenerateDocumentationComment(type.GetMember(name).Single()) },
                     { "EnumValue", Convert.ChangeType(Enum.Parse(type, name), Enum.GetUnderlyingType(type)).ToString() }
                 })));
+        }
+
+        private string GenerateEnumAttributeMaps(Type type, ITemplatingEngine templatingEngine)
+        {
+            return string.Join(Environment.NewLine,
+                Configuration.EnumAttributeMaps.Select(map => GenerateEnumAttributeMap(type, templatingEngine, map.Key, map.Value)));
+        }
+
+        private string GenerateEnumAttributeMap(Type type, ITemplatingEngine templatingEngine, string mapName, string mapValueTemplate)
+        {
+            return templatingEngine.UseTemplate("EnumAttributeMap", new Dictionary<string, string>
+            {
+                { "EnumName", type.Name },
+                { "MapName", mapName },
+                { "MapItems", string.Join($",{Environment.NewLine}",
+                    from memberName in Enum.GetNames(type)
+                    select templatingEngine.UseTemplate("EnumAttributeMapItem", new Dictionary<string, string>
+                    {
+                        { "EnumName", type.Name },
+                        { "EnumMember", memberName },
+                        { "MappedValue", mapValueTemplate.FormatWith(new Dictionary<string, object>
+                        {
+                            { "Attributes", GetEnumMemberAttributes(type, memberName) }
+                        }) }
+                    })).AddIndentation()
+                }
+            });
+        }
+
+        private IDictionary<string, Attribute> GetEnumMemberAttributes(Type type, string name)
+        {
+            var member = type.GetMember(name).SingleOrDefault();
+            return type.GetMember(name).SingleOrDefault().CustomAttributes
+                .Select(x => x.AttributeType)
+                .ToDictionary(x => x.Name, member.GetCustomAttribute);
         }
     }
 }

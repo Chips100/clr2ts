@@ -219,5 +219,29 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
 
             Assert.Equal(expected, input.FormatWith(context));
         }
+
+        /// <summary>
+        /// FormatWith allows lookups of dictionary values with the dot notation.
+        /// </summary>
+        [Fact]
+        public void StringExtensions_FormatWith_AllowsDictionaryKeyLookups()
+        {
+            // Includes a test case where the value in the dictionary is another object.
+            var input = "{ Tuple1.Item1.SomeKey }, { Tuple1.Item1.OtherKey.Item1 }!";
+            var expected = @"""Hello"", ""World""!";
+
+            var context = new Dictionary<string, object>
+            {
+                {
+                    "Tuple1",
+                    Tuple.Create(new Dictionary<string, object> {
+                        { "SomeKey", "Hello" },
+                        { "OtherKey", Tuple.Create("World") }
+                    })
+                },
+            };
+
+            Assert.Equal(expected, input.FormatWith(context));
+        }
     }
 }

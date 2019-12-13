@@ -1,0 +1,20 @@
+{
+  "input": {
+    "assemblyFiles": [
+      "../Clr2Ts.EndToEnd.Targets.dll"
+    ]
+  },
+  "transpilation": {
+    "flattenBaseTypes": true,
+    "enumAttributeMaps": {
+      "_displayNames": "{Attributes.MyDisplayAttribute.Name}",
+      "_displayDescriptions": "{Attributes.MyDisplayAttribute.Description}"
+    }
+  },
+  "output": {
+    "files": {
+      "directory": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/enums",
+      "mimicNamespacesWithSubdirectories": false
+    }
+  }
+}

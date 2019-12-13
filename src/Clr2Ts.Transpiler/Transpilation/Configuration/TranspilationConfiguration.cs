@@ -1,5 +1,6 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Clr2Ts.Transpiler.Transpilation.Configuration
@@ -17,12 +18,14 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         /// <param name="flattenBaseTypes">If set to true, properties derived from base types will be declared in the type itself.</param>
         /// <param name="customTypeMaps">Custom type maps mapping .NET types to TypeScript types.</param>
         /// <param name="classDecorators">Configuration for decorators that should be generated in TypeScript.</param>
-        public TranspilationConfiguration(bool? camelCase, bool? flattenBaseTypes, IEnumerable<CustomTypeMap> customTypeMaps, IEnumerable<ClassDecoratorConfiguration> classDecorators)
+        /// <param name="enumAttributeMaps">Configuration for enum member attributes that should be stored in a map.</param>
+        public TranspilationConfiguration(bool? camelCase, bool? flattenBaseTypes, IEnumerable<CustomTypeMap> customTypeMaps, IEnumerable<ClassDecoratorConfiguration> classDecorators, IDictionary<string, string> enumAttributeMaps)
         {
             CamelCase = camelCase ?? true; // Defaults to true.
             FlattenBaseTypes = flattenBaseTypes ?? false;
             CustomTypeMaps = customTypeMaps?.ToList() ?? Enumerable.Empty<CustomTypeMap>();
             ClassDecorators = classDecorators?.ToList() ?? Enumerable.Empty<ClassDecoratorConfiguration>();
+            EnumAttributeMaps = new ReadOnlyDictionary<string, string>(enumAttributeMaps ?? new Dictionary<string, string>());
         }
 
         /// <summary>
@@ -46,9 +49,14 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         public IEnumerable<ClassDecoratorConfiguration> ClassDecorators { get; }
 
         /// <summary>
+        /// Gets the configuration for enum member attributes that should be stored in a map.
+        /// </summary>
+        public IReadOnlyDictionary<string, string> EnumAttributeMaps { get; }
+
+        /// <summary>
         /// Returns a default configuration for the transpilation
         /// that should be used if the section has been omitted.
         /// </summary>
-        public static TranspilationConfiguration Default => new TranspilationConfiguration(true, null, null, null);
+        public static TranspilationConfiguration Default => new TranspilationConfiguration(true, null, null, null, null);
     }
 }
