@@ -85,10 +85,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                     {
                         { "EnumName", type.Name },
                         { "EnumMember", memberName },
-                        { "MappedValue", mapValueTemplate.FormatWith(new Dictionary<string, object>
-                        {
-                            { "Attributes", GetEnumMemberAttributes(type, memberName) }
-                        }) }
+                        { "MappedValue", mapValueTemplate.FormatWith(type.GetMember(memberName).SingleOrDefault().CreateFormattingContext()) }
                     })).AddIndentation()
                 }
             });

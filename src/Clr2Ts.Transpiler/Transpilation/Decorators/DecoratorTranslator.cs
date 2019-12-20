@@ -50,11 +50,7 @@ namespace Clr2Ts.Transpiler.Transpilation.Decorators
             if (!configuration.Condition.IsMatch(type)) return DecoratorTranslationResult.Empty;
 
             var parameters = configuration.DecoratorParameters
-                .Select(p => p.FormatWith(new Dictionary<string, object>
-                {
-                    ["Type"] = type,
-                    ["AssemblyName"] = type.Assembly.GetName()
-                }));
+                .Select(p => p.FormatWith(type.CreateFormattingContext()));
 
             return new DecoratorTranslationResult(
                 $"@{configuration.DecoratorName}({string.Join(",", parameters)})" + Environment.NewLine,
