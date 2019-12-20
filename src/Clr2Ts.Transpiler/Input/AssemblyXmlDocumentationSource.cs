@@ -35,7 +35,6 @@ namespace Clr2Ts.Transpiler.Input
                 f => File.Exists(f) ? XDocument.Load(f) : null);
 
             // Search for the specified member in the XML file.
-            // TODO: Keep loaded XML files in memory.
             return xmlDocument?.Descendants("member")
                 .FirstOrDefault(d => d.Attribute("name").Value == GetXmlName(member))
                 ?.Descendants("summary").FirstOrDefault()?.Value.ToString().Trim();
