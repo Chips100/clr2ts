@@ -56,7 +56,7 @@ The following example shows a complete configuration file that demonstrates simp
         "files": {
             "directory": "./Path/To/Your/TypeScriptCodeBase/directory",
 
-            /* Specify if a directory structure should be created following the namespaces of the assembly (otherwise all types are put in the directly into the directory). */
+            /* Specify if a directory structure should be created following the namespaces of the assembly (otherwise all types are put into the directory). */
             "mimicNamespacesWithSubdirectories": false
         }
     }
@@ -64,7 +64,7 @@ The following example shows a complete configuration file that demonstrates simp
 ```
 
 ### Type filters
-In most cases, clr2ts should not translate all types in the source assembly, but rather a specific subset. You can define type filters to control which types should be translated.
+In most cases, clr2ts should not translate all types in the source assembly, but rather a specific subset. You can define type filters to control which types should be translated. clr2ts will still translate dependencies of the matching types, even if they do not match the filter criteria. If you do not want to create translations of specific dependencies you can use custom type maps (see below) to map those to the `any` type, for example.
 
 ```
 "input": {
@@ -103,7 +103,7 @@ Custom type maps are used to specify types that should be mapped to existing Typ
             "name": "LibraryComponent",
             "source": "@lib/library"
         },
-        /* Referencing a type that does not need to be imported. */
+        /* Referencing a type that does not need to be imported, like "any". */
         {
             "type": "System.Type",
             "name": "any"
@@ -113,7 +113,7 @@ Custom type maps are used to specify types that should be mapped to existing Typ
 ```
 
 ### Decorators
-You can configure clr2ts to apply decorators to the translated TypeScript definitions. Decorators can currently only be applied to classes, but will soon be available for properties as well. You can specify the parameters that should be passed to the decorator in the format of simple template strings, which can include information from the current context (information about the current type or property, its attributes, the assembly, and more).
+You can configure clr2ts to apply decorators to the translated TypeScript definitions. Decorators can currently only be applied to classes, but will soon be available for properties as well. You can specify the parameters that should be passed to the decorator in the format of simple template strings, which can include information from the current context (providing information about the current type or property, its attributes, the assembly, and more).
 
 ```
 "transpilation": {
@@ -134,14 +134,12 @@ You can configure clr2ts to apply decorators to the translated TypeScript defini
 },
 ```
 
-This example shows that decorators do not have to match attributes in the source assembly, but can be applied by arbitrary conditions (type filter mechanism). This still allows you to map decorators from attributes though:
+The example above demonstrates that decorators do not have to match attributes in the source assembly, but can be applied by arbitrary conditions (type filter mechanism). This still allows you to map decorators from attributes if you want to:
 
 ```
 /* Decorator configuration that maps the DisplayAttribute from the source assembly to the display decorator. */
 {
-    "if": {
-        "hasAttribute": [ "Display" ]
-    },
+    "if": { "hasAttribute": [ "Display" ] },
     "decorator": "display",
     "parameters": [ "{Attributes.Display.Name}" ],
     "import": "@decorators/display"
