@@ -113,7 +113,7 @@ Custom type maps are used to specify types that should be mapped to existing Typ
 ```
 
 ### Decorators
-You can configure clr2ts to apply decorators to the translated TypeScript definitions. Decorators can currently only be applied to classes, but will soon be available for properties as well. You can specify the parameters that should be passed to the decorator in the format of simple template strings, which can include information from the current context (providing information about the current type or property, its attributes, the assembly, and more).
+You can configure clr2ts to apply decorators to the translated TypeScript definitions. Decorators can be applied to classes and properties. You can specify the parameters that should be passed to the decorator in the format of simple template strings, which can include information from the current context (providing information about the current type or property, its attributes, the assembly, and more).
 
 ```
 "transpilation": {
@@ -129,6 +129,17 @@ You can configure clr2ts to apply decorators to the translated TypeScript defini
             "parameters": ["{Type.FullName} + ', ' + {AssemblyName.Name}"],
             /* Optional import of the decorator definition. */
             "import": "../../typeName.decorator"
+        }
+    ],
+    "propertyDecorators": [
+        {
+            "if": {
+                /* Type allows you to specify a full type filter (see above) for the property's declaring type. */
+                "type": { "namespace": "Clr2Ts.EndToEnd.Targets.SubTyping" }
+            },
+            "decorator": "propertyName",
+            "parameters": ["{Type.FullName} + '.' + {Property.Name}"],
+            "import": "../../propertyName.decorator"
         }
     ]
 },
