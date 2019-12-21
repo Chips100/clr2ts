@@ -99,10 +99,14 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 Logger.WriteInformation($"Translating property {property.Name} on type {type}.");
 
                 var typeReferenceTranslation = TypeReferenceTranslator.Translate(property.PropertyType);
-                deps = deps.Merge(typeReferenceTranslation.Dependencies);
+                var decorators = DecoratorTranslator.GenerateDecorators(property);
+                deps = deps
+                    .Merge(typeReferenceTranslation.Dependencies)
+                    .Merge(decorators.Dependencies);
 
                 propertyCodeSnippets.Add(templatingEngine.UseTemplate("ClassPropertyDefinition", new Dictionary<string, string>
                 {
+                    { "Decorators", decorators.DecoratorCode },
                     { "PropertyName", GetTypeScriptPropertyName(property) },
                     { "Documentation", GenerateDocumentationComment(property) },
                     { "PropertyType", typeReferenceTranslation.ReferencedTypeName }

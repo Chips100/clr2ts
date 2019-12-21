@@ -1,2 +1,2 @@
 ﻿
-[Documentation]public [PropertyName]: [PropertyType] = null;
+[Documentation][Decorators]public [PropertyName]: [PropertyType] = null;

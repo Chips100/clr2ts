@@ -10,6 +10,10 @@
       {
         "type": "Clr2Ts.EndToEnd.Targets.Attributes.MyDisplayAttribute",
         "name": "any"
+      },
+      {
+        "type": "Clr2Ts.EndToEnd.Targets.Attributes.ClassLevelAttribute",
+        "name": "any"
       }
     ]
   },

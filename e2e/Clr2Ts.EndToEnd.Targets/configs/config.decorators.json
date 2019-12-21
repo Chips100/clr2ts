@@ -12,8 +12,20 @@
           "namespace": "Clr2Ts.EndToEnd.Targets.SubTyping"
         },
         "decorator": "typeName",
-        "parameters": ["{Type.FullName} + ', ' + {AssemblyName.Name}"],
+        "parameters": [ "{Type.FullName} + ', ' + {AssemblyName.Name}" ],
         "import": "../../typeName.decorator"
+      }
+    ],
+    "propertyDecorators": [
+      {
+        "if": {
+          "type": {
+            "hasAttribute": [ "ClassLevel" ]
+          }
+        },
+        "decorator": "propertyDecorator",
+        "parameters": [ "{Type.FullName} + ', ' + {Property.PropertyType.FullName}", "{TypeAttributes.MyDisplay.Name}", "{Attributes.MyDisplay.Name}" ],
+        "import":  "../../propertyDecorator.decorator"
       }
     ]
   },

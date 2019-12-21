@@ -31,26 +31,39 @@ namespace Clr2Ts.Transpiler.Transpilation.Decorators
         /// <returns>A set of TypeScript decorators for the specified member.</returns>
         public DecoratorTranslationResult GenerateDecorators(MemberInfo member)
         {
+            if (member is null) throw new ArgumentNullException(nameof(member));
+
+            // Skip entirely if no specific configuration has been provided.
             if (_configuration is null) return DecoratorTranslationResult.Empty;
 
-            // POC: For now, only support type decorators - maybe implement some
-            // sort of strategy pattern later to support property or enum member decorators.
+            // Combine all decorator definitions into a single result.
+            return GenerateIndividualDecorators(member)
+                .Aggregate(DecoratorTranslationResult.Empty, (current, next) => current.Merge(next));
+        }
+
+        private IEnumerable<DecoratorTranslationResult> GenerateIndividualDecorators(MemberInfo member)
+        {
             if (member is Type type)
             {
                 return _configuration.ClassDecorators
-                    .Select(x => GenerateClassDecorator(type, x))
-                    .Aggregate(DecoratorTranslationResult.Empty, (current, next) => current.Merge(next));
+                    .Select(x => GenerateDecorator(type, x));
+            }
+            else if (member is PropertyInfo property)
+            {
+                return _configuration.PropertyDecorators
+                    .Select(x => GenerateDecorator(property, x));
             }
 
-            return DecoratorTranslationResult.Empty;
+            return Enumerable.Empty<DecoratorTranslationResult>();
         }
 
-        private DecoratorTranslationResult GenerateClassDecorator(Type type, ClassDecoratorConfiguration configuration)
+        private DecoratorTranslationResult GenerateDecorator<TTarget>(TTarget target, DecoratorConfiguration<TTarget> configuration)
+            where TTarget: MemberInfo
         {
-            if (!configuration.Condition.IsMatch(type)) return DecoratorTranslationResult.Empty;
+            if (!configuration.Condition.IsMatch(target)) return DecoratorTranslationResult.Empty;
 
             var parameters = configuration.DecoratorParameters
-                .Select(p => p.FormatWith(type.CreateFormattingContext()));
+                .Select(p => p.FormatWith(target.CreateFormattingContext()));
 
             return new DecoratorTranslationResult(
                 $"@{configuration.DecoratorName}({string.Join(",", parameters)})" + Environment.NewLine,

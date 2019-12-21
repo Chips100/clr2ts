@@ -24,8 +24,7 @@ namespace Clr2Ts.Transpiler.Extensions
 
             var context =
                 member is TypeInfo type ? CreateFormattingContext(type)
-                // TODO: : member is FieldInfo field ? CreateFormattingContext(field)
-                // TODO: : member is PropertyInfo property ? CreateFormattingContext(property)
+                : member is PropertyInfo property ? CreateFormattingContext(property)
                 : new Dictionary<string, object>();
 
             AddAttributesToContext(context, member);
@@ -41,9 +40,21 @@ namespace Clr2Ts.Transpiler.Extensions
             };
         }
 
-        private static void AddAttributesToContext(IDictionary<string, object> context, MemberInfo member)
+        private static IDictionary<string, object> CreateFormattingContext(PropertyInfo property)
         {
-            context.Add("Attributes", member.CustomAttributes
+            var propertyContext = new Dictionary<string, object>
+            {
+                ["Property"] = property,
+                ["Type"] = property.DeclaringType
+            };
+
+            AddAttributesToContext(propertyContext, property.DeclaringType, "TypeAttributes");
+            return propertyContext;
+        }
+
+        private static void AddAttributesToContext(IDictionary<string, object> context, MemberInfo member, string contextKey = "Attributes")
+        {
+            context.Add(contextKey, member.CustomAttributes
                 // TODO: multiple attributes of same type. How to handle?
                 // Idea: Create multiple contexts if attribute is actually used in template?
                 .Select(x => member.GetCustomAttributes(x.AttributeType).First())
