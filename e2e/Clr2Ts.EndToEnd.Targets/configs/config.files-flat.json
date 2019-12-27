@@ -5,6 +5,7 @@
     ]
   },
   "transpilation": {
+    "defaultValues": "PrimitiveDefaults",
     "flattenBaseTypes": true
   },
   "output": {

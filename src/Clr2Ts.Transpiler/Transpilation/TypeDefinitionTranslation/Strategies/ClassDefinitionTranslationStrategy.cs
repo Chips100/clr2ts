@@ -1,6 +1,7 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using Clr2Ts.Transpiler.Extensions;
 using Clr2Ts.Transpiler.Logging;
+using Clr2Ts.Transpiler.Transpilation.DefaultValues;
 using Clr2Ts.Transpiler.Transpilation.Templating;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
     /// </summary>
     public sealed class ClassDefinitionTranslationStrategy : TranslationStrategyBase
     {
+        private readonly DefaultValueProvider _defaultValueProvider;
+
         /// <summary>
         /// Creates a <see cref="ClassDefinitionTranslationStrategy"/>.
         /// </summary>
@@ -24,7 +27,9 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="templatingEngine"/> or <paramref name="documentationSource"/> or <paramref name="logger"/> is null.</exception>
         public ClassDefinitionTranslationStrategy(IConfigurationSource configurationSource, ITemplatingEngine templatingEngine, IDocumentationSource documentationSource, ILogger logger)
             : base(configurationSource, templatingEngine, documentationSource, logger)
-        { }
+        {
+            _defaultValueProvider = new DefaultValueProvider(configurationSource, logger);
+        }
 
         /// <summary>
         /// Is overridden to define which type definitions can be translated by this strategy.
@@ -109,7 +114,8 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                     { "Decorators", decorators.DecoratorCode },
                     { "PropertyName", GetTypeScriptPropertyName(property) },
                     { "Documentation", GenerateDocumentationComment(property) },
-                    { "PropertyType", typeReferenceTranslation.ReferencedTypeName }
+                    { "PropertyType", typeReferenceTranslation.ReferencedTypeName },
+                    { "Assignment", _defaultValueProvider.Assignment(property) }
                 }));
             }
 

@@ -5,6 +5,7 @@
     ]
   },
   "transpilation": {
+    "defaultValues": "None",
     "flattenBaseTypes": true,
     "classDecorators": [
       {
@@ -25,7 +26,7 @@
         },
         "decorator": "propertyDecorator",
         "parameters": [ "{Type.FullName} + ', ' + {Property.PropertyType.FullName}", "{TypeAttributes.MyDisplay.Name}", "{Attributes.MyDisplay.Name}" ],
-        "import":  "../../propertyDecorator.decorator"
+        "import": "../../propertyDecorator.decorator"
       }
     ]
   },
