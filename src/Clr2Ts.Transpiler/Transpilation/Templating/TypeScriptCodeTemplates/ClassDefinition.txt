@@ -9,3 +9,5 @@
 		(<any>Object).assign(this, data);
 	}
 }
+
+[Dependencies]

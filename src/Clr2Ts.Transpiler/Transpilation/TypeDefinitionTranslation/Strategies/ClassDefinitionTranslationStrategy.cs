@@ -50,6 +50,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             var decorators = DecoratorTranslator.GenerateDecorators(type);
             var properties = GeneratePropertyDefinitions(type, templatingEngine);
             var declaration = GenerateClassDeclaration(type);
+            var deps = declaration.dependencies.Merge(properties.dependencies).Merge(decorators.Dependencies);
 
             var code = templatingEngine.UseTemplate("ClassDefinition", new Dictionary<string, string>
             {
@@ -58,6 +59,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 { "ClassDeclaration", declaration.code },
                 { "Documentation", GenerateDocumentationComment(type) },
                 { "Properties", properties.code.AddIndentation() },
+                { "Dependencies", GenerateDependencyInitialization(deps, templatingEngine) },
                 { "ConstructorCode", declaration.isDerived 
                     ? $"{ Environment.NewLine }super();".AddIndentation(2) 
                     : string.Empty }
@@ -66,7 +68,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             return new CodeFragment(
                 CodeFragmentId.ForClrType(type),
                 code,
-                declaration.dependencies.Merge(properties.dependencies).Merge(decorators.Dependencies));
+                deps);
         }
 
         private (string code, bool isDerived, CodeDependencies dependencies) GenerateClassDeclaration(Type type)
@@ -121,6 +123,20 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
 
             var properties = string.Join(Environment.NewLine, propertyCodeSnippets);
             return (properties, deps);
+        }
+
+        private string GenerateDependencyInitialization(CodeDependencies dependencies, ITemplatingEngine templatingEngine)
+        {
+            if (!Configuration.RuntimeDependencyLoading) return string.Empty;
+
+            var loadableDependencies = dependencies.CodeFragments
+                .Where(x => x.TryRecreateClrType(out var type) && !type.IsInterface)
+                .Select(x => x.ExportedName).Concat(dependencies.Imports.Select(x => x.Name));
+
+            return templatingEngine.UseTemplate("DependencyInitialization", new Dictionary<string, string>
+            {
+                { "Dependencies", string.Join(", ", loadableDependencies) }
+            });
         }
 
         private IEnumerable<PropertyInfo> GetPropertiesForTranspilation(Type type)

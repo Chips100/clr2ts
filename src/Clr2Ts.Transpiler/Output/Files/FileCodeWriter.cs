@@ -109,7 +109,7 @@ namespace Clr2Ts.Transpiler.Output.Files
                     parts.Take(parts.Length - 1).Select(p => $"{p}/"));
             }
 
-            return $"import {{ {parts.Last()} }} from './{subdirectory}{ parts.Last() }';";
+            return $"import {{ {codeFragmentId.ExportedName} }} from './{subdirectory}{ parts.Last() }';";
         }
 
         private string GetImportFor(Import import)

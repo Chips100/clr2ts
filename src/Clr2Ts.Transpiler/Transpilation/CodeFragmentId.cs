@@ -17,13 +17,15 @@ namespace Clr2Ts.Transpiler.Transpilation
         /// Creates a <see cref="CodeFragmentId"/>.
         /// </summary>
         /// <param name="name">Name that is used for identifying the code fragment.</param>
-        /// <param name="clrType">Type information, if this identifier represents a type; otherwise false.</param>
+        /// <param name="exportedName">Name of the artifact in the code fragment that is being defined.</param>
+        /// <param name="clrType">Type information, if this identifier represents a type; otherwise null.</param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is null or empty.</exception>
-        private CodeFragmentId(string name, Type clrType)
+        private CodeFragmentId(string name, string exportedName, Type clrType)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name cannot be empty.", nameof(name));
 
             Name = name;
+            ExportedName = exportedName;
             _clrType = clrType;
         }
 
@@ -31,6 +33,11 @@ namespace Clr2Ts.Transpiler.Transpilation
         /// Gets the name that is used for identifying the code fragment.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Gets the name of the artifact in the code fragment that is being defined.
+        /// </summary>
+        public string ExportedName { get; }
 
         /// <summary>
         /// Tries to recreate the type information that is represented by this identifier.
@@ -54,7 +61,10 @@ namespace Clr2Ts.Transpiler.Transpilation
             if (type == null) throw new ArgumentNullException(nameof(type));
 
             // Use the full name (namespace + type name) of the type for referencing the code fragment.
-            return new CodeFragmentId($"{type.Namespace}.{type.GetNameWithoutGenericTypeParameters()}", type);
+            return new CodeFragmentId(
+                $"{type.Namespace}.{type.GetNameWithoutGenericTypeParameters()}", 
+                type.GetNameWithoutGenericTypeParameters(), 
+                type);
         }
 
         public override string ToString() => Name;

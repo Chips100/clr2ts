@@ -1,0 +1,3 @@
+﻿[
+  [Dependencies]
+].forEach(() => { /* Prevent optimizers from removing the seemingly side-effect free statement to ensure decorator initialization of dependencies. */ });

@@ -6,6 +6,7 @@
   },
   /* TODO: This is a workaround! The bundled writer should respect the order of type definitions. */
   "transpilation": {
+    "runtimeDependencyLoading": false,
     "customTypeMaps": [
       {
         "type": "Clr2Ts.EndToEnd.Targets.Attributes.MyDisplayAttribute",
