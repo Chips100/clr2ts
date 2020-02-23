@@ -1,4 +1,6 @@
-﻿namespace Clr2Ts.EndToEnd.Targets
+﻿using Clr2Ts.EndToEnd.Targets.Generics;
+
+namespace Clr2Ts.EndToEnd.Targets
 {
     /// <summary>
     /// Simple example class type.

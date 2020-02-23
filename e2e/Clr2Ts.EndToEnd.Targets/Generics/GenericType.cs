@@ -1,4 +1,4 @@
-﻿namespace Clr2Ts.EndToEnd.Targets
+﻿namespace Clr2Ts.EndToEnd.Targets.Generics
 {
     /// <summary>
     /// Example for a generic type.
