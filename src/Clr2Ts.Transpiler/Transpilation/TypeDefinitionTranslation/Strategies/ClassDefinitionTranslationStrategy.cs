@@ -74,9 +74,22 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         private (string code, bool isDerived, CodeDependencies dependencies) GenerateClassDeclaration(Type type)
         {
             var isDerived = false;
-            var declarationParts = new List<string> { type.GetNameWithGenericTypeParameters() };
             var deps = CodeDependencies.Empty;
+            var declarationParts = new List<string>();
 
+            // Type name with generic type parameters (including constraints).
+            declarationParts.Add(type.GetNameWithGenericTypeParameters(t =>
+            {
+                var constraintTranslations = t.GetGenericParameterConstraints()
+                    .Except(new[] { typeof(ValueType) })
+                    .Select(TypeReferenceTranslator.Translate);
+
+                deps = constraintTranslations.Select(x => x.Dependencies).Aggregate(deps, (d, next) => d.Merge(next));
+                return !constraintTranslations.Any() ? string.Empty :
+                    $" extends {string.Join(" & ", constraintTranslations.Select(x => x.ReferencedTypeName))}";
+            }));
+
+            // Extending the base class.
             if (!Configuration.FlattenBaseTypes && type.BaseType != typeof(object))
             {
                 var baseTypeTranslation = TypeReferenceTranslator.Translate(type.BaseType);
@@ -85,6 +98,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 isDerived = true;
             }
 
+            // Implementing interfaces.
             var interfaces = type.GetSelfImplementedInterfaces();
             if (interfaces.Any())
             {

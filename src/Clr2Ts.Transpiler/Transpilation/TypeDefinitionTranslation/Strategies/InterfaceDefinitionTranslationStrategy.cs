@@ -4,6 +4,7 @@ using Clr2Ts.Transpiler.Logging;
 using Clr2Ts.Transpiler.Transpilation.Templating;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
@@ -41,17 +42,40 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <returns>Result of the translation.</returns>
         protected override CodeFragment Translate(Type type, ITemplatingEngine templatingEngine)
         {
+            var properties = GeneratePropertyDefinitions(type, templatingEngine, out var dependencies);
+            var declaration = GenerateClassDeclaration(type);
+            dependencies = dependencies.Merge(declaration.dependencies);
+
             var code = templatingEngine.UseTemplate("InterfaceDefinition", new Dictionary<string, string>
             {
-                { "InterfaceDeclaration", type.GetNameWithGenericTypeParameters() },
+                { "InterfaceDeclaration", declaration.code },
                 { "Documentation", GenerateDocumentationComment(type) },
-                { "Properties", GeneratePropertyDefinitions(type, templatingEngine, out var dependencies).AddIndentation() }
+                { "Properties", properties.AddIndentation() }
             });
 
             return new CodeFragment(
                 CodeFragmentId.ForClrType(type),
                 code,
                 dependencies);
+        }
+
+        private (string code, CodeDependencies dependencies) GenerateClassDeclaration(Type type)
+        {
+            var deps = CodeDependencies.Empty;
+
+            // Type name with generic type parameters (including constraints).
+            var declaration = type.GetNameWithGenericTypeParameters(t =>
+            {
+                var constraintTranslations = t.GetGenericParameterConstraints()
+                    .Except(new[] { typeof(ValueType) })
+                    .Select(TypeReferenceTranslator.Translate);
+
+                deps = constraintTranslations.Select(x => x.Dependencies).Aggregate(deps, (d, next) => d.Merge(next));
+                return !constraintTranslations.Any() ? string.Empty :
+                    $" extends {string.Join(" & ", constraintTranslations.Select(x => x.ReferencedTypeName))}";
+            });
+
+            return (declaration, deps);
         }
 
         private string GeneratePropertyDefinitions(Type type, ITemplatingEngine templatingEngine, out CodeDependencies dependencies)

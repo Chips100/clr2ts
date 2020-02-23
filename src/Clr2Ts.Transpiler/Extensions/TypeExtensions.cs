@@ -45,10 +45,11 @@ namespace Clr2Ts.Transpiler.Extensions
         /// written as <code>&lt;T1, T2, ...&gt;</code> (corresponding to the formal declaration).
         /// </summary>
         /// <param name="type">Type for which the name should be retreived.</param>
+        /// <param name="typeParameterSuffix">Optional suffix that should be added to type parameters.</param>
         /// <returns>The name of the type with its generic type parameters; or simply its name if the type is not generic.</returns>
-        public static string GetNameWithGenericTypeParameters(this Type type)
-            => type.GetNameWithReplacedTypeParameters(t => $"<{ string.Join(", ", t.GetGenericArguments().Select(x => x.Name)) }>");
-
+        public static string GetNameWithGenericTypeParameters(this Type type, Func<Type, string> typeParameterSuffix = null)
+            => type.GetNameWithReplacedTypeParameters(t => $@"<{ string.Join(", ", 
+                t.GetGenericArguments().Select(x => x.Name + typeParameterSuffix?.Invoke(x))) }>");
 
         /// <summary>
         /// Gets the name of a type without its generic parameters.
