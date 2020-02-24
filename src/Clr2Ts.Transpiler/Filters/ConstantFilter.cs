@@ -6,13 +6,21 @@
     public static class ConstantFilter
     {
         /// <summary>
-        /// Creates a filter that matches either all or no items.
+        /// Creates a filter that matches all items.
         /// </summary>
         /// <typeparam name="T">Type of the items that are matched by this filter.</typeparam>
-        /// <param name="result">True, if all items should be matched; otherwise false.</param>
-        /// <returns>A filter that matches all items if <paramref name="result"/> was true; otherwise a filter that matches no items.</returns>
-        public static IFilter<T> Create<T>(bool result)
-            => new ConstantFilterImplementation<T>(result);
+        /// <returns>A filter that matches all items.</returns>
+        public static IFilter<T> MatchAll<T>()
+            => new ConstantFilterImplementation<T>(true);
+
+        /// <summary>
+        /// Creates a filter that matches no items.
+        /// </summary>
+        /// <typeparam name="T">Type of the items that are matched by this filter.</typeparam>
+        /// <returns>A filter that matches no items.</returns>
+        public static IFilter<T> MatchNone<T>()
+            => new ConstantFilterImplementation<T>(false);
+
 
         private class ConstantFilterImplementation<T> : IFilter<T>
         {
