@@ -7,6 +7,7 @@ using Clr2Ts.Transpiler.Transpilation.Templating;
 using Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation;
 using Clr2Ts.Transpiler.Transpilation.TypeScript;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -25,7 +26,7 @@ namespace Clr2Ts.Cli
         {
             try
             {
-                Execute(args.FirstOrDefault());
+                Execute(args.FirstOrDefault(), ParseReplaceTokens(args.Skip(1)));
             }
             catch (Exception exception)
             {
@@ -42,12 +43,13 @@ namespace Clr2Ts.Cli
         /// Configuration file for the transpilation. If omitted, will be searched 
         /// by looking in parent directories from the current working directory.
         /// </param>
-        private static void Execute(string configurationFile)
+        /// <param name="configurationReplaceTokens">Replacements for user-defined tokens in the configuration file.</param>
+        private static void Execute(string configurationFile, IDictionary<string, string> configurationReplaceTokens)
         {
             // Configuration.
             var configuration = !string.IsNullOrWhiteSpace(configurationFile)
-                ? JsonFileConfigurationSource.FromFile(configurationFile)
-                : JsonFileConfigurationSource.FromDirectory(Environment.CurrentDirectory);
+                ? JsonFileConfigurationSource.FromFile(configurationFile, configurationReplaceTokens)
+                : JsonFileConfigurationSource.FromDirectory(Environment.CurrentDirectory, configurationReplaceTokens);
 
             // Change the current working directory based on the configuration file to allow relative paths.
             Environment.CurrentDirectory = configuration.ConfigurationFile.DirectoryName;
@@ -91,5 +93,13 @@ namespace Clr2Ts.Cli
                 writer.Write(result.CodeFragments);
             }
         }
+
+        private static IDictionary<string, string> ParseReplaceTokens(IEnumerable<string> commandLineArguments) =>
+            (from arg in commandLineArguments
+             let splitted = arg.Split('=')
+             let key = splitted.First()
+             let value = string.Join('=', splitted.Skip(1)) // Keep usages of the separator in the value.
+             select new KeyValuePair<string, string>(key, value)).ToDictionary(x => x.Key, x => x.Value);
+
     }
 }

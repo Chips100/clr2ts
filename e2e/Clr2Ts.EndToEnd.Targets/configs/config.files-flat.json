@@ -10,7 +10,7 @@
   },
   "output": {
     "files": {
-      "directory": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/files-flat",
+      "directory": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/$TargetFolder$",
       "mimicNamespacesWithSubdirectories": false
     }
   }

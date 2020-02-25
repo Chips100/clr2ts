@@ -26,10 +26,10 @@ namespace Clr2Ts.Transpiler.Configuration.Files
 
         // Private constructor to ensure usage of factory methods.
         private readonly IReadOnlyDictionary<string, object> _root;
-        private JsonFileConfigurationSource(FileInfo configurationFile)
+        private JsonFileConfigurationSource(FileInfo configurationFile, IDictionary<string, string> replaceTokens)
         {
             ConfigurationFile = configurationFile ?? throw new ArgumentNullException(nameof(configurationFile));
-            _root = ReadConfigurationFile(configurationFile);
+            _root = ReadConfigurationFile(configurationFile, replaceTokens);
         }
 
         /// <summary>
@@ -62,31 +62,38 @@ namespace Clr2Ts.Transpiler.Configuration.Files
         /// Creates a <see cref="JsonFileConfigurationSource"/> by searching for a configuration file in the specified directory.
         /// </summary>
         /// <param name="directory">Directory that should be searched for a configuration file.</param>
+        /// <param name="replaceTokens">Optional replacements for user-defined tokens in the configuration file.</param>
         /// <returns>A <see cref="JsonFileConfigurationSource"/> that represents the configuration file.</returns>
-        public static JsonFileConfigurationSource FromDirectory(string directory)
-            => new JsonFileConfigurationSource(SearchConfigurationFile(new DirectoryInfo(directory)));
+        public static JsonFileConfigurationSource FromDirectory(string directory, IDictionary<string, string> replaceTokens = null)
+            => new JsonFileConfigurationSource(SearchConfigurationFile(new DirectoryInfo(directory)), replaceTokens);
 
         /// <summary>
         /// Creates a <see cref="JsonFileConfigurationSource"/> by reading the specified configuration file.
         /// </summary>
         /// <param name="fileName">Name of the file that should be used for the configuration.</param>
+        /// <param name="replaceTokens">Optional replacements for user-defined tokens in the configuration file.</param>
         /// <returns>A <see cref="JsonFileConfigurationSource"/> that represents the configuration file.</returns>
-        public static JsonFileConfigurationSource FromFile(string fileName)
-            => new JsonFileConfigurationSource(new FileInfo(fileName));
+        public static JsonFileConfigurationSource FromFile(string fileName, IDictionary<string, string> replaceTokens = null)
+            => new JsonFileConfigurationSource(new FileInfo(fileName), replaceTokens);
 
         /// <summary>
         /// Reads the sections from the specified configuration file.
         /// </summary>
         /// <param name="configurationFile">File from which the sections should be read.</param>
+        /// <param name="replaceTokens">Optional replacements for user-defined tokens in the file.</param>
         /// <returns>A readonly dictionary that contains the sections from the configuration file.</returns>
         /// <exception cref="ConfigurationException">Thrown if the file could not be read or parsed.</exception>
-        private IReadOnlyDictionary<string, object> ReadConfigurationFile(FileInfo configurationFile)
+        private IReadOnlyDictionary<string, object> ReadConfigurationFile(FileInfo configurationFile, IDictionary<string, string> replaceTokens)
         {
             try
             {
-                var root = JsonConvert.DeserializeObject<IDictionary<string, object>>(
-                    File.ReadAllText(configurationFile.FullName, Encoding.UTF8));
+                var configJson = File.ReadAllText(configurationFile.FullName, Encoding.UTF8);
+                foreach (var replacement in replaceTokens ?? new Dictionary<string, string>())
+                {
+                    configJson = configJson.Replace(replacement.Key, replacement.Value);
+                }
 
+                var root = JsonConvert.DeserializeObject<IDictionary<string, object>>(configJson);
                 return new ReadOnlyDictionary<string, object>(root);
             }
             catch (Exception exception)

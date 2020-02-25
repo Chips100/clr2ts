@@ -26,7 +26,7 @@
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="dotnet &quot;$(SolutionDir)src/Clr2Ts.Cli/bin/$(Configuration)/netcoreapp3.1/Clr2Ts.Cli.dll&quot; &quot;$(OutDir)/configs/config.bundled.json&quot;" />
-    <Exec Command="dotnet &quot;$(SolutionDir)src/Clr2Ts.Cli/bin/$(Configuration)/netcoreapp3.1/Clr2Ts.Cli.dll&quot; &quot;$(OutDir)/configs/config.files-flat.json&quot;" />
+    <Exec Command="dotnet &quot;$(SolutionDir)src/Clr2Ts.Cli/bin/$(Configuration)/netcoreapp3.1/Clr2Ts.Cli.dll&quot; &quot;$(OutDir)/configs/config.files-flat.json&quot; $TargetFolder$=files-flat" />
     <Exec Command="dotnet &quot;$(SolutionDir)src/Clr2Ts.Cli/bin/$(Configuration)/netcoreapp3.1/Clr2Ts.Cli.dll&quot; &quot;$(OutDir)/configs/config.custom-map.json&quot;" />
     <Exec Command="dotnet &quot;$(SolutionDir)src/Clr2Ts.Cli/bin/$(Configuration)/netcoreapp3.1/Clr2Ts.Cli.dll&quot; &quot;$(OutDir)/configs/config.decorators.json&quot;" />
     <Exec Command="dotnet &quot;$(SolutionDir)src/Clr2Ts.Cli/bin/$(Configuration)/netcoreapp3.1/Clr2Ts.Cli.dll&quot; &quot;$(OutDir)/configs/config.enums.json&quot;" />
