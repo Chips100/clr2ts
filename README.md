@@ -27,7 +27,7 @@ clr2ts your.config.json
 ## Configuration
 The following example shows a complete configuration file that demonstrates simple settings. More complex scenarios are described in detail below.
 
-```
+```js
 {
     "input": {
         /* Required: At least one assembly that should be translated. */
@@ -66,7 +66,7 @@ The following example shows a complete configuration file that demonstrates simp
 ### Type filters
 In most cases, clr2ts should not translate all types in the source assembly, but rather a specific subset. You can define type filters to control which types should be translated. clr2ts will still translate dependencies of the matching types, even if they do not match the filter criteria. If you do not want to create translations of specific dependencies you can use custom type maps (see below) to map those to the `any` type, for example.
 
-```
+```js
 "input": {
     /* Define multiple filters for OR-semantics. */
     "typeFilters": [
@@ -88,7 +88,7 @@ In most cases, clr2ts should not translate all types in the source assembly, but
 ### Custom Type Maps
 Custom type maps are used to specify types that should be mapped to existing TypeScript definitions and not be translated by clr2ts. 
 
-```
+```js
 "transpilation": {
     "customTypeMaps": [
         /* Importing a type definition from the surrounding code base. */
@@ -115,7 +115,7 @@ Custom type maps are used to specify types that should be mapped to existing Typ
 ### Decorators
 You can configure clr2ts to apply decorators to the translated TypeScript definitions. Decorators can be applied to classes and properties. You can specify the parameters that should be passed to the decorator in the format of simple template strings, which can include information from the current context (providing information about the current type or property, its attributes, the assembly, and more).
 
-```
+```js
 "transpilation": {
     "classDecorators": [
         {
@@ -147,7 +147,7 @@ You can configure clr2ts to apply decorators to the translated TypeScript defini
 
 The example above demonstrates that decorators do not have to match attributes in the source assembly, but can be applied by arbitrary conditions (type filter mechanism). This still allows you to map decorators from attributes if you want to:
 
-```
+```js
 /* Decorator configuration that maps the DisplayAttribute from the source assembly to the display decorator. */
 {
     "if": { "hasAttribute": [ "Display" ] },
@@ -160,7 +160,7 @@ The example above demonstrates that decorators do not have to match attributes i
 ### Enum attribute maps
 As of now, TypeScript does not support decorators for enum members. If you need information from attributes applied to enums in the source assembly, clr2ts supports a workaround in the form of simple maps stored in the TypeScript enum itself. For example, the following configuration instructs clr2ts to generate a map for the `DisplayAttribute.Name` property like shown below:  
 
-```
+```js
 "transpilation": {
     "enumAttributeMaps": {
         "_displayNames": "{Attributes.DisplayAttribute.Name}",
@@ -170,7 +170,7 @@ As of now, TypeScript does not support decorators for enum members. If you need 
 ```
 
 **Enum definition (C# example):**
-```
+```C#
 public enum ExampleEnum
 {
     [Display(Name = "DisplayName1")]
@@ -186,7 +186,7 @@ public enum ExampleEnum
 
 **TypeScript translation:**
 
-```
+```ts
 export enum ExampleEnum {
 	Value1 = 0,
 	Value2 = 1,
