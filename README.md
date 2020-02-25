@@ -199,3 +199,24 @@ export enum ExampleEnum {
 	[ExampleEnum.Value3]: "DisplayName3"
 };
 ```
+
+## Reusable configuration files
+You can define tokens that should be replaced in a configuration file to reuse it for different purposes or build configurations.
+
+```js
+{
+  "input": {
+    "assemblyFiles": [
+      /* $OutDir$ will be used as a custom token */
+      "$OutDir$/Assembly.dll"
+    ]
+  }
+}
+```
+
+The actual values to put into the configuration files are defined by command line arguments when calling clr2ts:
+```
+clr2ts your.config.json $OutDir$=MyDirectory
+```
+
+> You are free to choose the name of your tokens to avoid conflicts with any special characters in your scenario, but the name must not contain `=`.
