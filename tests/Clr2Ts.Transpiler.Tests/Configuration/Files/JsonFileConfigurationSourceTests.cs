@@ -2,6 +2,7 @@
 using Clr2Ts.Transpiler.Configuration.Files;
 using Clr2Ts.Transpiler.Input;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -36,6 +37,23 @@ namespace Clr2Ts.Transpiler.Tests.Configuration.Files
             var config = JsonFileConfigurationSource.FromFile("configuration.sample.json");
 
             Assert.Single(config.GetSection<InputConfiguration>().AssemblyFiles);
+        }
+
+        /// <summary>
+        /// Replacing Tokens in a configuration file for reusability should be supported.
+        /// </summary>
+        [Fact]
+        public void JsonFileConfigurationSource_ReplacesTokensInConfigurationFile()
+        {
+            var testvalue = "TestValue";
+            var config = JsonFileConfigurationSource.FromFile("configuration.sample.json",
+                new Dictionary<string, string>
+                {
+                    { "$TOKEN$", testvalue }
+                });
+
+            var testConfig = config.GetSection<TestConfiguration>();
+            Assert.Equal(testvalue, testConfig.Value);
         }
 
         /// <summary>

@@ -6,5 +6,8 @@
   },
   "output": {
     "bundledFile": "./bundle.ts"
+  },
+  "test": {
+    "value": "$TOKEN$"
   }
 }
