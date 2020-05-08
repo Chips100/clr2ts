@@ -243,5 +243,20 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
 
             Assert.Equal(expected, input.FormatWith(context));
         }
+
+        [Fact]
+        public void StringExtensions_FormatWith_SupportsPlaceholderFormatting_Camelcase()
+        {
+            var input = "{ Tuple1.Item1.Item1 : camelCase }, { Tuple2.Item2.Item1 : camelCase}!";
+            var expected = @"""helloHello"", ""worldWorld""!";
+
+            var context = new Dictionary<string, object>
+            {
+                { "Tuple1", Tuple.Create(Tuple.Create("HelloHello")) },
+                { "Tuple2", Tuple.Create("", Tuple.Create("WorldWorld")) },
+            };
+
+            Assert.Equal(expected, input.FormatWith(context));
+        }
     }
 }

@@ -75,7 +75,8 @@ namespace Clr2Ts.Transpiler.Extensions
 
         private static string EvaluateTemplateContext(string path, IDictionary<string, object> context)
         {
-            var cleanPath = path.Trim('{', '}').Replace(" ", string.Empty);
+            var splitted = path.Trim('{', '}').Split(':');
+            var cleanPath = splitted.First().Replace(" ", string.Empty);
             var pathElements = new Queue<string>(cleanPath.Split('.'));
 
             // TODO: this can be expressed in a functional way.
@@ -86,6 +87,13 @@ namespace Clr2Ts.Transpiler.Extensions
                 var pathElement = pathElements.Dequeue();
                 obj = TryDictionaryLookup(obj, pathElement) 
                     ?? obj.GetType().GetProperty(pathElement)?.GetValue(obj);
+            }
+
+            // Apply formatting if specified.
+            var format = splitted.Skip(1).FirstOrDefault();
+            if (format != null && Formatters.TryGetValue(format.Trim(), out var formatter))
+            {
+                obj = formatter(obj);
             }
 
             return JsonConvert.SerializeObject(obj);
@@ -112,5 +120,12 @@ namespace Clr2Ts.Transpiler.Extensions
 
             return tryGetValueResult ? tryGetValueParameters[1] : null;
         }
+
+        private static readonly IDictionary<string, Func<object, object>> Formatters = new Dictionary<string, Func<object, object>>(StringComparer.OrdinalIgnoreCase)
+        {
+            // Pass-through original object if it was not a string
+            // but "camelcase" was requested.
+            { "camelcase", x => (x as string)?.ToCamelCase() ?? x }
+        };
     }
 }
