@@ -14,5 +14,10 @@ namespace Clr2Ts.EndToEnd.Targets
         /// </summary>
         [MyDisplay("DisplaNameForSomeProperty", "Description for some property")]
         public string SomeProperty { get; set; }
+
+        /// <summary>
+        /// Some example string property without any attributes.
+        /// </summary>
+        public string UnattributedProperty { get; set; }
     }
 }

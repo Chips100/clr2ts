@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Clr2Ts.Transpiler.Filters.MemberInfoFilters;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Clr2Ts.Transpiler.Filters.ConfigurationAdapters
@@ -15,11 +16,13 @@ namespace Clr2Ts.Transpiler.Filters.ConfigurationAdapters
         /// Constructor parameters correspond to the configuration schema.
         /// </summary>
         /// <param name="type">Filters properties by applying a filter to their declaring type.</param>
-        public PropertyFilterConfigurationAdapter(TypeFilterConfigurationAdapter type)
+        /// <param name="hasAttribute">Filters properties to those that are decorated with one of the specified attributes.</param>
+        public PropertyFilterConfigurationAdapter(TypeFilterConfigurationAdapter type, IEnumerable<string> hasAttribute)
         {
             var filters = new List<IFilter<PropertyInfo>>();
 
             if (type != null) filters.Add(ProjectedFilter.Create(type, (PropertyInfo p) => p.DeclaringType));
+            if (hasAttribute != null) filters.Add(new HasAttributeFilter(hasAttribute));
 
             // Multiple filters in a single adapter must all be fulfilled for a match.
             _filter = CompositeFilter.And(filters);

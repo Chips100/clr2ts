@@ -22,7 +22,8 @@
         "if": {
           "type": {
             "hasAttribute": [ "ClassLevel" ]
-          }
+          },
+          "hasAttribute": [ "MyDisplay" ]
         },
         "decorator": "propertyDecorator",
         "parameters": [ "{Type.FullName} + ', ' + {Property.PropertyType.FullName}", "{TypeAttributes.MyDisplay.Name}", "{Attributes.MyDisplay.Name}" ],

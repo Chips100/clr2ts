@@ -1,4 +1,5 @@
-﻿using Clr2Ts.Transpiler.Filters.TypeFilters;
+﻿using Clr2Ts.Transpiler.Filters.MemberInfoFilters;
+using Clr2Ts.Transpiler.Filters.TypeFilters;
 using System;
 using System.Collections.Generic;
 
@@ -22,7 +23,7 @@ namespace Clr2Ts.Transpiler.Filters.ConfigurationAdapters
         {
             var filters = new List<IFilter<Type>>();
 
-            if (hasAttribute != null) filters.Add(new AttributeTypeFilter(hasAttribute));
+            if (hasAttribute != null) filters.Add(new HasAttributeFilter(hasAttribute));
             if (subTypeOf != null) filters.Add(new SubTypeFilter(subTypeOf));
             if (@namespace != null) filters.Add(new NamespaceFilter(@namespace));
 

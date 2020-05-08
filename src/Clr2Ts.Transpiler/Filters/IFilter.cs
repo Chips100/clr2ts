@@ -4,7 +4,7 @@
     /// Represents a filter to match a subset of items from a specific type.
     /// </summary>
     /// <typeparam name="T">Type of items that can be matched by this filter.</typeparam>
-    public interface IFilter<T>
+    public interface IFilter<in T>
     {
         /// <summary>
         /// Determines if the specified item is matched by this filter.
