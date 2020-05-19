@@ -41,6 +41,29 @@ namespace Clr2Ts.Transpiler.Extensions
         }
 
         /// <summary>
+        /// Gets the type of the elements that the specified collection type contains.
+        /// </summary>
+        /// <param name="collectionType">The type of the collection to inspect.</param>
+        /// <returns>The type of the elements contained by the collection type; or null if it does not represent a collection.</returns>
+        public static Type GetCollectionElementType(this Type collectionType)
+        {
+            if (collectionType is null) throw new ArgumentNullException(nameof(collectionType));
+
+            // Check if the type is the IEnumerable interface itself,
+            // otherwise look for the implemented IEnumerable interface.
+            var enumerableInterface = GetSelfEnumerableType(collectionType)
+                ?? GetImplementedEnumerableType(collectionType);
+
+            return enumerableInterface?.GetGenericArguments().Single();
+        }
+
+        private static Type GetSelfEnumerableType(Type type)
+            => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>) ? type : null;
+
+        private static Type GetImplementedEnumerableType(Type type)
+            => type.GetInterface(typeof(IEnumerable<>).Name);
+
+        /// <summary>
         /// Gets the name of a type with its generic parameters
         /// written as <code>&lt;T1, T2, ...&gt;</code> (corresponding to the formal declaration).
         /// </summary>

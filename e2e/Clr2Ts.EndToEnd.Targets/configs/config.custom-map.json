@@ -19,6 +19,10 @@
       {
         "type": "Clr2Ts.EndToEnd.Targets.ExampleClass3",
         "name": "any"
+      },
+      {
+        "type": "System.Byte[]",
+        "name": "Array<number> | File"
       }
     ]
   },

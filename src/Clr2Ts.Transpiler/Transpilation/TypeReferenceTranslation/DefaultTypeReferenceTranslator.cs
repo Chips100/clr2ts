@@ -28,9 +28,9 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation
                 new GenericArgumentTranslationStrategy(),
                 new NullableTypeTranslationStrategy(this),
                 new BuiltInTypeTranslationStrategy(this),
-                new DictionaryTypeTranslationStrategy( this),
-                new CollectionTypeTranslationStrategy(this),
+                new DictionaryTypeTranslationStrategy(this),
                 new CustomMappedTranslationStrategy(configurationSource, this),
+                new CollectionTypeTranslationStrategy(this),
                 new GenericTypeTranslationStrategy(this),
                 new DefaultTranslationStrategy()
             };

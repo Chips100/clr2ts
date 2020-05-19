@@ -31,5 +31,15 @@ namespace Clr2Ts.EndToEnd.Targets
         /// Example for a nested constructed generic type reference.
         /// </summary>
         public GenericType<ExampleClass2, GenericType<ExampleClass1, int>> NestedGenericReference { get; set; }
+
+        /// <summary>
+        /// Property with type array of bytes.
+        /// </summary>
+        public byte[] SomeByteArrayProperty { get; set; }
+
+        /// <summary>
+        /// Property with an array of a potentially mapped type.
+        /// </summary>
+        public ExampleClass3[] SomeOtherArray { get; set; }
     }
 }

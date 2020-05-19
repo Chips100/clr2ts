@@ -6,7 +6,7 @@
     <ToolCommandName>clr2ts</ToolCommandName>
     <PackageOutputPath>../../dist</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.2.2</Version>
+    <Version>0.2.3</Version>
     <Authors>Dennis Janiak</Authors>
     <Company />
     <Product>clr2ts</Product>
@@ -15,7 +15,7 @@
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chips100/clr2ts</RepositoryUrl>
     <PackageTags>CLR TypeScript .NET C#</PackageTags>
-    <PackageReleaseNotes>Adds support for custom type maps and a first prototype for class decorators.</PackageReleaseNotes>
+    <PackageReleaseNotes>Support custom maps for collection types.</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

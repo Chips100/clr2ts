@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Clr2Ts.Transpiler.Extensions;
+using System;
 
 namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
 {
@@ -23,7 +22,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <param name="type">Type reference that should be translated.</param>
         /// <returns>True, if this strategy can be used to translate the specified type reference; otherwise false.</returns>
         protected override bool CanTranslate(Type type)
-            => GetCollectionElementType(type) != null;
+            => type.GetCollectionElementType() != null;
 
         /// <summary>
         /// Is overridden to define how the type reference is translated by this strategy.
@@ -33,28 +32,12 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
         /// <returns>Result of the translation.</returns>
         protected override TypeReferenceTranslationResult Translate(Type referencedType, ITypeReferenceTranslator translator)
         {
-            var elementType = GetCollectionElementType(referencedType);
+            var elementType = referencedType.GetCollectionElementType();
             var translatedElement = translator.Translate(elementType);
 
             return new TypeReferenceTranslationResult(
                 $"Array<{ translatedElement.ReferencedTypeName }>",
                 translatedElement.Dependencies);
         }
-
-        private Type GetCollectionElementType(Type collectionType)
-        {
-            // Check if the type is the IEnumerable interface itself,
-            // otherwise look for the implemented IEnumerable interface.
-            var enumerableInterface = GetSelfEnumerableType(collectionType)
-                ?? GetImplementedEnumerableType(collectionType);
-
-            return enumerableInterface?.GetGenericArguments().Single();
-        }
-
-        private Type GetSelfEnumerableType(Type type)
-            => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>) ? type : null;
-
-        private Type GetImplementedEnumerableType(Type type)
-            => type.GetInterface(typeof(IEnumerable<>).Name);
     }
 }

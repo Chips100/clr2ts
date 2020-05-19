@@ -43,11 +43,21 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         /// <returns>True, if the specified type is covered by this map; otherwise false.</returns>
         public bool MapsType(Type type)
         {
-            var typeName = type.GetNameWithoutGenericTypeParameters();
+            if (type is null) throw new ArgumentNullException(nameof(type));
+
+            // Allow mapping collections by specifying an array suffix "[]".
+            var mappedTypeName = Type;
+            if (mappedTypeName.EndsWith("[]"))
+            {
+                mappedTypeName = mappedTypeName.Substring(0, mappedTypeName.Length - 2);
+                type = type.GetCollectionElementType();
+                if (type is null) return false;
+            }
 
             // Allow specifying the map via simple type name
             // or fully qualified with namespace.
-            return Type == typeName || Type == $"{type.Namespace}.{typeName}";
+            var typeName = type.GetNameWithoutGenericTypeParameters();
+            return mappedTypeName == typeName || mappedTypeName == $"{type.Namespace}.{typeName}";
         }
 
         /// <summary>
