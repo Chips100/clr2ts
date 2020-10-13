@@ -5,6 +5,7 @@
     ]
   },
   "transpilation": {
+    "defaultValues": "DefaultConstructor",
     "customTypeMaps": [
       {
         "type": "Clr2Ts.EndToEnd.Targets.ExampleClass1",

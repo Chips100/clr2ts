@@ -1,10 +1,12 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using Clr2Ts.Transpiler.Logging;
 using Clr2Ts.Transpiler.Transpilation.Configuration;
+using Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Clr2Ts.Transpiler.Transpilation.DefaultValues
@@ -30,13 +32,16 @@ namespace Clr2Ts.Transpiler.Transpilation.DefaultValues
         /// </summary>
         /// <param name="configurationSource">Configuration that the provider should respect.</param>
         /// <param name="logger">Logger to use for writing log messages.</param>
-        public DefaultValueProvider(IConfigurationSource configurationSource, ILogger logger)
+        public DefaultValueProvider(IConfigurationSource configurationSource, ILogger logger, ITypeReferenceTranslator typeReferenceTranslator)
         {
             if (configurationSource is null) throw new ArgumentNullException(nameof(configurationSource));
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _configuration = configurationSource.GetSection<TranspilationConfiguration>() 
+            _configuration = configurationSource.GetSection<TranspilationConfiguration>()
                 ?? TranspilationConfiguration.Default;
+
+            _defaultValueAssignments.Add(DefaultValueStrategy.DefaultConstructor,
+                type => GetDefaultConstructorCall(type, _configuration, typeReferenceTranslator));
         }
 
         /// <summary>
@@ -54,6 +59,20 @@ namespace Clr2Ts.Transpiler.Transpilation.DefaultValues
             // Fallback: no assignment.
             _logger.WriteWarning($"No strategy for creating assignments with DefaultValueStrategy: {_configuration.DefaultValues}");
             return string.Empty;
+        }
+
+        private string GetDefaultConstructorCall(Type type, TranspilationConfiguration configuration, ITypeReferenceTranslator typeReferenceTranslator)
+        {
+            var unconstructables = new[] { typeof(string), typeof(object) };
+            if (configuration.CustomTypeMaps.Any(map => map.MapsType(type))
+                || !type.IsClass
+                || unconstructables.Contains(type)
+                || type.IsGenericParameter)
+            {
+                return _defaultValueAssignments[DefaultValueStrategy.PrimitiveDefaults](type);
+            }
+
+            return $" = new {typeReferenceTranslator.Translate(type).ReferencedTypeName}()";
         }
 
         private static string GetPrimitiveDefaultAsTypeScript(Type type)

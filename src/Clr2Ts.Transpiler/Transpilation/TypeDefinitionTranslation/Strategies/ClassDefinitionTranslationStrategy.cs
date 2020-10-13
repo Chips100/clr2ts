@@ -28,7 +28,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         public ClassDefinitionTranslationStrategy(IConfigurationSource configurationSource, ITemplatingEngine templatingEngine, IDocumentationSource documentationSource, ILogger logger)
             : base(configurationSource, templatingEngine, documentationSource, logger)
         {
-            _defaultValueProvider = new DefaultValueProvider(configurationSource, logger);
+            _defaultValueProvider = new DefaultValueProvider(configurationSource, logger, TypeReferenceTranslator);
         }
 
         /// <summary>

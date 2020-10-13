@@ -19,6 +19,12 @@
         /// Assign default values for primitive types, like Boolean or Int32.
         /// All other types will be assigned null.
         /// </summary>
-        PrimitiveDefaults
+        PrimitiveDefaults,
+
+        /// <summary>
+        /// Create class instances by calling the default constructor.
+        /// Primitive types get their default value as by <see cref="PrimitiveDefaults"/>.
+        /// </summary>
+        DefaultConstructor
     }
 }
