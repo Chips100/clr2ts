@@ -10,6 +10,7 @@
     <None Remove="CustomType.ts" />
     <None Remove="GenericCustomType.ts" />
     <None Remove="propertyDecorator.decorator.ts" />
+    <None Remove="typeHint.decorator.ts" />
     <None Remove="typeName.decorator.ts" />
   </ItemGroup>
   <ItemGroup>

@@ -15,13 +15,15 @@ namespace Clr2Ts.Transpiler.Filters.ConfigurationAdapters
         /// Creates a <see cref="PropertyFilterConfigurationAdapter"/>.
         /// Constructor parameters correspond to the configuration schema.
         /// </summary>
-        /// <param name="type">Filters properties by applying a filter to their declaring type.</param>
+        /// <param name="declaringType">Filters properties by applying a filter to their declaring type.</param>
+        /// <param name="propertyType">Filters properties by applying a filter to the type of the property.</param>
         /// <param name="hasAttribute">Filters properties to those that are decorated with one of the specified attributes.</param>
-        public PropertyFilterConfigurationAdapter(TypeFilterConfigurationAdapter type, IEnumerable<string> hasAttribute)
+        public PropertyFilterConfigurationAdapter(TypeFilterConfigurationAdapter declaringType, TypeFilterConfigurationAdapter propertyType, IEnumerable<string> hasAttribute)
         {
             var filters = new List<IFilter<PropertyInfo>>();
 
-            if (type != null) filters.Add(ProjectedFilter.Create(type, (PropertyInfo p) => p.DeclaringType));
+            if (declaringType != null) filters.Add(ProjectedFilter.Create(declaringType, (PropertyInfo p) => p.DeclaringType));
+            if (propertyType != null) filters.Add(ProjectedFilter.Create(propertyType, (PropertyInfo p) => p.PropertyType));
             if (hasAttribute != null) filters.Add(new HasAttributeFilter(hasAttribute));
 
             // Multiple filters in a single adapter must all be fulfilled for a match.

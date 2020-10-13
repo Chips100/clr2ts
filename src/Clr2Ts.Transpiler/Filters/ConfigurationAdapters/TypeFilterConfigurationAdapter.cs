@@ -19,13 +19,15 @@ namespace Clr2Ts.Transpiler.Filters.ConfigurationAdapters
         /// <param name="hasAttribute">Filters types to those that are decorated with one of the specified attributes.</param>
         /// <param name="subTypeOf">Filters types to those that are subtypes of one of the specified types.</param>
         /// <param name="namespace">Filters types to those that are declared in the specified namespace.</param>
-        public TypeFilterConfigurationAdapter(IEnumerable<string> hasAttribute, IEnumerable<string> subTypeOf, string @namespace)
+        /// <param name="isEnum">True, if only types should be matched that represent an enum type.</param>
+        public TypeFilterConfigurationAdapter(IEnumerable<string> hasAttribute, IEnumerable<string> subTypeOf, string @namespace, bool isEnum)
         {
             var filters = new List<IFilter<Type>>();
 
             if (hasAttribute != null) filters.Add(new HasAttributeFilter(hasAttribute));
             if (subTypeOf != null) filters.Add(new SubTypeFilter(subTypeOf));
             if (@namespace != null) filters.Add(new NamespaceFilter(@namespace));
+            if (isEnum) filters.Add(new IsEnumFilter());
 
             // Multiple filters in a single adapter must all be fulfilled for a match.
             _filter = CompositeFilter.And(filters);

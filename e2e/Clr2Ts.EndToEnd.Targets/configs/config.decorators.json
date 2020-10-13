@@ -28,6 +28,12 @@
         "decorator": "propertyDecorator",
         "parameters": [ "{Type.FullName} + ', ' + {Property.PropertyType.FullName}", "{TypeAttributes.MyDisplay.Name}", "{Attributes.MyDisplay.Name}" ],
         "import": "../../propertyDecorator.decorator"
+      },
+      {
+        "if": { "propertyType": { "isEnum": true } },
+        "decorator": "typeHint",
+        "parameters": [ "{Property.PropertyType.Name:rawString}" ],
+        "import": "../../typeHint.decorator"
       }
     ]
   },
