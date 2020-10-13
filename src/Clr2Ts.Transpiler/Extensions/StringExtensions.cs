@@ -96,6 +96,10 @@ namespace Clr2Ts.Transpiler.Extensions
                 obj = formatter(obj);
             }
 
+            // Special formatter: Apply string value without quotes into template.
+            if ("rawstring".Equals(format, StringComparison.OrdinalIgnoreCase)
+                && obj is string stringValue) return stringValue;
+
             return JsonConvert.SerializeObject(obj);
         }
 
