@@ -32,12 +32,17 @@ namespace Clr2Ts.Transpiler.Output.Files
         /// <param name="codeFragments">Code fragments that should be written.</param>
         public void Write(IEnumerable<CodeFragment> codeFragments)
         {
-            // Clean the target directory first.
-            if (Directory.Exists(_directory)) Directory.Delete(_directory, true);
-
+            var writtenFiles = new HashSet<string>();
             foreach (var fragment in codeFragments)
             {
-                WriteCodeFragment(fragment);
+                writtenFiles.Add(WriteCodeFragment(fragment).FullName);
+            }
+
+            // Clean the target directory from trailing files.
+            var existingFiles = Directory.EnumerateFiles(_directory, "*.ts", SearchOption.AllDirectories);
+            foreach (var file in existingFiles.Where(f => !writtenFiles.Contains(new FileInfo(f).FullName)))
+            {
+                File.Delete(file);
             }
         }
 
@@ -45,7 +50,7 @@ namespace Clr2Ts.Transpiler.Output.Files
         /// Writes a single code fragment to the corresponding file.
         /// </summary>
         /// <param name="codeFragment">The code fragment that should be written.</param>
-        private void WriteCodeFragment(CodeFragment codeFragment)
+        private FileInfo WriteCodeFragment(CodeFragment codeFragment)
         {
             var file = GetFileNameFor(codeFragment.Id);
             Directory.CreateDirectory(Path.GetDirectoryName(file));
@@ -67,6 +72,8 @@ namespace Clr2Ts.Transpiler.Output.Files
                 writer.WriteLine();
                 writer.Write(codeFragment.Code);
             }
+
+            return new FileInfo(file);
         }
 
         /// <summary>
