@@ -26,13 +26,13 @@
           "hasAttribute": [ "MyDisplay" ]
         },
         "decorator": "propertyDecorator",
-        "parameters": [ "{Type.FullName} + ', ' + {Property.PropertyType.FullName}", "{TypeAttributes.MyDisplay.Name}", "{Attributes.MyDisplay.Name}" ],
+        "parameters": [ "{Type.FullName} + ', ' + {Property.PropertyType.FullName}", "{TypeAttributes.MyDisplay.Name}", "{Attributes.MyDisplay.Name}+{Attributes.MyDisplay.GetDescription}" ],
         "import": "../../propertyDecorator.decorator"
       },
       {
         "if": { "propertyType": { "isEnum": true } },
         "decorator": "typeHint",
-        "parameters": [ "{Property.PropertyType.Name:rawString}" ],
+        "parameters": [ "{Property.PropertyType.UnderlyingTypeIfNullable.Name:rawString}" ],
         "import": "../../typeHint.decorator"
       }
     ]

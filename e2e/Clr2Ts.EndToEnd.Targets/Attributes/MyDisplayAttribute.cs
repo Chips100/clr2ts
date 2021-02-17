@@ -27,5 +27,14 @@ namespace Clr2Ts.EndToEnd.Targets.Attributes
         /// Gets the description of the attributed member.
         /// </summary>
         public string Description { get; }
+        
+        /// <summary>
+        /// Accesses the description property by a method.
+        /// </summary>
+        /// <returns>The description with a suffix.</returns>
+        public string GetDescription()
+        {
+            return Description + " by method";
+        }
     }
 }

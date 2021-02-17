@@ -8,7 +8,7 @@
     "flattenBaseTypes": true,
     "enumAttributeMaps": {
       "_displayNames": "{Attributes.MyDisplayAttribute.Name}",
-      "_displayDescriptions": "{Attributes.MyDisplayAttribute.Description}"
+      "_displayDescriptions": "{Attributes.MyDisplayAttribute.GetDescription}"
     }
   },
   "output": {

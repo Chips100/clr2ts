@@ -85,8 +85,17 @@ namespace Clr2Ts.Transpiler.Extensions
             while (obj != null && pathElements.Any())
             {
                 var pathElement = pathElements.Dequeue();
+
+                // Custom operators are priorized.
+                if (CustomOperators.TryGetValue(pathElement, out var customOperator))
+                {
+                    obj = customOperator(obj);
+                    continue;
+                }
+
                 obj = TryDictionaryLookup(obj, pathElement) 
-                    ?? obj.GetType().GetProperty(pathElement)?.GetValue(obj);
+                    ?? obj.GetType().GetProperty(pathElement)?.GetValue(obj)
+                    ?? obj.GetType().GetMethod(pathElement)?.Invoke(obj, new object[0]);
             }
 
             // Apply formatting if specified.
@@ -130,6 +139,11 @@ namespace Clr2Ts.Transpiler.Extensions
             // Pass-through original object if it was not a string
             // but "camelcase" was requested.
             { "camelcase", x => (x as string)?.ToCamelCase() ?? x }
+        };
+
+        private static readonly IDictionary<string, Func<object, object>> CustomOperators = new Dictionary<string, Func<object, object>>
+        {
+            { "UnderlyingTypeIfNullable", obj => obj is Type type ? (Nullable.GetUnderlyingType(type) ?? type) : null }
         };
     }
 }

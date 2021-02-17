@@ -16,7 +16,9 @@ namespace Clr2Ts.Transpiler.Filters.TypeFilters
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            return item.IsEnum;
+            return item.IsEnum 
+                // Nullable enums are still enums from our perspective.
+                || (Nullable.GetUnderlyingType(item)?.IsEnum ?? false);
         }
     }
 }

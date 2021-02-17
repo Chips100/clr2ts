@@ -258,5 +258,42 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
 
             Assert.Equal(expected, input.FormatWith(context));
         }
+    
+        /// <summary>
+        /// FormatWith allows specifying method names to invoke them
+        /// (only parameterless for now).
+        /// </summary>
+        [Fact]
+        public void StringExtensions_FormatWith_AllowMethodCall()
+        {
+            var input = "{ MyString.GetType.Name }";
+            var expected = @"""String""";
+
+            var context = new Dictionary<string, object>
+            {
+                { "MyString", "Hello, World!" },
+            };
+
+            Assert.Equal(expected, input.FormatWith(context));
+        }
+
+        /// <summary>
+        /// FormatWith offers custom operators to include in the
+        /// resolved path (here: UnderlyingTypeIfNullable).
+        /// </summary>
+        [Fact]
+        public void StringExtensions_FormatWith_CustomOperator_UnderlyingTypeIfNullable()
+        {
+            var input = "{ NullableInt.GetType.UnderlyingTypeIfNullable.Name }, { NonNullableInt.GetType.UnderlyingTypeIfNullable.Name }";
+            var expected = @"""Int32"", ""Int32""";
+
+            var context = new Dictionary<string, object>
+            {
+                { "NullableInt", (int?)5 },
+                { "NonNullableInt", 5 },
+            };
+
+            Assert.Equal(expected, input.FormatWith(context));
+        }
     }
 }

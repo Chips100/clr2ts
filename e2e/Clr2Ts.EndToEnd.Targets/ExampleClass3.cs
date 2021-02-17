@@ -14,5 +14,10 @@
         /// Simple property referencing an enum.
         /// </summary>
         public ExampleEnum EnumProperty { get; set; }
+
+        /// <summary>
+        /// Nullable Property referencing an enum.
+        /// </summary>
+        public ExampleEnum? EnumPropertyNullable { get; set; }
     }
 }
