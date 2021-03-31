@@ -6,6 +6,8 @@
 
 Transpiler that takes CLR assemblies and outputs corresponding typescript definitions.
 
+![Demo Gif](./clr2ts.gif)
+
 ## Installation
 Get clr2ts by installing it as a dotnet tool from nuget.org.
 
