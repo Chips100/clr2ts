@@ -67,6 +67,41 @@ namespace Clr2Ts.Transpiler.Tests.Filters.TypeFilters
             Assert.False(sut.IsMatch(typeof(NoMatchClass)));
         }
 
+        /// <summary>
+        /// IsMatch should support specification of the full name
+        /// of a type, so the user may choose to fully specify
+        /// the name to avoid conflicts with the simple name.
+        /// </summary>
+        [Fact]
+        public void SubTypeFilter_SpecifiedWithFullname()
+        {
+            var sut = new SubTypeFilter(new[] { "Clr2Ts.Transpiler.Tests.Filters.TypeFilters.SubTypeFilterTests+ISomething" });
+            Assert.True(sut.IsMatch(typeof(SubClass)));
+        }
+
+        /// <summary>
+        /// A type is by definition a subtype of itself.
+        /// </summary>
+        [Fact]
+        public void SubTypeFilter_SubTypeOfItself()
+        {
+            var sut = new SubTypeFilter(new[] { "SubClass" });
+            Assert.True(sut.IsMatch(typeof(SubClass)));
+        }
+
+        /// <summary>
+        /// The SubTypeFilter should be applicable to primitive types as well.
+        /// </summary>
+        [Fact]
+        public void SubTypeFilter_SubTypeOfItself_Primitive()
+        {
+            var sutDecimal = new SubTypeFilter(new[] { "System.Decimal" });
+            Assert.True(sutDecimal.IsMatch(typeof(decimal)));
+
+            var sutBool = new SubTypeFilter(new[] { "System.Boolean" });
+            Assert.True(sutBool.IsMatch(typeof(bool)));
+        }
+
         private class BaseA : ISomethingElse { }
 
         private class BaseB : BaseA { }

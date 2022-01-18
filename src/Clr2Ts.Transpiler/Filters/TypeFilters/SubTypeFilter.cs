@@ -21,6 +21,11 @@ namespace Clr2Ts.Transpiler.Filters.TypeFilters
             _baseTypeNames = baseTypeNames ?? throw new ArgumentNullException(nameof(baseTypeNames));
         }
 
+        /// <summary>
+        /// Determines if the specified item is matched by this filter.
+        /// </summary>
+        /// <param name="item">Item to check.</param>
+        /// <returns>True, if the item is matched by this filter; otherwise false.</returns>
         public bool IsMatch(Type item)
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
@@ -29,13 +34,9 @@ namespace Clr2Ts.Transpiler.Filters.TypeFilters
             return _baseTypeNames.All(x => IsSubTypeOf(item, x));
         }
 
-        /// <summary>
-        /// Determines if the specified item is matched by this filter.
-        /// </summary>
-        /// <param name="item">Item to check.</param>
-        /// <returns>True, if the item is matched by this filter; otherwise false.</returns>
         private bool IsSubTypeOf(Type type, string baseTypeName)
-            => type.GetInterface(baseTypeName) != null
-                || type.GetBaseTypes().Any(bt => bt.Name == baseTypeName);
+            // Subtype relation: Identical type, base class hierarchy or interface implementation.
+            => new[] { type }.Concat(type.GetBaseTypes()).Concat(type.GetInterfaces())
+                    .Any(bt => bt.Name == baseTypeName || bt.FullName == baseTypeName);
     }
 }
