@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Clr2Ts.Transpiler.Extensions;
+using System;
 
 namespace Clr2Ts.Transpiler.Filters.TypeFilters
 {
@@ -16,9 +17,8 @@ namespace Clr2Ts.Transpiler.Filters.TypeFilters
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            return item.IsEnum 
-                // Nullable enums are still enums from our perspective.
-                || (Nullable.GetUnderlyingType(item)?.IsEnum ?? false);
+            // Nullable enums are still enums from our perspective.
+            return item.UnwrapNullable().IsEnum;
         }
     }
 }

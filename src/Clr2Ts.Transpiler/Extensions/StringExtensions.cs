@@ -143,7 +143,7 @@ namespace Clr2Ts.Transpiler.Extensions
 
         private static readonly IDictionary<string, Func<object, object>> CustomOperators = new Dictionary<string, Func<object, object>>
         {
-            { "UnderlyingTypeIfNullable", obj => obj is Type type ? (Nullable.GetUnderlyingType(type) ?? type) : null }
+            { "UnderlyingTypeIfNullable", obj => obj is Type type ? type.UnwrapNullable() : null }
         };
     }
 }

@@ -10,6 +10,15 @@ namespace Clr2Ts.Transpiler.Extensions
     public static class TypeExtensions
     {
         /// <summary>
+        /// Returns the underlying type if a nullable type is specified,
+        /// otherwise the type itself.
+        /// </summary>
+        /// <param name="type">Type that might be nullable.</param>
+        /// <returns>The underlying type, if it is nullable; otherwise the type itself.</returns>
+        public static Type UnwrapNullable(this Type type)
+            => Nullable.GetUnderlyingType(type) ?? type;
+
+        /// <summary>
         /// Gets all base types that the current type is derived from (including <see cref="object"/>).
         /// </summary>
         /// <param name="type">Current type.</param>

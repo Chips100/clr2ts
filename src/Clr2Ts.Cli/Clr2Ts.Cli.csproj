@@ -6,7 +6,7 @@
     <ToolCommandName>clr2ts</ToolCommandName>
     <PackageOutputPath>../../dist</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.3.2</Version>
+    <Version>0.3.3</Version>
     <Authors>Dennis Janiak</Authors>
     <Company />
     <Product>clr2ts</Product>
@@ -15,7 +15,7 @@
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chips100/clr2ts</RepositoryUrl>
     <PackageTags>CLR TypeScript .NET C#</PackageTags>
-    <PackageReleaseNotes>Support custom maps for collection types.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixes SubTypeFilter when handed the identical type (or nullable version).</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

@@ -102,6 +102,18 @@ namespace Clr2Ts.Transpiler.Tests.Filters.TypeFilters
             Assert.True(sutBool.IsMatch(typeof(bool)));
         }
 
+        /// <summary>
+        /// The SubTypeFilter should recognize nullable versions
+        /// of types as subtypes as well.
+        /// </summary>
+        [Fact]
+        public void SubTypeFilter_SubTypeOfItself_Nullable()
+        {
+            var sutDecimal = new SubTypeFilter(new[] { "System.Decimal" });
+            Assert.True(sutDecimal.IsMatch(typeof(decimal?)));
+        }
+
+
         private class BaseA : ISomethingElse { }
 
         private class BaseB : BaseA { }

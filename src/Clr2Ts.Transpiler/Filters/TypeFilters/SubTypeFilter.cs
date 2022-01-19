@@ -36,7 +36,7 @@ namespace Clr2Ts.Transpiler.Filters.TypeFilters
 
         private bool IsSubTypeOf(Type type, string baseTypeName)
             // Subtype relation: Identical type, base class hierarchy or interface implementation.
-            => new[] { type }.Concat(type.GetBaseTypes()).Concat(type.GetInterfaces())
+            => new[] { type.UnwrapNullable() }.Concat(type.GetBaseTypes()).Concat(type.GetInterfaces())
                     .Any(bt => bt.Name == baseTypeName || bt.FullName == baseTypeName);
     }
 }
