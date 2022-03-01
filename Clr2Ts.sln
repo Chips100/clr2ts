@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.202
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clr2Ts.Cli", "src\Clr2Ts.Cli\Clr2Ts.Cli.csproj", "{FC53FD47-37A3-43B3-85C5-D94B8B98FEC3}"
 EndProject
@@ -27,7 +27,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clr2Ts.EndToEnd.Tests", "e2
 		{AE7D3A6A-0609-4043-BAA9-522EE21C7DA6} = {AE7D3A6A-0609-4043-BAA9-522EE21C7DA6}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clr2Ts.EndToEnd.Targets", "e2e\Clr2Ts.EndToEnd.Targets\Clr2Ts.EndToEnd.Targets.csproj", "{AE7D3A6A-0609-4043-BAA9-522EE21C7DA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clr2Ts.EndToEnd.Targets", "e2e\Clr2Ts.EndToEnd.Targets\Clr2Ts.EndToEnd.Targets.csproj", "{AE7D3A6A-0609-4043-BAA9-522EE21C7DA6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FC53FD47-37A3-43B3-85C5-D94B8B98FEC3} = {FC53FD47-37A3-43B3-85C5-D94B8B98FEC3}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clr2Ts.EndToEnd.Net6.Targets", "Clr2Ts.EndToEnd.Net6.Targets\Clr2Ts.EndToEnd.Net6.Targets.csproj", "{6A418799-9F8C-4269-8F63-9BE0E408B414}"
 	ProjectSection(ProjectDependencies) = postProject
 		{FC53FD47-37A3-43B3-85C5-D94B8B98FEC3} = {FC53FD47-37A3-43B3-85C5-D94B8B98FEC3}
 	EndProjectSection
@@ -66,6 +71,10 @@ Global
 		{AE7D3A6A-0609-4043-BAA9-522EE21C7DA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE7D3A6A-0609-4043-BAA9-522EE21C7DA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE7D3A6A-0609-4043-BAA9-522EE21C7DA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A418799-9F8C-4269-8F63-9BE0E408B414}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A418799-9F8C-4269-8F63-9BE0E408B414}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A418799-9F8C-4269-8F63-9BE0E408B414}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A418799-9F8C-4269-8F63-9BE0E408B414}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +87,7 @@ Global
 		{EE4623E5-EB20-468F-8233-82768F2B4C7E} = {D9652F52-2B12-4E1E-9EE6-8F9376191CBF}
 		{9400553F-E0F5-4655-B8BE-07E04ED14E6F} = {A86F4537-47F3-459B-8F57-AE2F6154E4CB}
 		{AE7D3A6A-0609-4043-BAA9-522EE21C7DA6} = {A86F4537-47F3-459B-8F57-AE2F6154E4CB}
+		{6A418799-9F8C-4269-8F63-9BE0E408B414} = {A86F4537-47F3-459B-8F57-AE2F6154E4CB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17FA4A7F-0B54-42D4-8036-9B894B9D3384}
