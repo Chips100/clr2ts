@@ -43,7 +43,8 @@ namespace Clr2Ts.Transpiler.Input
             var assemblyFiles = configuration.AssemblyFiles
                 .SelectMany(x => new DirectoryInfo(Environment.CurrentDirectory)
                     .EnumerateFiles(x, SearchOption.AllDirectories)
-                    .Select(f => f.FullName));
+                    .Select(f => f.FullName))
+                    .RedirectReferenceAssemblies(_logger);
 
             return assemblyFiles.SelectMany(GetTypesFromAssembly)
                 .Where(configuration.TypeFilter.IsMatch);

@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	<Exec Command="dotnet &quot;$(SolutionDir)src/Clr2Ts.Cli/bin/$(Configuration)/netcoreapp3.1/Clr2Ts.Cli.dll&quot; &quot;$(OutDir)/config.clr2ts.json&quot;" />
+	<Exec Command="dotnet &quot;$(SolutionDir)src/Clr2Ts.Cli/bin/$(Configuration)/Clr2Ts.Cli.dll&quot; &quot;$(OutDir)/config.clr2ts.json&quot;" />
   </Target>
 
 </Project>
