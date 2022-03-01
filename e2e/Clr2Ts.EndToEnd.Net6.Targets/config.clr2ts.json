@@ -7,7 +7,7 @@
   "transpilation": { },
   "output": {
     "files": {
-      "directory": "../../../../Clr2Ts.EndToEnd.Net6.Tests/targets-output/",
+      "directory": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/net6",
       "mimicNamespacesWithSubdirectories": false
     }
   }

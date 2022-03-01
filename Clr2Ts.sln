@@ -32,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clr2Ts.EndToEnd.Targets", "
 		{FC53FD47-37A3-43B3-85C5-D94B8B98FEC3} = {FC53FD47-37A3-43B3-85C5-D94B8B98FEC3}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clr2Ts.EndToEnd.Net6.Targets", "Clr2Ts.EndToEnd.Net6.Targets\Clr2Ts.EndToEnd.Net6.Targets.csproj", "{6A418799-9F8C-4269-8F63-9BE0E408B414}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clr2Ts.EndToEnd.Net6.Targets", "e2e\Clr2Ts.EndToEnd.Net6.Targets\Clr2Ts.EndToEnd.Net6.Targets.csproj", "{6A418799-9F8C-4269-8F63-9BE0E408B414}"
 	ProjectSection(ProjectDependencies) = postProject
 		{FC53FD47-37A3-43B3-85C5-D94B8B98FEC3} = {FC53FD47-37A3-43B3-85C5-D94B8B98FEC3}
 	EndProjectSection
