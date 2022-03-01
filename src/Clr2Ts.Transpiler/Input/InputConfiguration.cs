@@ -17,9 +17,10 @@ namespace Clr2Ts.Transpiler.Input
         /// Creates an <see cref="InputConfiguration"/>.
         /// </summary>
         /// <param name="assemblyFiles">Names of the assembly files that should be transpiled.</param>
+        /// <param name="redirectReferenceAssemblies">If true, reference assemblies will be redirected to their full versions automatically.</param>
         /// <param name="typeFilters">Filters that should be used to determine which types should be transpiled.</param>
         /// <exception cref="ConfigurationException">Thrown when <paramref name="assemblyFiles"/> is null or empty.</exception>
-        public InputConfiguration(IEnumerable<string> assemblyFiles, IEnumerable<TypeFilterConfigurationAdapter> typeFilters = null)
+        public InputConfiguration(IEnumerable<string> assemblyFiles, bool? redirectReferenceAssemblies = null, IEnumerable<TypeFilterConfigurationAdapter> typeFilters = null)
         {
             if (assemblyFiles == null || !assemblyFiles.Any())
             {
@@ -28,6 +29,7 @@ namespace Clr2Ts.Transpiler.Input
 
             AssemblyFiles = assemblyFiles.ToList();
             TypeFilter = typeFilters != null ? CompositeFilter.Or(typeFilters) : ConstantFilter.MatchAll<Type>();
+            RedirectReferenceAssemblies = redirectReferenceAssemblies ?? true;
         }
 
         /// <summary>
@@ -39,5 +41,10 @@ namespace Clr2Ts.Transpiler.Input
         /// Gets the filter that should be used to determine which types should be transpiled.
         /// </summary>
         public IFilter<Type> TypeFilter { get; }
+
+        /// <summary>
+        /// If true, reference assemblies will be redirected to their full versions automatically.
+        /// </summary>
+        public bool RedirectReferenceAssemblies { get; }
     }
 }
