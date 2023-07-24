@@ -1,6 +1,4 @@
 ﻿using Clr2Ts.Transpiler.Extensions;
-using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Clr2Ts.Transpiler.Tests.Extensions
@@ -30,6 +28,22 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         {
             Assert.Equal("x", "X".ToCamelCase());
             Assert.Equal("someProperty", "SomeProperty".ToCamelCase());
+        }
+
+        /// <summary>
+        /// ToCamelCase should detect patterns with a screaming caps prefix
+        /// (or all uppercase names), like "ID" (=> "id"), "NR" (=> "nr")
+        /// or "IDSomething" (=> "idSomething")
+        /// </summary>
+        [Fact]
+        public void StringExtensions_ToCamelCase_HandlesUpperCasePrefix()
+        {
+            Assert.Equal("id", "ID".ToCamelCase());
+            Assert.Equal("nr", "NR".ToCamelCase());
+            Assert.Equal("idSomething", "IDSomething".ToCamelCase());
+            Assert.Equal("nrSomethingElse", "NRSomethingElse".ToCamelCase());
+            Assert.Equal("alluppercase", "ALLUPPERCASE".ToCamelCase());
+            Assert.Equal("nId", "NId".ToCamelCase());
         }
 
         /// <summary>

@@ -20,8 +20,17 @@ namespace Clr2Ts.Transpiler.Extensions
         {
             if (string.IsNullOrWhiteSpace(input)) return string.Empty;
 
+            // Find the first occurence of an upper case character followed
+            // by a lower case character (skipping the first character).
+            // This is the first word we want to keep.
+            // (Handles cases with an uppercase prefix like IDSomething => idSomething).
+            // If the string is all upper case, we convert it completely to lower case.
+            var index = Enumerable.Range(1, Math.Max(0, input.Length - 2))
+                .Where(i => char.IsLower(input[i+1]))
+                .DefaultIfEmpty(input.Length).First();
+
             // Just convert the first character to lower case.
-            return input.Substring(0, 1).ToLower() + input.Substring(1);
+            return input.Substring(0, index).ToLower() + input.Substring(index);
         }
 
         /// <summary>
