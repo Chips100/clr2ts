@@ -9,7 +9,7 @@
     <ToolCommandName>clr2ts</ToolCommandName>
     <PackageOutputPath>../../dist</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.4.2</Version>
+    <Version>0.5.0</Version>
     <Authors>Dennis Stetter</Authors>
     <Company />
     <Product>clr2ts</Product>
@@ -18,7 +18,7 @@
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chips100/clr2ts</RepositoryUrl>
     <PackageTags>CLR TypeScript .NET C#</PackageTags>
-    <PackageReleaseNotes>Improve camel casing of names with upper case prefixes or all upper case names.</PackageReleaseNotes>
+    <PackageReleaseNotes>Introduce net8 support.</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
