@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="config.clr2ts.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	<Exec Command="dotnet &quot;$(SolutionDir)src/Clr2Ts.Cli/bin/$(Configuration)/Clr2Ts.Cli.dll&quot; &quot;$(OutDir)/config.clr2ts.json&quot;" />
+  </Target>
+
+</Project>

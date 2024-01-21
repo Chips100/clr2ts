@@ -1,0 +1,14 @@
+{
+  "input": {
+    "assemblyFiles": [
+      "../Clr2Ts.EndToEnd.Net8.Targets.dll"
+    ]
+  },
+  "transpilation": { },
+  "output": {
+    "files": {
+      "directory": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/net8",
+      "mimicNamespacesWithSubdirectories": false
+    }
+  }
+}
