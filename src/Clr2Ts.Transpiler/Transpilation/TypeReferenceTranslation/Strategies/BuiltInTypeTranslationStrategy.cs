@@ -21,7 +21,12 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeReferenceTranslation.Strategies
             { typeof(DateTime), "Date" },
             { typeof(string), "string" },
             { typeof(Guid), "string" }, // special case: no real Guid type in TypeScript.
-            { typeof(object), "any" }
+            { typeof(object), "any" },
+
+            // Make new basic types from net6 work out of the box;
+            // can be overriden by custom type maps.
+            { typeof(DateOnly), "Date" },
+            { typeof(TimeOnly), "string" }
         };
 
         /// <summary>

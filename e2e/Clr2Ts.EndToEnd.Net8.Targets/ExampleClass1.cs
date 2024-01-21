@@ -30,5 +30,15 @@
         /// Property with type Int32.
         /// </summary>
         public int SomeIntegerProperty { get; set; }
+
+        /// <summary>
+        /// Property with type DateOnly.
+        /// </summary>
+        public DateOnly SomeDate { get; set; }
+
+        /// <summary>
+        /// Property with type TimeOnly.
+        /// </summary>
+        public TimeOnly TimeOnly { get; set; }
     }
 }

@@ -9,7 +9,7 @@
     <ToolCommandName>clr2ts</ToolCommandName>
     <PackageOutputPath>../../dist</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.5.0</Version>
+    <Version>0.5.1</Version>
     <Authors>Dennis Stetter</Authors>
     <Company />
     <Product>clr2ts</Product>
@@ -18,7 +18,7 @@
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chips100/clr2ts</RepositoryUrl>
     <PackageTags>CLR TypeScript .NET C#</PackageTags>
-    <PackageReleaseNotes>Introduce net8 support.</PackageReleaseNotes>
+    <PackageReleaseNotes>Support DateOnly and TimeOnly out of the box (can be overridden via custom type maps).</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
