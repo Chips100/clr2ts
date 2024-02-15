@@ -1,6 +1,7 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using Clr2Ts.Transpiler.Extensions;
 using Clr2Ts.Transpiler.Logging;
+using Clr2Ts.Transpiler.Transpilation.Configuration;
 using Clr2Ts.Transpiler.Transpilation.DefaultValues;
 using Clr2Ts.Transpiler.Transpilation.Templating;
 using System;
@@ -13,9 +14,10 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
     /// <summary>
     /// Strategy for translating definitions of class types.
     /// </summary>
-    public sealed class ClassDefinitionTranslationStrategy : TranslationStrategyBase
+    public sealed class ClassDefinitionTranslationStrategy: TranslationStrategyBase
     {
         private readonly DefaultValueProvider _defaultValueProvider;
+        private readonly TranspilationConfiguration _configuration;
 
         /// <summary>
         /// Creates a <see cref="ClassDefinitionTranslationStrategy"/>.
@@ -25,10 +27,20 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <param name="documentationSource">Source for looking up documentation comments for members.</param>
         /// <param name="logger">Logger to use for writing log messages.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="templatingEngine"/> or <paramref name="documentationSource"/> or <paramref name="logger"/> is null.</exception>
-        public ClassDefinitionTranslationStrategy(IConfigurationSource configurationSource, ITemplatingEngine templatingEngine, IDocumentationSource documentationSource, ILogger logger)
-            : base(configurationSource, templatingEngine, documentationSource, logger)
+        public ClassDefinitionTranslationStrategy(
+            IConfigurationSource configurationSource,
+            ITemplatingEngine templatingEngine,
+            IDocumentationSource documentationSource,
+            ILogger logger)
+            : base(
+                configurationSource,
+                templatingEngine,
+                documentationSource,
+                logger
+            )
         {
             _defaultValueProvider = new DefaultValueProvider(configurationSource, logger, TypeReferenceTranslator);
+            _configuration = configurationSource.GetSection<TranspilationConfiguration>();
         }
 
         /// <summary>
@@ -37,7 +49,9 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <param name="type">Type definition that should be translated.</param>
         /// <returns>True, if this strategy can be used to translate the specified type definition; otherwise false.</returns>
         protected override bool CanTranslate(Type type)
-            => type.IsClass;
+        {
+            return type.IsClass;
+        }
 
         /// <summary>
         /// Is overridden to define how the type definition is translated by this strategy.
@@ -52,23 +66,27 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             var declaration = GenerateClassDeclaration(type);
             var deps = declaration.dependencies.Merge(properties.dependencies).Merge(decorators.Dependencies);
 
-            var code = templatingEngine.UseTemplate("ClassDefinition", new Dictionary<string, string>
-            {
-                { "Decorators", decorators.DecoratorCode },
-                { "ClassName", type.GetNameWithGenericTypeParameters() },
-                { "ClassDeclaration", declaration.code },
-                { "Documentation", GenerateDocumentationComment(type) },
-                { "Properties", properties.code.AddIndentation() },
-                { "Dependencies", GenerateDependencyInitialization(deps, templatingEngine) },
-                { "ConstructorCode", declaration.isDerived 
-                    ? $"{ Environment.NewLine }super();".AddIndentation(2) 
-                    : string.Empty }
-            });
+            var code = templatingEngine.UseTemplate(
+                "ClassDefinition",
+                new Dictionary<string, string> {
+                    { "Decorators", decorators.DecoratorCode },
+                    { "ClassName", type.GetNameWithGenericTypeParameters() },
+                    { "ClassDeclaration", declaration.code },
+                    { "Documentation", GenerateDocumentationComment(type) },
+                    { "Properties", properties.code.AddIndentation() },
+                    { "Dependencies", GenerateDependencyInitialization(deps, templatingEngine) }, {
+                        "ConstructorCode", declaration.isDerived
+                                               ? $"{Environment.NewLine}super();".AddIndentation(2)
+                                               : string.Empty
+                    }
+                }
+            );
 
             return new CodeFragment(
                 CodeFragmentId.ForClrType(type),
                 code,
-                deps);
+                deps
+            );
         }
 
         private (string code, bool isDerived, CodeDependencies dependencies) GenerateClassDeclaration(Type type)
@@ -78,32 +96,38 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             var declarationParts = new List<string>();
 
             // Type name with generic type parameters (including constraints).
-            declarationParts.Add(type.GetNameWithGenericTypeParameters(t =>
-            {
-                var constraintTranslations = t.GetGenericParameterConstraints()
-                    .Except(new[] { typeof(ValueType) })
-                    .Select(TypeReferenceTranslator.Translate);
+            declarationParts.Add(
+                type.GetNameWithGenericTypeParameters(
+                    t => {
+                        var constraintTranslations = t.GetGenericParameterConstraints()
+                                                      .Except(
+                                                          new[] {
+                                                              typeof(ValueType)
+                                                          }
+                                                      )
+                                                      .Select(TypeReferenceTranslator.Translate);
 
-                deps = constraintTranslations.Select(x => x.Dependencies).Aggregate(deps, (d, next) => d.Merge(next));
-                return !constraintTranslations.Any() ? string.Empty :
-                    $" extends {string.Join(" & ", constraintTranslations.Select(x => x.ReferencedTypeName))}";
-            }));
+                        deps = constraintTranslations.Select(x => x.Dependencies).Aggregate(deps, (d, next) => d.Merge(next));
+                        return !constraintTranslations.Any()
+                                   ? string.Empty
+                                   : $" extends {string.Join(" & ", constraintTranslations.Select(x => x.ReferencedTypeName))}";
+                    }
+                )
+            );
 
             // Extending the base class.
-            if (!Configuration.FlattenBaseTypes && type.BaseType != typeof(object))
-            {
+            if (!Configuration.FlattenBaseTypes && type.BaseType != typeof(object)) {
                 var baseTypeTranslation = TypeReferenceTranslator.Translate(type.BaseType);
-                declarationParts.Add($"extends { baseTypeTranslation.ReferencedTypeName }");
+                declarationParts.Add($"extends {baseTypeTranslation.ReferencedTypeName}");
                 deps = deps.Merge(baseTypeTranslation.Dependencies);
                 isDerived = true;
             }
 
             // Implementing interfaces.
             var interfaces = type.GetSelfImplementedInterfaces();
-            if (interfaces.Any())
-            {
+            if (interfaces.Any()) {
                 var interfaceTranslations = interfaces.Select(TypeReferenceTranslator.Translate);
-                declarationParts.Add($"implements { string.Join(", ", interfaceTranslations.Select(t => t.ReferencedTypeName)) }");
+                declarationParts.Add($"implements {string.Join(", ", interfaceTranslations.Select(t => t.ReferencedTypeName))}");
                 deps = interfaceTranslations.Select(t => t.Dependencies).Aggregate(deps, (d, next) => d.Merge(next));
             }
 
@@ -115,50 +139,82 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             var propertyCodeSnippets = new List<string>();
             var deps = CodeDependencies.Empty;
 
-            foreach (var property in GetPropertiesForTranspilation(type))
-            {
+            if (_configuration.InjectTypeHintCondition?.IsMatch(type) ?? false) {
+                propertyCodeSnippets.Add(GenerateTypeProperty(type, templatingEngine));
+            }
+
+            foreach (var property in GetPropertiesForTranspilation(type)) {
                 Logger.WriteInformation($"Translating property {property.Name} on type {type}.");
 
                 var typeReferenceTranslation = TypeReferenceTranslator.Translate(property.PropertyType);
                 var decorators = DecoratorTranslator.GenerateDecorators(property);
                 deps = deps
-                    .Merge(typeReferenceTranslation.Dependencies)
-                    .Merge(decorators.Dependencies);
+                       .Merge(typeReferenceTranslation.Dependencies)
+                       .Merge(decorators.Dependencies);
 
-                propertyCodeSnippets.Add(templatingEngine.UseTemplate("ClassPropertyDefinition", new Dictionary<string, string>
-                {
-                    { "Decorators", decorators.DecoratorCode },
-                    { "PropertyName", GetTypeScriptPropertyName(property) },
-                    { "Documentation", GenerateDocumentationComment(property) },
-                    { "PropertyType", typeReferenceTranslation.ReferencedTypeName },
-                    { "Assignment", _defaultValueProvider.Assignment(property) }
-                }));
+                propertyCodeSnippets.Add(
+                    templatingEngine.UseTemplate(
+                        "ClassPropertyDefinition",
+                        new Dictionary<string, string> {
+                            { "Documentation", GenerateDocumentationComment(property) },
+                            { "Decorators", decorators.DecoratorCode },
+                            { "PropertyConstrains", "" },
+                            { "PropertyName", GetTypeScriptPropertyName(property) },
+                            { "PropertyType", typeReferenceTranslation.ReferencedTypeName },
+                            { "Assignment", _defaultValueProvider.Assignment(property) }
+                        }
+                    )
+                );
             }
 
             var properties = string.Join(Environment.NewLine, propertyCodeSnippets);
             return (properties, deps);
         }
 
+        private string GenerateTypeProperty(Type type, ITemplatingEngine templatingEngine)
+        {
+            var value = $"{type}, {type.Assembly.GetName().Name}";
+            return templatingEngine.UseTemplate(
+                "ClassPropertyDefinition",
+                new Dictionary<string, string> {
+                    { "Documentation", GenerateDocumentationComment("The injected $type reference for JSON-Deserialization") },
+                    { "Decorators", "" },
+                    { "PropertyConstrains", "readonly" },
+                    { "PropertyName", "$type" },
+                    { "PropertyType", TypeReferenceTranslator.Translate(value.GetType()).ReferencedTypeName },
+                    { "Assignment", $@" = ""{value}""" }
+                }
+            );
+        }
+
         private string GenerateDependencyInitialization(CodeDependencies dependencies, ITemplatingEngine templatingEngine)
         {
-            if (!Configuration.RuntimeDependencyLoading) return string.Empty;
+            if (!Configuration.RuntimeDependencyLoading)
+                return string.Empty;
 
             var loadableDependencies = dependencies.CodeFragments
-                .Where(x => x.TryRecreateClrType(out var type) && !type.IsInterface)
-                .Select(x => x.ExportedName).Concat(dependencies.Imports.Select(x => x.Name));
+                                                   .Where(x => x.TryRecreateClrType(out var type) && !type.IsInterface)
+                                                   .Select(x => x.ExportedName)
+                                                   .Concat(dependencies.Imports.Select(x => x.Name));
 
-            return templatingEngine.UseTemplate("DependencyInitialization", new Dictionary<string, string>
-            {
-                { "Dependencies", string.Join(", ", loadableDependencies) }
-            });
+            return templatingEngine.UseTemplate(
+                "DependencyInitialization",
+                new Dictionary<string, string> { { "Dependencies", string.Join(", ", loadableDependencies) } }
+            );
         }
 
         private IEnumerable<PropertyInfo> GetPropertiesForTranspilation(Type type)
-            => Configuration.FlattenBaseTypes
-                ? type.GetProperties()
-                : type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        {
+            return Configuration.FlattenBaseTypes
+                       ? type.GetProperties()
+                       : type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        }
 
         private string GetTypeScriptPropertyName(PropertyInfo property)
-            => Configuration.CamelCase ? property.Name.ToCamelCase() : property.Name;
+        {
+            return Configuration.CamelCase
+                       ? property.Name.ToCamelCase()
+                       : property.Name;
+        }
     }
 }
