@@ -179,7 +179,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 new Dictionary<string, string> {
                     { "Documentation", GenerateDocumentationComment("The injected $type reference for JSON-Deserialization") },
                     { "Decorators", "" },
-                    { "PropertyConstrains", "readonly" },
+                    { "PropertyConstrains", "readonly " },
                     { "PropertyName", "$type" },
                     { "PropertyType", TypeReferenceTranslator.Translate(value.GetType()).ReferencedTypeName },
                     { "Assignment", $@" = ""{value}""" }
