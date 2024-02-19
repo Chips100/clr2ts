@@ -1,4 +1,5 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
+using Clr2Ts.Transpiler.Filters.ConfigurationAdapters;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -22,11 +23,17 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         /// <param name="classDecorators">Configuration for decorators that should be generated for classes in TypeScript.</param>
         /// <param name="propertyDecorators">Configuration for decorators that should be generated for properties in TypeScript.</param>
         /// <param name="enumAttributeMaps">Configuration for enum member attributes that should be stored in a map.</param>
-        public TranspilationConfiguration(bool? camelCase, bool? flattenBaseTypes, bool? runtimeDependencyLoading, DefaultValueStrategy? defaultValues,
-            IEnumerable<CustomTypeMap> customTypeMaps, 
+        /// <param name="injectTypeHintCondition">Configuration for checking if to inject $type-hint to type.</param>
+        public TranspilationConfiguration(
+            bool? camelCase,
+            bool? flattenBaseTypes,
+            bool? runtimeDependencyLoading,
+            DefaultValueStrategy? defaultValues,
+            IEnumerable<CustomTypeMap> customTypeMaps,
             IEnumerable<ClassDecoratorConfiguration> classDecorators,
             IEnumerable<PropertyDecoratorConfiguration> propertyDecorators,
-            IDictionary<string, string> enumAttributeMaps)
+            IDictionary<string, string> enumAttributeMaps,
+            TypeFilterConfigurationAdapter injectTypeHintCondition)
         {
             CamelCase = camelCase ?? true;
             RuntimeDependencyLoading = runtimeDependencyLoading ?? true;
@@ -36,6 +43,7 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
             ClassDecorators = classDecorators?.ToList() ?? Enumerable.Empty<ClassDecoratorConfiguration>();
             PropertyDecorators = propertyDecorators?.ToList() ?? Enumerable.Empty<PropertyDecoratorConfiguration>();
             EnumAttributeMaps = new ReadOnlyDictionary<string, string>(enumAttributeMaps ?? new Dictionary<string, string>());
+            InjectTypeHintCondition = injectTypeHintCondition;
         }
 
         /// <summary>
@@ -79,10 +87,23 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         /// </summary>
         public IReadOnlyDictionary<string, string> EnumAttributeMaps { get; }
 
+        public TypeFilterConfigurationAdapter InjectTypeHintCondition { get; }
+
         /// <summary>
         /// Returns a default configuration for the transpilation
         /// that should be used if the section has been omitted.
         /// </summary>
-        public static TranspilationConfiguration Default => new TranspilationConfiguration(true, null, null, null, null, null, null, null);
+        public static TranspilationConfiguration Default =>
+            new TranspilationConfiguration(
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            );
     }
 }

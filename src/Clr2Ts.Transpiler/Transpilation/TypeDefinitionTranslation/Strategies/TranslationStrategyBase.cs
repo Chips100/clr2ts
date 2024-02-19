@@ -12,7 +12,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
     /// <summary>
     /// Base implementation of strategies for translating type definitions.
     /// </summary>
-    public abstract class TranslationStrategyBase : ITypeDefinitionTranslationStrategy
+    public abstract class TranslationStrategyBase: ITypeDefinitionTranslationStrategy
     {
         private readonly ITemplatingEngine _templatingEngine;
         private readonly IDocumentationSource _documentationSource;
@@ -25,9 +25,14 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <param name="documentationSource">Source for looking up documentation comments for members.</param>
         /// <param name="logger">Logger to use for writing log messages.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="templatingEngine"/> or <paramref name="documentationSource"/> or <paramref name="logger"/> is null.</exception>
-        protected TranslationStrategyBase(IConfigurationSource configurationSource, ITemplatingEngine templatingEngine, IDocumentationSource documentationSource, ILogger logger)
+        protected TranslationStrategyBase(
+            IConfigurationSource configurationSource,
+            ITemplatingEngine templatingEngine,
+            IDocumentationSource documentationSource,
+            ILogger logger)
         {
-            if (configurationSource == null) throw new ArgumentNullException(nameof(configurationSource));
+            if (configurationSource == null)
+                throw new ArgumentNullException(nameof(configurationSource));
 
             _templatingEngine = templatingEngine ?? throw new ArgumentNullException(nameof(templatingEngine));
             _documentationSource = documentationSource ?? throw new ArgumentNullException(nameof(documentationSource));
@@ -36,7 +41,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             TypeReferenceTranslator = new DefaultTypeReferenceTranslator(configurationSource, logger);
             DecoratorTranslator = new DecoratorTranslator(configurationSource);
             Configuration = configurationSource.GetSection<TranspilationConfiguration>()
-                ?? TranspilationConfiguration.Default;
+                         ?? TranspilationConfiguration.Default;
         }
 
         /// <summary>
@@ -66,7 +71,8 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <returns>True, if this strategy can be used to translate the specified type definition; otherwise false.</returns>
         public bool CanTranslateTypeDefinition(Type type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
 
             return CanTranslate(type);
         }
@@ -78,8 +84,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         /// <returns>Result of the translation.</returns>
         public CodeFragment Translate(Type referencedType)
         {
-            if (!CanTranslateTypeDefinition(referencedType))
-            {
+            if (!CanTranslateTypeDefinition(referencedType)) {
                 throw new InvalidOperationException("Called Translate although CanTranslateTypeDefinition returns false.");
             }
 
@@ -109,9 +114,19 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
         protected string GenerateDocumentationComment(MemberInfo member)
         {
             var documentation = _documentationSource.GetDocumentationText(member);
-            if (string.IsNullOrWhiteSpace(documentation)) return null;
+            return GenerateDocumentationComment(documentation);
+        }
 
-            return $@"/**
+        /// <summary>
+        /// Creates a documentation comment for a type definition.
+        /// </summary>
+        /// <param name="documentation">Text that should be documented.</param>
+        /// <returns>A string with the documentation comment for the specified member.</returns>
+        protected string GenerateDocumentationComment(string documentation)
+        {
+            return string.IsNullOrWhiteSpace(documentation)
+                       ? null
+                       : $@"/**
  * {documentation}
  */
 ";

@@ -1,2 +1,2 @@
 ﻿
-[Documentation][Decorators]public [PropertyName]: [PropertyType][Assignment];
+[Documentation][Decorators]public [PropertyModifiers][PropertyName]: [PropertyType][Assignment];
