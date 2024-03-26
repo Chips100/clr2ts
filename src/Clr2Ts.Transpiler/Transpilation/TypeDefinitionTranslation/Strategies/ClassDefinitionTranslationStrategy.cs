@@ -158,7 +158,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                         new Dictionary<string, string> {
                             { "Documentation", GenerateDocumentationComment(property) },
                             { "Decorators", decorators.DecoratorCode },
-                            { "PropertyModifiers", "" },
+                            { "PropertyModifiers", $"{(type.BaseType != null && property.DeclaringType != type ? "override " : "")}" },
                             { "PropertyName", GetTypeScriptPropertyName(property) },
                             { "PropertyType", typeReferenceTranslation.ReferencedTypeName },
                             { "Assignment", _defaultValueProvider.Assignment(property) }
@@ -179,7 +179,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 new Dictionary<string, string> {
                     { "Documentation", GenerateDocumentationComment("The injected $type reference for JSON-Deserialization") },
                     { "Decorators", "" },
-                    { "PropertyModifiers", "readonly " },
+                    { "PropertyModifiers", $"{(type.BaseType != null ? "override " : "")} readonly " },
                     { "PropertyName", "$type" },
                     { "PropertyType", TypeReferenceTranslator.Translate(value.GetType()).ReferencedTypeName },
                     { "Assignment", $@" = ""{value}""" }
