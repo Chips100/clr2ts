@@ -63,7 +63,7 @@ namespace Clr2Ts.Transpiler.Tests.Transpilation.TypeDefinitionTranslation.Strate
             var result = cdts.Translate(definition);
 
             Assert.Contains(
-                "public readonly $type: string = \"Clr2Ts.Transpiler.Tests.Transpilation.TypeDefinitionTranslation.Strategies.TestClass_ClassDefinitionTranslationStrategy, Clr2Ts.Transpiler.Tests\"",
+                "public override readonly $type: string = \"Clr2Ts.Transpiler.Tests.Transpilation.TypeDefinitionTranslation.Strategies.TestClass_ClassDefinitionTranslationStrategy, Clr2Ts.Transpiler.Tests\"",
                 result.Code
             );
         }
