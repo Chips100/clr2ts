@@ -116,7 +116,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             );
 
             // Extending the base class.
-            if (!Configuration.FlattenBaseTypes && type.BaseType != typeof(object)) {
+            if (HasBaseType(type)) {
                 var baseTypeTranslation = TypeReferenceTranslator.Translate(type.BaseType);
                 declarationParts.Add($"extends {baseTypeTranslation.ReferencedTypeName}");
                 deps = deps.Merge(baseTypeTranslation.Dependencies);
@@ -158,7 +158,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                         new Dictionary<string, string> {
                             { "Documentation", GenerateDocumentationComment(property) },
                             { "Decorators", decorators.DecoratorCode },
-                            { "PropertyModifiers", $"{(type.BaseType != null && property.DeclaringType != type ? "override " : "")}" },
+                            { "PropertyModifiers", $"{(IsPropertyOverride(type, property) ? "override " : "")}" },
                             { "PropertyName", GetTypeScriptPropertyName(property) },
                             { "PropertyType", typeReferenceTranslation.ReferencedTypeName },
                             { "Assignment", _defaultValueProvider.Assignment(property) }
@@ -171,6 +171,18 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
             return (properties, deps);
         }
 
+        private bool IsPropertyOverride(Type type, PropertyInfo property)
+        {
+            return HasBaseType(type)
+                && type.BaseType is { IsClass: true }
+                && (property == null || property.DeclaringType != type);
+        }
+
+        private bool HasBaseType(Type type)
+        {
+            return !Configuration.FlattenBaseTypes && type.BaseType != typeof(object);
+        }
+
         private string GenerateTypeProperty(Type type, ITemplatingEngine templatingEngine)
         {
             var value = $"{type}, {type.Assembly.GetName().Name}";
@@ -179,7 +191,7 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation.Strategies
                 new Dictionary<string, string> {
                     { "Documentation", GenerateDocumentationComment("The injected $type reference for JSON-Deserialization") },
                     { "Decorators", "" },
-                    { "PropertyModifiers", $"{(type.BaseType != null ? "override " : "")}readonly " },
+                    { "PropertyModifiers", $"{(IsPropertyOverride(type, null) ? "override " : "")}readonly " },
                     { "PropertyName", "$type" },
                     { "PropertyType", TypeReferenceTranslator.Translate(value.GetType()).ReferencedTypeName },
                     { "Assignment", $@" = ""{value}""" }

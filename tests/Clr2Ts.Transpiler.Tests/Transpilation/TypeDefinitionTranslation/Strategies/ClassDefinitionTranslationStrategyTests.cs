@@ -17,6 +17,10 @@ namespace Clr2Ts.Transpiler.Tests.Transpilation.TypeDefinitionTranslation.Strate
         public string Name { get; set; }
     }
 
+    internal class TestClassInherit_ClassDefinitionTranslationStrategy: TestClass_ClassDefinitionTranslationStrategy
+    {
+    }
+
     /// <summary>
     /// Tests for the <see cref="ClassDefinitionTranslationStrategyTests"/>.
     /// </summary>
@@ -63,7 +67,53 @@ namespace Clr2Ts.Transpiler.Tests.Transpilation.TypeDefinitionTranslation.Strate
             var result = cdts.Translate(definition);
 
             Assert.Contains(
-                "public override readonly $type: string = \"Clr2Ts.Transpiler.Tests.Transpilation.TypeDefinitionTranslation.Strategies.TestClass_ClassDefinitionTranslationStrategy, Clr2Ts.Transpiler.Tests\"",
+                "public readonly $type: string = \"Clr2Ts.Transpiler.Tests.Transpilation.TypeDefinitionTranslation.Strategies.TestClass_ClassDefinitionTranslationStrategy, Clr2Ts.Transpiler.Tests\"",
+                result.Code
+            );
+        }
+
+        /// <summary>
+        /// The DictionaryTypeTranslationStrategy should translate references
+        /// to dictionaries with simple key/value types.
+        /// </summary>
+        [Fact]
+        public void ClassDefinitionTranslationStrategyTests_TranslatesTypeHintInjectionInherit()
+        {
+            var definition = typeof(TestClassInherit_ClassDefinitionTranslationStrategy);
+            var config = new ConfigurationSourceMock(
+                new TranspilationConfiguration(
+                    true,
+                    false,
+                    false,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    new TypeFilterConfigurationAdapter(
+                        null,
+                        new[] {
+                            "ITestInterface"
+                        },
+                        null,
+                        false
+                    )
+                )
+            );
+
+            var cdts = new ClassDefinitionTranslationStrategy(
+                config,
+                EmbeddedResourceTemplatingEngine.ForTypeScript(),
+                new AssemblyXmlDocumentationSource(),
+                new LoggerMock()
+            );
+
+            Assert.True(cdts.CanTranslateTypeDefinition(definition));
+
+            var result = cdts.Translate(definition);
+
+            Assert.Contains(
+                "public override readonly $type: string = \"Clr2Ts.Transpiler.Tests.Transpilation.TypeDefinitionTranslation.Strategies.TestClassInherit_ClassDefinitionTranslationStrategy, Clr2Ts.Transpiler.Tests\"",
                 result.Code
             );
         }
