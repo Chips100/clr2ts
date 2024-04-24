@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace Clr2Ts.EndToEnd.Tests
@@ -22,9 +19,10 @@ namespace Clr2Ts.EndToEnd.Tests
         {
             // Assume the project directory has the same name as the project (=namespace).
             var currentDirectory = Environment.CurrentDirectory;
-            var projectDirectoryName = GetType().Namespace;
-            var projectDirectory = new DirectoryInfo(currentDirectory.Substring(
-                0, currentDirectory.IndexOf(projectDirectoryName) + projectDirectoryName.Length));
+            var projectDirectoryName = GetType().Namespace!;
+            var projectDirectory = new DirectoryInfo(
+                currentDirectory[..(currentDirectory.IndexOf(projectDirectoryName, StringComparison.Ordinal) + projectDirectoryName.Length)]
+            );
 
             // Look for Javascript Files (output of the TypeScript compiler).
             var jsFiles = projectDirectory.EnumerateFiles("*.js", SearchOption.AllDirectories);

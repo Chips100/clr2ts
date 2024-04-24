@@ -1,5 +1,4 @@
 ﻿using Clr2Ts.Transpiler.Input;
-using System;
 using System.Reflection;
 using Xunit;
 
@@ -58,7 +57,7 @@ namespace Clr2Ts.Transpiler.Tests.Input
             // Use the sample assembly.
             var assembly = Assembly.LoadFile(SampleAssemblyInfo.Location.FullName);
             var type = assembly.GetType("Clr2Ts.Transpiler.Tests.SampleAssembly.SampleClass");
-            var property = type.GetProperty("SampleString");
+            var property = type!.GetProperty("SampleString");
 
             var sut = new AssemblyXmlDocumentationSource();
             Assert.Equal("Some sample string property.", sut.GetDocumentationText(property));

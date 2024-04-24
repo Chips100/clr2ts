@@ -1,5 +1,4 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
-using System;
 using Xunit;
 
 namespace Clr2Ts.Transpiler.Tests.Configuration
@@ -16,7 +15,7 @@ namespace Clr2Ts.Transpiler.Tests.Configuration
         [Fact]
         public void ConfigurationSourceExtensions_GetRequiredSectionThrowsArgumentNullException()
         {
-            IConfigurationSource source = null;
+            IConfigurationSource source = null!;
             Assert.Throws<ArgumentNullException>(() => source.GetRequiredSection<ConfigurationSection>());
         }
 
@@ -43,14 +42,14 @@ namespace Clr2Ts.Transpiler.Tests.Configuration
             Assert.Equal("SomeValue", section.SomeValue);
         }
 
-        private class ConfigurationSourceWithSection : IConfigurationSource
+        private class ConfigurationSourceWithSection: IConfigurationSource
         {
             public T GetSection<T>() => Activator.CreateInstance<T>();
         }
 
-        private class ConfigurationSourceWithoutSection : IConfigurationSource
+        private class ConfigurationSourceWithoutSection: IConfigurationSource
         {
-            public T GetSection<T>() => default(T);
+            public T GetSection<T>() => default(T)!;
         }
 
         [ConfigurationSection("section")]

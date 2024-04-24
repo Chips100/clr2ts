@@ -14,7 +14,7 @@ namespace Clr2Ts.Transpiler.Tests.Transpilation.TypeDefinitionTranslation.Strate
 
     internal class TestClass_ClassDefinitionTranslationStrategy: ITestInterface
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 
     internal class TestClassInherit_ClassDefinitionTranslationStrategy: TestClass_ClassDefinitionTranslationStrategy
@@ -39,6 +39,7 @@ namespace Clr2Ts.Transpiler.Tests.Transpilation.TypeDefinitionTranslation.Strate
                     true,
                     false,
                     false,
+                    null,
                     null,
                     null,
                     null,
@@ -85,6 +86,7 @@ namespace Clr2Ts.Transpiler.Tests.Transpilation.TypeDefinitionTranslation.Strate
                     true,
                     false,
                     false,
+                    null,
                     null,
                     null,
                     null,

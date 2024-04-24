@@ -14,7 +14,7 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         [Fact]
         public void StringExtensions_ToCamelCase_NormalizesEmptyInput()
         {
-            Assert.Equal(string.Empty, ((string)null).ToCamelCase());
+            Assert.Equal(string.Empty, ((string)null!).ToCamelCase());
             Assert.Equal(string.Empty, string.Empty.ToCamelCase());
             Assert.Equal(string.Empty, "   ".ToCamelCase());
         }
@@ -71,7 +71,7 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         [Fact]
         public void StringExtensions_AddIndentation_NormalizesNullValues()
         {
-            Assert.Equal(string.Empty, ((string)null).AddIndentation());
+            Assert.Equal(string.Empty, ((string)null!).AddIndentation());
         }
 
         /// <summary>
@@ -82,19 +82,24 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void StringExtensions_AddIndentation_IndentsLines()
         {
             var expectedIndentation = "\t\t";
-            var expected = string.Join(Environment.NewLine, new[]
-            {
-                $"{expectedIndentation}Line 1",
-                $"{expectedIndentation}Line 2",
-                $"{expectedIndentation}Line 3"
-            });
+            var expected = string.Join(
+                Environment.NewLine,
+                new[] {
+                    $"{expectedIndentation}Line 1",
+                    $"{expectedIndentation}Line 2",
+                    $"{expectedIndentation}Line 3"
+                }
+            );
 
-            var actual = string.Join(Environment.NewLine, new[]
-            {
-                "Line 1",
-                "Line 2",
-                "Line 3"
-            }).AddIndentation(2);
+            var actual = string.Join(
+                                   Environment.NewLine,
+                                   new[] {
+                                       "Line 1",
+                                       "Line 2",
+                                       "Line 3"
+                                   }
+                               )
+                               .AddIndentation(2);
 
             Assert.Equal(actual, expected);
         }
@@ -106,19 +111,24 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void StringExtensions_AddIndentation_KeepsEmptyLines()
         {
             var expectedIndentation = "\t\t";
-            var expected = string.Join(Environment.NewLine, new[]
-            {
-                $"{expectedIndentation}Line 1",
-                $"",
-                $"{expectedIndentation}Line 3"
-            });
+            var expected = string.Join(
+                Environment.NewLine,
+                new[] {
+                    $"{expectedIndentation}Line 1",
+                    $"",
+                    $"{expectedIndentation}Line 3"
+                }
+            );
 
-            var actual = string.Join(Environment.NewLine, new[]
-            {
-                "Line 1",
-                "",
-                "Line 3"
-            }).AddIndentation(2);
+            var actual = string.Join(
+                                   Environment.NewLine,
+                                   new[] {
+                                       "Line 1",
+                                       "",
+                                       "Line 3"
+                                   }
+                               )
+                               .AddIndentation(2);
 
             Assert.Equal(actual, expected);
         }
@@ -152,10 +162,9 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
             var input = "{Tuple1.Item1}, {Tuple2.Item2}!";
             var expected = @"""Hello"", ""World""!";
 
-            var context = new Dictionary<string, object>
-            {
+            var context = new Dictionary<string, object> {
                 { "Tuple1", Tuple.Create("Hello") },
-                { "Tuple2", Tuple.Create("", "World") },
+                { "Tuple2", Tuple.Create("", "World") }
             };
 
             Assert.Equal(expected, input.FormatWith(context));
@@ -171,10 +180,9 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
             var input = @"\{\{\\{{Tuple1.Item1}, \{\\{ {Tuple2.Item2}!";
             var expected = @"{{\{""Hello"", {\{ ""World""!";
 
-            var context = new Dictionary<string, object>
-            {
+            var context = new Dictionary<string, object> {
                 { "Tuple1", Tuple.Create("Hello") },
-                { "Tuple2", Tuple.Create("", "World") },
+                { "Tuple2", Tuple.Create("", "World") }
             };
 
             Assert.Equal(expected, input.FormatWith(context));
@@ -189,10 +197,9 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
             var input = "{ Tuple1.Item1 }, { Tuple2.Item2 }!";
             var expected = @"""Hello"", ""World""!";
 
-            var context = new Dictionary<string, object>
-            {
+            var context = new Dictionary<string, object> {
                 { "Tuple1", Tuple.Create("Hello") },
-                { "Tuple2", Tuple.Create("", "World") },
+                { "Tuple2", Tuple.Create("", "World") }
             };
 
             Assert.Equal(expected, input.FormatWith(context));
@@ -207,10 +214,9 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
             var input = "{ Tuple1.Item1.Item1 }, { Tuple2.Item2.Item1 }!";
             var expected = @"""Hello"", ""World""!";
 
-            var context = new Dictionary<string, object>
-            {
+            var context = new Dictionary<string, object> {
                 { "Tuple1", Tuple.Create(Tuple.Create("Hello")) },
-                { "Tuple2", Tuple.Create("", Tuple.Create("World")) },
+                { "Tuple2", Tuple.Create("", Tuple.Create("World")) }
             };
 
             Assert.Equal(expected, input.FormatWith(context));
@@ -225,10 +231,9 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
             var input = "{ Tuple1.Item1.Item1 }, { Tuple2.Item2.Item1 }!";
             var expected = @"""Hello"", null!";
 
-            var context = new Dictionary<string, object>
-            {
+            var context = new Dictionary<string, object> {
                 { "Tuple1", Tuple.Create(Tuple.Create("Hello")) },
-                { "Tuple2", Tuple.Create("", (object)null) },
+                { "Tuple2", Tuple.Create("", (object)null!) }
             };
 
             Assert.Equal(expected, input.FormatWith(context));
@@ -244,15 +249,15 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
             var input = "{ Tuple1.Item1.SomeKey }, { Tuple1.Item1.OtherKey.Item1 }!";
             var expected = @"""Hello"", ""World""!";
 
-            var context = new Dictionary<string, object>
-            {
+            var context = new Dictionary<string, object> {
                 {
-                    "Tuple1",
-                    Tuple.Create(new Dictionary<string, object> {
-                        { "SomeKey", "Hello" },
-                        { "OtherKey", Tuple.Create("World") }
-                    })
-                },
+                    "Tuple1", Tuple.Create(
+                        new Dictionary<string, object> {
+                            { "SomeKey", "Hello" },
+                            { "OtherKey", Tuple.Create("World") }
+                        }
+                    )
+                }
             };
 
             Assert.Equal(expected, input.FormatWith(context));
@@ -264,15 +269,14 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
             var input = "{ Tuple1.Item1.Item1 : camelCase }, { Tuple2.Item2.Item1 : camelCase}!";
             var expected = @"""helloHello"", ""worldWorld""!";
 
-            var context = new Dictionary<string, object>
-            {
+            var context = new Dictionary<string, object> {
                 { "Tuple1", Tuple.Create(Tuple.Create("HelloHello")) },
-                { "Tuple2", Tuple.Create("", Tuple.Create("WorldWorld")) },
+                { "Tuple2", Tuple.Create("", Tuple.Create("WorldWorld")) }
             };
 
             Assert.Equal(expected, input.FormatWith(context));
         }
-    
+
         /// <summary>
         /// FormatWith allows specifying method names to invoke them
         /// (only parameterless for now).
@@ -283,10 +287,7 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
             var input = "{ MyString.GetType.Name }";
             var expected = @"""String""";
 
-            var context = new Dictionary<string, object>
-            {
-                { "MyString", "Hello, World!" },
-            };
+            var context = new Dictionary<string, object> { { "MyString", "Hello, World!" } };
 
             Assert.Equal(expected, input.FormatWith(context));
         }
@@ -301,10 +302,9 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
             var input = "{ NullableInt.GetType.UnderlyingTypeIfNullable.Name }, { NonNullableInt.GetType.UnderlyingTypeIfNullable.Name }";
             var expected = @"""Int32"", ""Int32""";
 
-            var context = new Dictionary<string, object>
-            {
+            var context = new Dictionary<string, object> {
                 { "NullableInt", (int?)5 },
-                { "NonNullableInt", 5 },
+                { "NonNullableInt", 5 }
             };
 
             Assert.Equal(expected, input.FormatWith(context));

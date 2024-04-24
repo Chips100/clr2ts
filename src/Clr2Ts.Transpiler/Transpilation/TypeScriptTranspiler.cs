@@ -1,6 +1,7 @@
 ﻿using Clr2Ts.Transpiler.Configuration;
 using Clr2Ts.Transpiler.Transpilation.Configuration;
 using Clr2Ts.Transpiler.Transpilation.TypeDefinitionTranslation;
+using Clr2Ts.Transpiler.Transpilation.TypeListTranslation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,19 +14,27 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
     public sealed class TypeScriptTranspiler
     {
         private readonly ITypeDefinitionTranslator _typeDefinitionTranslator;
+        private readonly ITypeListTranslator _typeListTranslator;
         private readonly TranspilationConfiguration _configuration;
 
         /// <summary>
         /// Creates a <see cref="TypeScriptTranspiler"/>.
         /// </summary>
+        /// <param name="configurationSource"></param>
         /// <param name="typeDefinitionTranslator">Translator used to translate type definitions.</param>
+        /// <param name="typeListTranslator"></param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeDefinitionTranslator"/> is null.</exception>
-        public TypeScriptTranspiler(IConfigurationSource configurationSource, ITypeDefinitionTranslator typeDefinitionTranslator)
+        public TypeScriptTranspiler(
+            IConfigurationSource configurationSource,
+            ITypeDefinitionTranslator typeDefinitionTranslator,
+            ITypeListTranslator typeListTranslator)
         {
-            if (configurationSource == null) throw new ArgumentNullException(nameof(configurationSource));
+            if (configurationSource == null)
+                throw new ArgumentNullException(nameof(configurationSource));
 
             _configuration = configurationSource.GetSection<TranspilationConfiguration>() ?? TranspilationConfiguration.Default;
             _typeDefinitionTranslator = typeDefinitionTranslator ?? throw new ArgumentNullException(nameof(typeDefinitionTranslator));
+            _typeListTranslator = typeListTranslator ?? throw new ArgumentException(nameof(typeListTranslator));
         }
 
         /// <summary>
@@ -36,25 +45,27 @@ namespace Clr2Ts.Transpiler.Transpilation.TypeScript
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="types"/> is null.</exception>
         public TranspilationResult Transpile(IEnumerable<Type> types)
         {
-            if (types == null) throw new ArgumentNullException(nameof(types));
+            if (types == null)
+                throw new ArgumentNullException(nameof(types));
 
             // Only translate type definitions that are
             // not mapped to custom TypeScript types.
-            types = types.Where(t => !_configuration.CustomTypeMaps.Any(m => m.MapsType(t)));
+            types = types.Where(t => !_configuration.CustomTypeMaps.Any(m => m.MapsType(t))).ToList();
 
             var result = new TranspilationResult(types.Select(_typeDefinitionTranslator.Translate));
-            return TranspileDependencies(result);
+            result = TranspileDependencies(result);
+            if (_configuration.GenerateTypeList)
+                result = result.AddCodeFragments(_typeListTranslator.Translate(types));
+
+            return result;
         }
 
         private TranspilationResult TranspileDependencies(TranspilationResult currentResult)
         {
-            while (currentResult.GetUnresolvedDependencies().Any())
-            {
+            while (currentResult.GetUnresolvedDependencies().Any()) {
                 var codeFragments = new List<CodeFragment>();
-                foreach (var dependency in currentResult.GetUnresolvedDependencies())
-                {
-                    if (!dependency.TryRecreateClrType(out var type))
-                    {
+                foreach (var dependency in currentResult.GetUnresolvedDependencies()) {
+                    if (!dependency.TryRecreateClrType(out var type)) {
                         throw new InvalidOperationException($"Detected unresolvable dependency that could not be transpiled: {dependency}");
                     }
 

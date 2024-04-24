@@ -18,6 +18,7 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         /// <param name="camelCase">If set to true, property names should be converted to camelCase.</param>
         /// <param name="flattenBaseTypes">If set to true, properties derived from base types will be declared in the type itself.</param>
         /// <param name="runtimeDependencyLoading">If set to true, dependencies of a type will automatically be loaded when the type is used for the first time.</param>
+        /// <param name="generateTypeList">If set to true, a index file is created containing all type references.</param>
         /// <param name="defaultValues">Strategy that defines how to assign default values to TypeScript properties.</param>
         /// <param name="customTypeMaps">Custom type maps mapping .NET types to TypeScript types.</param>
         /// <param name="classDecorators">Configuration for decorators that should be generated for classes in TypeScript.</param>
@@ -28,6 +29,7 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
             bool? camelCase,
             bool? flattenBaseTypes,
             bool? runtimeDependencyLoading,
+            bool? generateTypeList,
             DefaultValueStrategy? defaultValues,
             IEnumerable<CustomTypeMap> customTypeMaps,
             IEnumerable<ClassDecoratorConfiguration> classDecorators,
@@ -36,8 +38,9 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
             TypeFilterConfigurationAdapter injectTypeHintCondition)
         {
             CamelCase = camelCase ?? true;
-            RuntimeDependencyLoading = runtimeDependencyLoading ?? true;
             FlattenBaseTypes = flattenBaseTypes ?? false;
+            RuntimeDependencyLoading = runtimeDependencyLoading ?? true;
+            GenerateTypeList = generateTypeList ?? false;
             DefaultValues = defaultValues ?? default(DefaultValueStrategy);
             CustomTypeMaps = customTypeMaps?.ToList() ?? Enumerable.Empty<CustomTypeMap>();
             ClassDecorators = classDecorators?.ToList() ?? Enumerable.Empty<ClassDecoratorConfiguration>();
@@ -61,6 +64,11 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         /// when the type is used for the first time (to ensure evaluation of decorators, for example).
         /// </summary>
         public bool RuntimeDependencyLoading { get; }
+
+        /// <summary>
+        /// If specified, a index file is created containing all type references.
+        /// </summary>
+        public bool GenerateTypeList { get; }
 
         /// <summary>
         /// Gets the strategy that defines how to assign default values to TypeScript properties.
@@ -96,6 +104,7 @@ namespace Clr2Ts.Transpiler.Transpilation.Configuration
         public static TranspilationConfiguration Default =>
             new TranspilationConfiguration(
                 true,
+                null,
                 null,
                 null,
                 null,
