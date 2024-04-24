@@ -9,7 +9,7 @@
     <ToolCommandName>clr2ts</ToolCommandName>
     <PackageOutputPath>../../dist</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.6.0</Version>
+    <Version>0.6.1</Version>
     <Authors>Dennis Stetter</Authors>
     <Company />
     <Product>clr2ts</Product>
