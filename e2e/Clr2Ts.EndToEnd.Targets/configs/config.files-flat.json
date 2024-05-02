@@ -6,7 +6,8 @@
   },
   "transpilation": {
     "defaultValues": "PrimitiveDefaults",
-    "flattenBaseTypes": true
+    "flattenBaseTypes": true,
+    "generateTypeList": true
   },
   "output": {
     "files": {

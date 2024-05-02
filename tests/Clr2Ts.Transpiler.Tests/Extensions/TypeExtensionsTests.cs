@@ -1,6 +1,4 @@
 ﻿using Clr2Ts.Transpiler.Extensions;
-using System;
-using System.Linq;
 using Xunit;
 
 namespace Clr2Ts.Transpiler.Tests.Extensions
@@ -16,11 +14,12 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         [Fact]
         public void TypeExtensions_GetBaseTypes_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                // Do not evaluate the IEnumerable to ensure eager exception throwing. 
-                var _ = ((Type)null).GetBaseTypes();
-            });
+            Assert.Throws<ArgumentNullException>(
+                () => {
+                    // Do not evaluate the IEnumerable to ensure eager exception throwing. 
+                    var _ = ((Type)null!).GetBaseTypes();
+                }
+            );
         }
 
         /// <summary>
@@ -30,8 +29,11 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void TypeExtensions_GetBaseTypes_TypeDerivedFromObject()
         {
             Assert.Equal(
-                new[] { typeof(object) },
-                typeof(BaseA).GetBaseTypes().ToArray());
+                new[] {
+                    typeof(object)
+                },
+                typeof(BaseA).GetBaseTypes().ToArray()
+            );
         }
 
         /// <summary>
@@ -41,8 +43,12 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void TypeExtensions_GetBaseTypes_TypeDerivedFromBaseClass()
         {
             Assert.Equal(
-                new[] { typeof(BaseA), typeof(object) },
-                typeof(BaseB).GetBaseTypes().ToArray());
+                new[] {
+                    typeof(BaseA),
+                    typeof(object)
+                },
+                typeof(BaseB).GetBaseTypes().ToArray()
+            );
         }
 
         /// <summary>
@@ -52,8 +58,13 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void TypeExtensions_GetBaseTypes_ChainOfBaseClasses()
         {
             Assert.Equal(
-                new[] { typeof(BaseB), typeof(BaseA), typeof(object) },
-                typeof(SubClass).GetBaseTypes().ToArray());
+                new[] {
+                    typeof(BaseB),
+                    typeof(BaseA),
+                    typeof(object)
+                },
+                typeof(SubClass).GetBaseTypes().ToArray()
+            );
         }
 
         /// <summary>
@@ -80,12 +91,12 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         [Fact]
         public void TypeExtensions_GetSelfImplementedInterfaces_ThrowsArgumentNullException()
         {
-
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                // Do not evaluate the IEnumerable to ensure eager exception throwing. 
-                var _ = ((Type)null).GetSelfImplementedInterfaces();
-            });
+            Assert.Throws<ArgumentNullException>(
+                () => {
+                    // Do not evaluate the IEnumerable to ensure eager exception throwing. 
+                    var _ = ((Type)null!).GetSelfImplementedInterfaces();
+                }
+            );
         }
 
         /// <summary>
@@ -96,8 +107,11 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void TypeExtensions_GetSelfImplementedInterfaces_ReturnsOnlyInterfaceFromClass()
         {
             Assert.Equal(
-                new[] { typeof(ISomethingElse) },
-                typeof(SubClass).GetSelfImplementedInterfaces());
+                new[] {
+                    typeof(ISomethingElse)
+                },
+                typeof(SubClass).GetSelfImplementedInterfaces()
+            );
         }
 
         /// <summary>
@@ -108,8 +122,11 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         public void TypeExtensions_GetSelfImplementedInterfaces_SupportsGenericsDeterminedBySubClass()
         {
             Assert.Equal(
-                new[] { typeof(IGenericInterface<string>) },
-                typeof(GenericSubClass<int>).GetSelfImplementedInterfaces());
+                new[] {
+                    typeof(IGenericInterface<string>)
+                },
+                typeof(GenericSubClass<int>).GetSelfImplementedInterfaces()
+            );
         }
 
         /// <summary>
@@ -118,7 +135,7 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         [Fact]
         public void TypeExtensions_GetNameWithGenericTypeParameters_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => ((Type)null).GetNameWithGenericTypeParameters());
+            Assert.Throws<ArgumentNullException>(() => ((Type)null!).GetNameWithGenericTypeParameters());
         }
 
         /// <summary>
@@ -137,8 +154,10 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         [Fact]
         public void TypeExtensions_GetNameWithGenericTypeParameters_SupportsGenericType()
         {
-            Assert.Equal($"{nameof(GenericSubClass<object>)}<T>", 
-                typeof(GenericSubClass<>).GetNameWithGenericTypeParameters());
+            Assert.Equal(
+                $"{nameof(GenericSubClass<object>)}<T>",
+                typeof(GenericSubClass<>).GetNameWithGenericTypeParameters()
+            );
         }
 
         /// <summary>
@@ -147,8 +166,10 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         [Fact]
         public void TypeExtensions_GetNameWithGenericTypeParameters_SupportsGenericTypeOfHigherArity()
         {
-            Assert.Equal($"{nameof(GenericWithArityTwo<object, object>)}<T1, T2>",
-                typeof(GenericWithArityTwo<,>).GetNameWithGenericTypeParameters());
+            Assert.Equal(
+                $"{nameof(GenericWithArityTwo<object, object>)}<T1, T2>",
+                typeof(GenericWithArityTwo<,>).GetNameWithGenericTypeParameters()
+            );
         }
 
         /// <summary>
@@ -157,7 +178,7 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         [Fact]
         public void TypeExtensions_GetNameWithoutGenericTypeParameters_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => ((Type)null).GetNameWithoutGenericTypeParameters());
+            Assert.Throws<ArgumentNullException>(() => ((Type)null!).GetNameWithoutGenericTypeParameters());
         }
 
         /// <summary>
@@ -176,8 +197,10 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         [Fact]
         public void TypeExtensions_GetNameWithoutGenericTypeParameters_SupportsGenericType()
         {
-            Assert.Equal($"{nameof(GenericSubClass<object>)}",
-                typeof(GenericSubClass<>).GetNameWithoutGenericTypeParameters());
+            Assert.Equal(
+                $"{nameof(GenericSubClass<object>)}",
+                typeof(GenericSubClass<>).GetNameWithoutGenericTypeParameters()
+            );
         }
 
         /// <summary>
@@ -186,29 +209,47 @@ namespace Clr2Ts.Transpiler.Tests.Extensions
         [Fact]
         public void TypeExtensions_GetNameWithoutGenericTypeParameters_SupportsGenericTypeOfHigherArity()
         {
-            Assert.Equal($"{nameof(GenericWithArityTwo<object, object>)}",
-                typeof(GenericWithArityTwo<,>).GetNameWithoutGenericTypeParameters());
+            Assert.Equal(
+                $"{nameof(GenericWithArityTwo<object, object>)}",
+                typeof(GenericWithArityTwo<,>).GetNameWithoutGenericTypeParameters()
+            );
         }
 
 
+        private class BaseA
+        {
+        }
 
+        private class BaseB: BaseA, ISomething
+        {
+        }
 
-        private class BaseA { }
+        private class SubClass: BaseB, ISomethingElse
+        {
+        }
 
-        private class BaseB : BaseA, ISomething { }
+        private class GenericBase<T>: IGenericInterface<T>
+        {
+        }
 
-        private class SubClass : BaseB, ISomethingElse { }
+        private class GenericSubClass<T>: GenericBase<T>, IGenericInterface<string>
+        {
+        }
 
-        private class GenericBase<T>: IGenericInterface<T> { }
-        
-        private class GenericSubClass<T>: GenericBase<T>, IGenericInterface<string> { }
+        private class GenericWithArityTwo<T1, T2>
+        {
+        }
 
-        private class GenericWithArityTwo<T1, T2> { }
+        private interface ISomething
+        {
+        }
 
-        private interface ISomething { }
+        private interface ISomethingElse: ISomething
+        {
+        }
 
-        private interface ISomethingElse : ISomething { }
-
-        private interface IGenericInterface<T> { }
+        private interface IGenericInterface<T>
+        {
+        }
     }
 }

@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\ClassDefinition.txt" />
+    <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\ClassList.txt" />
+    <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\ClassListEntry.txt" />
     <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\ClassPropertyDefinition.txt" />
     <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\DependencyInitialization.txt" />
     <None Remove="Transpilation\Templating\TypeScriptCodeTemplates\EnumAttributeMap.txt" />
@@ -17,21 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\ClassList.txt" />
+    <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\ClassListEntry.txt" />
     <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\DependencyInitialization.txt" />
     <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\EnumAttributeMapItem.txt" />
     <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\EnumAttributeMap.txt" />
     <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\InterfacePropertyDefinition.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\InterfaceDefinition.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\EnumDefinition.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\ClassDefinition.txt" />
     <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\EnumValue.txt" />
     <EmbeddedResource Include="Transpilation\Templating\TypeScriptCodeTemplates\ClassPropertyDefinition.txt" />

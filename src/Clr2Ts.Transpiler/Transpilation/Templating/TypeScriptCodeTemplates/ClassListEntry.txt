@@ -1,0 +1,1 @@
+"[AssemblyTypeDefinition]": (data: Partial<[ClassNameWithGenerics]>) => new [ClassName](data),

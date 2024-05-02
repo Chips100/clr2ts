@@ -1,0 +1,273 @@
+{
+  "title": "JSON schema for clr2ts configuration files",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "typeFilter": {
+      "additionalProperties": false,
+      "description": "Filter for type definitions. If multiple criteria are specified, a type has to fulfill all of them to match this filter.",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the type must start with the specified value to match this filter.",
+          "default": null
+        },
+        "isEnum": {
+          "type": "boolean",
+          "description": "The type has to be an enum definition to match this filter.",
+          "default": false
+        },
+        "hasAttribute": {
+          "type": "array",
+          "description": "Specifies a set of attributes that have to be applied to the type to match this filter. You may omit the 'Attribute'-Suffix.",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "subTypeOf": {
+          "type": "array",
+          "description": "The type needs to be subtype of all specified types to match this filter. You may specify base classes as well as implemented interfaces.",
+          "items": { "type": "string" },
+          "default": []
+        }
+      }
+    },
+    "propertyFilter": {
+      "additionalProperties": false,
+      "description": "Filter for properties. If multiple criteria are specified, a property has to fulfill all of them to match this filter.",
+      "properties": {
+        "declaringType": {
+          "$ref": "#/definitions/typeFilter",
+          "description": "The type in which the property is declared has to match the specified filter for the property to match this filter."
+        },
+        "propertyType": {
+          "$ref": "#/definitions/typeFilter",
+          "description": "The type of the property has to match the specified filter for the property to match this filter."
+        },
+        "hasAttribute": {
+          "type": "array",
+          "description": "Specifies a set of attributes that have to be applied to the type to match this filter. You may omit the 'Attribute'-Suffix.",
+          "items": { "type": "string" },
+          "default": []
+        }
+      }
+    }
+  },
+
+  "type": "object",
+  "required": ["input"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "log": {
+      "type": "object",
+      "description": "Section that configures the logging behaviour.",
+      "additionalProperties": false,
+      "properties": {
+        "console": {
+          "description": "Set to true, if log messages should be written to the console output.",
+          "type": "boolean",
+          "default": false
+        },
+        "file": {
+          "description": "Specify a file location that log messages should be written to. Relative paths will be resolved starting from the directory of the configuration file.",
+          "type": "string",
+          "default": null
+        }
+      }
+    },
+
+    "input": {
+      "type": "object",
+      "description": "Section that configures what types should be passed into the transpilation process.",
+      "required": ["assemblyFiles"],
+      "additionalProperties": false,
+      "properties": {
+        "assemblyFiles": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "File locations of assemblies that contain the type definitions to transpile. Relative paths will be resolved starting from the directory of the configuration file.",
+          "default": []
+        },
+        "typeFilters": {
+          "type": "array",
+          "description": "Optional set of filters to specify which types from the source assemblies should be transpiled. If multiple filters are specified, types that match at least one filter will be transpiled.",
+          "items": { "$ref": "#/definitions/typeFilter" }
+        },
+        "redirectReferenceAssemblies": {
+          "type": "boolean",
+          "description": "If true, reference assemblies will be redirected to their full versions automatically.",
+          "default": true
+        }
+      }
+    },
+
+    "transpilation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "camelCase": {
+          "type": "boolean",
+          "description": "Set to false to keep the original naming of properties in the types. By default, PascalCase names will be converted to camelCase notation.",
+          "default": true
+        },
+        "runtimeDependencyLoading": {
+          "type": "boolean",
+          "description": "Set to false to omit automatic loading of dependend types with the declaration of a type. By default, a TypeScript type delcaration is automatically followed by a list of its dependencies to ensure the initialization of their respective decorators.",
+          "default": true
+        },
+        "flattenBaseTypes": {
+          "type": "boolean",
+          "description": "Set to true to drop type hierarchies of the original types and instead repeat all properties derived from base types in the declaration itself.",
+          "default": false
+        },
+        "generateTypeList": {
+          "type": "boolean",
+          "description": "Set to true to generate an index file containing all type references",
+          "default": false
+        },
+        "defaultValues": {
+          "type": "string",
+          "description": "Specifies how properties of types should be initialized. Use AlwaysNull to assign null to each property. Use None to omit any property initialization. Use PrimitiveDefaults to assign default values for primitives, like false for boolean or 0 for numbers, while complex types are initialized with null. Use DefaultConstructor to create new instances of complex types by their default constructor, while primitive types will be initialized to their default value.",
+          "enum": [
+            "AlwaysNull",
+            "None",
+            "PrimitiveDefaults",
+            "DefaultConstructor"
+          ],
+          "default": "AlwaysNull"
+        },
+        "injectTypeHintCondition": {
+          "$ref": "#/definitions/typeFilter",
+          "description": "TypeHints will only be injected to types that match the specified filter."
+        },
+        "enumAttributeMaps": {
+          "type": "object",
+          "description": "Maps information about enum members, like values from their attributes, into objects stored on the TypeScript enum itself. The value to store can be defined by template strings containing placeholders specified in curly braces, like '{Attributes.DisplayAttribute.Name}'.",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^.+$": {
+              "type": "string",
+              "description": "Maps information about an enum member, like values from an attribute, into an object stored on the TypeScript enum itself. The value to store can be defined by template strings containing placeholders specified in curly braces, like '{Attributes.DisplayAttribute.Name}'."
+            }
+          },
+          "default": {}
+        },
+        "customTypeMaps": {
+          "type": "array",
+          "description": "Configures individual types that should not be transpiled, but instead mapped to existing TypeScript types.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [ "type", "name" ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Full name of the original type that should be mapped, including its namespace, for example 'System.Type'."
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the existing TypeScript type that should be mapped to, for example 'any'."
+              },
+              "source": {
+                "type": "string",
+                "description": "Required if the target type needs to be imported. Defines the source from which the type should be imported, for example '@lib/module'. Not required for ambient TypeScript types like 'any'."
+              }
+            }
+          }
+        },
+        "classDecorators": {
+          "type": "array",
+          "description": "Configures decorators that should be applied to generated TypeScript types based on their original types.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [ "decorator", "import" ],
+            "properties": {
+              "if": {
+                "$ref": "#/definitions/typeFilter",
+                "description": "The decorator will only be applied to types that match the specified filter."
+              },
+              "decorator": {
+                "type": "string",
+                "description": "Name of the decorator to apply to the TypeScript type."
+              },
+              "parameters": {
+                "type": "array",
+                "description": "List of parameters that should be passed to the decorator. A parameter can be defined by template strings containing placeholders specified in curly braces, like '{Type.FullName}'.",
+                "items": { "type": "string" }
+              },
+              "import": {
+                "type": "string",
+                "description": "Defines the source from which the decorator should be imported, for example '@lib/module'."
+              }
+            }
+          }
+        },
+        "propertyDecorators": {
+          "type": "array",
+          "description": "Configures decorators that should be applied to properties of generated TypeScript types based on the original properties.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [ "decorator", "import" ],
+            "properties": {
+              "if": {
+                "$ref": "#/definitions/propertyFilter",
+                "description": "The decorator will only be applied to properties that match the specified filter."
+              },
+              "decorator": {
+                "type": "string",
+                "description": "Name of the decorator to apply to the property."
+              },
+              "parameters": {
+                "type": "array",
+                "description": "List of parameters that should be passed to the decorator. A parameter can be defined by template strings containing placeholders specified in curly braces, like '{Type.FullName} or {Property.Name}'.",
+                "items": { "type": "string" }
+              },
+              "import": {
+                "type": "string",
+                "description": "Defines the source from which the decorator should be imported, for example '@lib/module'."
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "output": {
+      "type": "object",
+      "description": "Section that configures where the generated TypeScript type definitions should be written.",
+      "additionalProperties": false,
+      "properties": {
+        "clipboard": {
+          "type": "boolean",
+          "description": "Set to true to copy all TypeScript types to the clipboard.",
+          "default": false
+        },
+        "bundledFile": {
+          "type": "string",
+          "description": "Specify a file location to write all TypeScript types into a single .ts-file. Relative paths will be resolved starting from the directory of the configuration file.",
+          "default": null
+        },
+        "files": {
+          "type": "object",
+          "description": "Configures a directory in which each TypeScript type will be put into an individual .ts-file.",
+          "additionalProperties": false,
+          "properties": {
+            "mimicNamespacesWithSubdirectories": {
+              "type": "boolean",
+              "description": "Set to true to generate a folder structure that corresponds to the namespaces of the original types. Each part of the namespace (separated by dots) will be projected as a new folder.",
+              "default": false
+            },
+            "directory": {
+              "type": "string",
+              "description": "Path to the directory in which the TypeScript types will be stored. If it does not exist, it will be created. Relative paths will be resolved starting from the directory of the configuration file.",
+              "default": null
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -22,7 +22,8 @@ namespace Clr2Ts.Transpiler.Transpilation
         /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is null or empty.</exception>
         private CodeFragmentId(string name, string exportedName, Type clrType)
         {
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name cannot be empty.", nameof(name));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name cannot be empty.", nameof(name));
 
             Name = name;
             ExportedName = exportedName;
@@ -58,23 +59,39 @@ namespace Clr2Ts.Transpiler.Transpilation
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
         public static CodeFragmentId ForClrType(Type type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
 
             // Use the full name (namespace + type name) of the type for referencing the code fragment.
             return new CodeFragmentId(
-                $"{type.Namespace}.{type.GetNameWithoutGenericTypeParameters()}", 
-                type.GetNameWithoutGenericTypeParameters(), 
-                type);
+                $"{type.Namespace}.{type.GetNameWithoutGenericTypeParameters()}",
+                type.GetNameWithoutGenericTypeParameters(),
+                type
+            );
+        }
+
+        /// <summary>
+        /// Derives the ID for the code fragment that defines the specified namespace index file.
+        /// </summary>
+        /// <param name="namespace">The Namespace that is defined in the referenced code fragment.</param>
+        /// <returns>The ID for the code fragment that defines the specified type.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="namespace"/> is null.</exception>
+        public static CodeFragmentId ForClassList(string @namespace)
+        {
+            if (@namespace == null)
+                throw new ArgumentNullException(nameof(@namespace));
+
+            return new CodeFragmentId(
+                $"{@namespace}.index",
+                "index",
+                null
+            );
         }
 
         public override string ToString() => Name;
         public override bool Equals(object obj) => Name.Equals((obj as CodeFragmentId)?.Name);
         public override int GetHashCode() => Name.GetHashCode();
-
-        public static bool operator ==(CodeFragmentId a, CodeFragmentId b)
-            => a?.Equals(b) ?? b == null;
-
-        public static bool operator !=(CodeFragmentId a, CodeFragmentId b)
-            => !(a == b);
+        public static bool operator ==(CodeFragmentId a, CodeFragmentId b) => a?.Equals(b) ?? b == null;
+        public static bool operator !=(CodeFragmentId a, CodeFragmentId b) => !(a == b);
     }
 }
