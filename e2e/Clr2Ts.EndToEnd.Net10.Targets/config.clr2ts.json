@@ -1,13 +1,13 @@
 {
   "input": {
     "assemblyFiles": [
-      "../Clr2Ts.EndToEnd.Net6.Targets.dll"
+      "../Clr2Ts.EndToEnd.Net10.Targets.dll"
     ]
   },
   "transpilation": { },
   "output": {
     "files": {
-      "directory": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/net6",
+      "directory": "../../../../Clr2Ts.EndToEnd.Tests/targets-output/net10",
       "mimicNamespacesWithSubdirectories": false
     }
   }

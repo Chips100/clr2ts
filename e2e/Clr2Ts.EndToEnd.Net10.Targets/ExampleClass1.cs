@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Simple example class type for testing basic
-    /// compatibility with .NET 6 libraries.
+    /// compatibility with .NET 10 libraries.
     /// </summary>
     public class ExampleClass1
     {
