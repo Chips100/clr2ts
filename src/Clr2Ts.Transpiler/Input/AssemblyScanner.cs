@@ -51,6 +51,13 @@ namespace Clr2Ts.Transpiler.Input
                 assemblyFiles = assemblyFiles.RedirectReferenceAssemblies(_logger);
             }
 
+            // Per documentation, at least one assembly file must be found to translate; otherwise fail.
+            if (!assemblyFiles.Any())
+            {
+                throw new FileNotFoundException($"No assembly files could be found with the " +
+                    $"specified file patterns: {string.Join(", ", configuration.AssemblyFiles)}");
+            }
+
             return assemblyFiles.SelectMany(GetTypesFromAssembly)
                 .Where(configuration.TypeFilter.IsMatch);
         }
